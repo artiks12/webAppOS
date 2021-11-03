@@ -1,0 +1,18 @@
+class 
+_Art_i123s 
+{
+	Vecums:
+	Integer;
+	
+			_Vards:String;
+
+	[URL("java:MyPkg.MyJavaClass#myMethodName")]
+	Integer sum(Integer a, Integer b);
+}
+
+
+class Raivis 
+: _Art_is Artis ARTIS
+{
+
+}

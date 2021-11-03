@@ -1,0 +1,31 @@
+class BaseObject
+{
+	private IWebMemory _wm
+	public BaseObject (IWebMemory wm)
+	{
+		_wm = wm;
+	}
+}
+
+class _Art_i123s : BaseObject
+{
+	public _Art_i123s (IWebMemory wm)
+	{
+		
+	}
+	public int Vecums { get; set; }
+	public string _Vards { get; set; }
+	
+	public int sum (int a, int b)
+	{
+		return 0;
+	}
+}
+
+class Raivis : _Art_is Artis ARTIS
+{
+	public Raivis (IWebMemory wm)
+	{
+		/// createObject();
+	}
+}

@@ -1,0 +1,52 @@
+class
+_Art_i123s
+{
+	Integer Vecums;
+
+	[URL("java:MyPkg.MyJavaClass#myMethodName")]
+	Integer sum1(Integer a, Integer b, Integer c);
+
+	[URL("java:MyPkg.MyJavaClass#myMethodName")]
+	String sum2(Integer a);
+
+	[URL("java:remote:MyPkg.MyJavaClass#myMethodName")]
+	[classPath("directoryPath1")]
+	[classPath("directoryPath2")]
+	Boolean sum3();
+
+	[URL("dotnet:local:dllName#namespaceName.className.methodName")]
+	Integer sum4();
+}
+
+class Raivis : _Art_i123s
+{
+	[URL("java:local:MyPkg.MyJavaClass#myMethodName")]
+	Integer sum1(Integer a, Integer b, Integer c);
+}
+
+association source1 : _Art_i123s <-> target1 : Raivis; /// Divvirzienu asociacija
+association person : Raivis <>- address : _Art_i123s; /// Divvirzienu asociacija ar kompoziciju
+
+
+
+
+
+
+Ir tris klases "_Art_i123s", "Raivis" un "Raivis2". 
+Neviena Klase nav apaksklase sava starpa.
+
+/// Nav labi, jo abas asociacijas ir target1
+association source1 : _Art_i123s <-> target1 : Raivis;
+association source1 : _Art_i123s <-> target1 : Raivis2;
+
+/// Ir labi
+association source1 : _Art_i123s <->target1 : Raivis;
+association source1 : _Art_i123s <->target2 : Raivis2;
+
+/// Nav labi, jo klasei "Raivis" ir javeido divas asociacijas ar nosaukumu "source1"
+association source1 : _Art_i123s <->target1 : Raivis;
+association source1 : _Art_i123s <->target2 : Raivis;
+
+/// Ir labi
+association source1 : _Art_i123s < ->target1 : Raivis;
+association source2 : _Art_i123s < ->target2 : Raivis;
