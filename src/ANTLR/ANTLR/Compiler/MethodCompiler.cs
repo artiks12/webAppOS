@@ -17,13 +17,36 @@ namespace AntlrCSharp
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
-		public override object VisitMethod([NotNull] MethodContext context)
+		public object VisitMethod([NotNull] FieldContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			_method = new();
 			_method.Line = (uint)context.Start.Line;
-			VisitChildren(context);
 
+			
+			if (context.annotation().Length > 0)
+			{
+				foreach (var a in context.annotation()) 
+				{
+					VisitAnnotation(a);
+				}
+			}
+			else { Errors.Add("At line " + context.Start.Line + ": Missing method URL!"); }
+
+			var methodBody = context.fieldDefinition();
+
+			if (methodBody.fieldProtection() != null) { VisitMethodProtection(methodBody.fieldProtection()); }
+
+			if (methodBody.fieldDataType() != null) { VisitMethodDataType(methodBody.fieldDataType()); }
+			else { Errors.Add("At line " + context.Start.Line + ": Missing datatype!"); }
+
+			if (methodBody.fieldName() != null) { VisitMethodName(methodBody.fieldName()); }
+			else { Errors.Add("At line " + context.Start.Line + ": Missing name!"); }
+
+			if (methodBody.methodDefinition() != null) { VisitMethodDefinition(methodBody.methodDefinition()); }
+			else { Errors.Add("At line " + context.Start.Line + ": Missing arguemnt definition!"); }
+
+			/*
 			if (_method.Name != " ") 
 			{
 				if (_class._superClasses.Count > 0)
@@ -65,32 +88,10 @@ namespace AntlrCSharp
 			{
 				_class._methods.Add(_method);
 			}
-			return null;
-		}
+			*/
 
-		/// <summary>
-		/// Izejam cauri metodes definīcijai
-		/// </summary>
-		/// <param name="context"></param>
-		/// <returns></returns>
-		public override object VisitMethodDefinition([NotNull] MethodDefinitionContext context)
-		{
-			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
-			// Argumenti ir "sadalīti" vairākās grupās, bet ir jābūt tikai vienai grupai
-			var arguments = context.arguments();
-			// Ja ir vairākas grupas, tad kaut kuri argumenti nav atdalīti ar komatu
-			if (arguments.Length > 1)
-			{
-				Errors.Add("At line " + context.arguments()[0].Start.Line + ": Syntax error! Missing ','!");
-			}
-			// Gadījums, ja metodei nav dots ne vārds, ne datu tips
-			if (context.GetText().StartsWith("("))
-			{
-				Errors.Add("At line " + context.Start.Line + ": Missing datatype and name for method!");
-				///		Console.WriteLine(node.GetType() + "\n" + node.GetText() + "\n\n");
-				return null;
-			}
-			return VisitChildren(context);
+			_class._methods.Add(_method);
+			return null;
 		}
 
 		/// <summary>
@@ -98,7 +99,7 @@ namespace AntlrCSharp
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
-		public override object VisitMethodProtection([NotNull] MethodProtectionContext context)
+		public object VisitMethodProtection([NotNull] FieldProtectionContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			var p = context.GetText();
@@ -111,23 +112,16 @@ namespace AntlrCSharp
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
-		public override object VisitMethodDataType([NotNull] MethodDataTypeContext context)
+		public object VisitMethodDataType([NotNull] FieldDataTypeContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
+
 			var t = context.GetText();
-			// Gadījums, kad nav dots ne metodes vārds, ne datu tips, bet ir dota aizsardzība.
-			if (t.StartsWith("("))
+			_method.Type = t;
+			// Pārbaudam, vai ir pareizs datu tips
+			if (_method.Type == null)
 			{
-				Errors.Add("At line " + context.Start.Line + ": Missing datatype and name for method!");
-			}
-			else 
-			{
-				_method.Type = t;
-				// Pārbaudam, vai ir pareizs datu tips
-				if (_method.Type == null) 
-				{
-					Errors.Add("At line " + context.Start.Line + ": Unsupported datatype '" + context.GetText() + "' was given for method!");
-				}
+				Errors.Add("At line " + context.Start.Line + ": Unsupported datatype '" + context.GetText() + "' was given for method!");
 			}
 			return null;
 		}
@@ -137,66 +131,57 @@ namespace AntlrCSharp
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
-		public override object VisitMethodName([NotNull] MethodNameContext context)
+		public object VisitMethodName([NotNull] FieldNameContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			var n = context.GetText();
-			// Pārbauda, vai metodei ir dots vārds
-			if (n.StartsWith("<missing"))
+			// Pārbauda, vai metodes vārds sakrīt ar klases vārdu
+			if (context.GetText() == _class.className)
 			{
-				Errors.Add("At line " + context.Start.Line + ": Missing name for method!");
+				Errors.Add("At line " + context.Start.Line + ": A method cannot be named after class name!");
 				_method.Name = " ";
 			}
 			else
 			{
-				// Pārbauda, vai metodes vārds sakrīt ar klases vārdu
-				if (context.GetText() == _class.className) 
-				{ 
-					Errors.Add("At line " + context.Start.Line + ": A method cannot be named after class name!");
-					_method.Name = " ";
-				}
-				else 
+				bool found = false;
+				// Pārbauda, vai metodes vārds sakrīt ar rezervētajiem vārdiem
+				foreach (var r in Reserved)
 				{
-					bool found = false;
-					// Pārbauda, vai metodes vārds sakrīt ar rezervētajiem vārdiem
-					foreach (var r in Reserved)
+					if (context.GetText() == r)
 					{
-						if (context.GetText() == r) 
-						{ 
-							Errors.Add("At line " + context.Start.Line + ": A method cannot be named '" + r + "'!");
+						Errors.Add("At line " + context.Start.Line + ": A method cannot be named '" + r + "'!");
+						_method.Name = " ";
+						found = true;
+						break;
+					}
+				}
+				if (found == false)
+				{
+					// Pārbauda, vai metodes vārds atkārtojas klasē starp citām metodēm
+					foreach (var m in _class._methods)
+					{
+						if (m.Name == n)
+						{
+							Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists! Check line " + m.Line + "!");
 							_method.Name = " ";
-							found = true; 
-							break; 
+							found = true;
+							break;
 						}
 					}
 					if (found == false)
 					{
-						// Pārbauda, vai metodes vārds atkārtojas klasē starp citām metodēm
-						foreach (var m in _class._methods)
+						// Pārbauda, vai metodes vārds atkārtojas klasē starp mainīgajiem
+						foreach (var v in _class._variables)
 						{
-							if (m.Name == n)
+							if (v.Name == n)
 							{
-								Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists! Check line "+m.Line+"!");
+								Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists! Check line " + v.Line + "!");
 								_method.Name = " ";
-								found = true; 
+								found = true;
 								break;
 							}
 						}
-						if (found == false)
-						{
-							// Pārbauda, vai metodes vārds atkārtojas klasē starp mainīgajiem
-							foreach (var v in _class._variables)
-							{
-								if (v.Name == n)
-								{
-									Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists! Check line " + v.Line + "!");
-									_method.Name = " ";
-									found = true; 
-									break;
-								}
-							}
-							if (found == false) { _method.Name = n; }
-						}
+						if (found == false) { _method.Name = n; }
 					}
 				}
 			}

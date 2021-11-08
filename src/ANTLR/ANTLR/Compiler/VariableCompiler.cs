@@ -12,29 +12,34 @@ namespace AntlrCSharp
 	{
 		Variable _variable;
 
-		/// <summary>
-		/// Izveidojam mainīgā objektu
-		/// </summary>
-		/// <param name="context"></param>
-		/// <returns></returns>
-		public override object VisitVariable([NotNull] VariableContext context)
+		public object VisitVariable([NotNull] FieldContext context) 
 		{
-			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			_variable = new();
 			_variable.Line = (uint)context.Start.Line;
-			if (context.variableName() == null) { Errors.Add("At line " + context.Start.Line + ": Missing variable name!"); }
-			VisitChildren(context);
+
+			var variableBody = context.fieldDefinition();
+
+			if (variableBody.fieldProtection() != null) { VisitVariableProtection(variableBody.fieldProtection()); }
+
+			if (variableBody.fieldDataType() != null) { VisitVariableDataType(variableBody.fieldDataType()); }
+			else { Errors.Add("At line " + context.Start.Line + ": Missing datatype!"); }
+
+			if (variableBody.fieldName() != null) { VisitVariableName(variableBody.fieldName()); }
+			else { Errors.Add("At line " + context.Start.Line + ": Missing name!"); }
+
 			_class._variables.Add(_variable);
+			
 			return null;
 		}
-		public override object VisitVariableProtection([NotNull] VariableProtectionContext context)
+
+		public object VisitVariableProtection([NotNull] FieldProtectionContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			var p = context.GetText();
 			_variable.Protection = p;
 			return null;
 		}
-		public override object VisitVariableDataType([NotNull] VariableDataTypeContext context)
+		public object VisitVariableDataType([NotNull] FieldDataTypeContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			// Pārbauda, vai mainīgajam ir dots datu tips
@@ -50,7 +55,7 @@ namespace AntlrCSharp
 			}
 			return VisitChildren(context);
 		}
-		public override object VisitVariableName([NotNull] VariableNameContext context)
+		public object VisitVariableName([NotNull] FieldNameContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			var n = context.GetText();

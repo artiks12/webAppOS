@@ -60,86 +60,26 @@ namespace test
 
     class _Art_i123s : BaseObject
     {
-        public int Vecums 
+        public string Vards 
         {
             get
             {
-                checkObject( "Vecums" , "Integer" , "_Art_i123s" );
-                return _object["Vecums"];
+                checkObject( "Vards" , "String" , "_Art_i123s" );
+                return _object["Vards"];
             }
             set
             {
-                checkObject( "Vecums" , "Integer" , "_Art_i123s" );
-                _object["Vecums"] = Convert.ToString( value );
+                checkObject( "Vards" , "String" , "_Art_i123s" );
+                _object["Vards"] = Convert.ToString( value );
             }
-        }
-
-        public List<Raivis> target1
-        {
-            get
-            {
-                var a = checkAssociation( "source1" , "target1" , "_Art_i123s" , "Raivis" );
-                var list = _object.LinkedObjects(a);
-                List<Raivis> result = _object.LinkedObjects(a);
-                foreach (var l in list)
-                {
-                    result.add( new Raivis( _vm , l.getReference() ));
-                }
-                return result;
-            }
-            set
-            {
-                var a = checkAssociation( "source1" , "target1" , "_Art_i123s" , "Raivis" );
-                var list = value
-                List<WebObject> result = new();
-                foreach (var l in list)
-                {
-                    result.add( l._object );
-                }
-            }
-        }
-
-        public int sum1 ( int a , int b , int c  )
-        {
-            return 0;
-        }
-
-        public string sum2 ( int a  )
-        {
-            return null;
-        }
-
-        public bool sum3 ( )
-        {
-            return false;
         }
     }
 
     class Raivis : BaseObject, _Art_i123s
     {
-        public List<_Art_i123s> target2
+        public int sum1 ( int a , int b , int c  )
         {
-            get
-            {
-                var a = checkAssociation( "source2" , "target2" , "Raivis" , "_Art_i123s" );
-                var list = _object.LinkedObjects(a);
-                List<_Art_i123s> result = _object.LinkedObjects(a);
-                foreach (var l in list)
-                {
-                    result.add( new _Art_i123s( _vm , l.getReference() ));
-                }
-                return result;
-            }
-            set
-            {
-                var a = checkAssociation( "source2" , "target2" , "Raivis" , "_Art_i123s" );
-                var list = value
-                List<WebObject> result = new();
-                foreach (var l in list)
-                {
-                    result.add( l._object );
-                }
-            }
+            return 0;
         }
     }
 }

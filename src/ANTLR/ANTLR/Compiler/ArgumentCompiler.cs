@@ -15,7 +15,38 @@ namespace AntlrCSharp
         public override object VisitArguments([NotNull] ArgumentsContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
-			return VisitChildren(context);
+			if (context.children != null) 
+			{
+				if (context.children.Count > 0)
+				{
+					bool needComa = false;
+					foreach (var c in context.children)
+					{
+						switch (c.GetType().ToString())
+						{
+							case "ANTLR.LanguageParser+ComaContext":
+								if (needComa == false)
+								{
+									Errors.Add("At line " + ((ComaContext)c).Start.Line + ": argument expected!");
+								}
+								else { needComa = false; }
+								break;
+							case "ANTLR.LanguageParser+ArgumentContext":
+								if (needComa == false)
+								{
+									needComa = true;
+								}
+								else
+								{
+									Errors.Add("At line " + ((ArgumentContext)c).Start.Line + ": Syntax error! Missing ','!");
+								}
+								VisitArgument((ArgumentContext)c);
+								break;
+						}
+					}
+				}
+			}
+			return null;
 		}
 
 		/// <summary>
@@ -27,17 +58,13 @@ namespace AntlrCSharp
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			// Pārbauda, vai arguments ir definēts
-			if (context.GetText() == "") { Errors.Add("At line " + context.Start.Line + ": Missing argument!");}
-			else 
-			{
-				_argument = new();
-				_argument.Line = (uint)context.Start.Line;
-				VisitChildren(context);
-				if (context.argumentName() == null) { Errors.Add("At line " + context.Start.Line + ": Missing argument name!"); }
-				_method._arguments.Add(_argument);
-			}
+			_argument = new();
+			_argument.Line = (uint)context.Start.Line;
+			VisitChildren(context);
+			if (context.argumentName() == null) { Errors.Add("At line " + context.Start.Line + ": Missing argument name!"); }
+			_method._arguments.Add(_argument);
 			return null;
-        }
+		}
 
 		/// <summary>
 		/// Iegūstam argumenta datu tipu
@@ -47,16 +74,11 @@ namespace AntlrCSharp
         public override object VisitArgumentDataType([NotNull] ArgumentDataTypeContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
-			// Pārbauda, vai argumentam ir dots datu tips
-			if (context.GetText() == "") { Errors.Add("At line " + context.Start.Line + ": Missing argument datatype!"); }
-			else
+			_argument.Type = context.GetText();
+			// Pārbauda, vai argumentam ir dots pareizs datu tips
+			if (_argument.Type == null)
 			{
-				_argument.Type = context.GetText();
-				// Pārbauda, vai argumentam ir dots pareizs datu tips
-				if (_argument.Type == null) 
-				{
-					Errors.Add("At line " + context.Start.Line + ": Unsupported datatype '" + context.GetText() + "' was given for argument!");
-				}
+				Errors.Add("At line " + context.Start.Line + ": Unsupported datatype '" + context.GetText() + "' was given for argument!");
 			}
 			return VisitChildren(context);
 		}
@@ -70,23 +92,19 @@ namespace AntlrCSharp
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			// Pārbauda, vai argumentam ir dots vārds
-			if (context.GetText().StartsWith("<missing")) { Errors.Add("At line " + context.Start.Line + ": Missing argument name!"); }
-			else 
+			bool found = false;
+			// Pārbauda, vai arguments ar doto vārdu jau ir definēts
+			foreach (var arg in _method._arguments)
 			{
-				bool found = false;
-				// Pārbauda, vai arguments ar doto vārdu jau ir definēts
-				foreach (var arg in _method._arguments)
+				if (arg.Name == context.GetText())
 				{
-					if (arg.Name == context.GetText())
-					{
-						Errors.Add("At line " + context.Start.Line + ": Argument with given name already exists! Check line " + arg.Line + "!");
-						_argument.Name = " ";
-						found = true;
-						break;
-					}
+					Errors.Add("At line " + context.Start.Line + ": Argument with name '" + context.GetText() + "' already exists! Check line " + arg.Line + "!");
+					_argument.Name = " ";
+					found = true;
+					break;
 				}
-				if (found == false) { _argument.Name = context.GetText(); }
 			}
+			if (found == false) { _argument.Name = context.GetText(); }
 			return VisitChildren(context);
 		}
 	}

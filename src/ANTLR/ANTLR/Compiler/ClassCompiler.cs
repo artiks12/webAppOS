@@ -28,11 +28,44 @@ namespace AntlrCSharp
 		}
 
 		/// <summary>
-		/// Iegūstam klases vārdu
+		/// Pārbaudam klases atribūtus
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
-		public override object VisitClassName([NotNull] ClassNameContext context)
+        /*public override object VisitClassAttributes([NotNull] ClassAttributesContext context)
+        {
+			if (context.classType() != null) { VisitClassType(context.classType()); }
+			else { Errors.Add("At line " + context.Start.Line + ": Missing keyword 'class'!"); }
+			if (context.className() != null) { VisitClassName(context.className()); }
+			else { Errors.Add("At line " + context.Start.Line + ": Missing class name!"); }
+			return null;
+		}*/
+
+		/// <summary>
+		/// Pārbaudam nepieciešamību pēc virsklašu pārbaudes
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns></returns>
+        public override object VisitSuperClass([NotNull] SuperClassContext context)
+        {
+			var col = context.COLON();
+			var supClasses = context.superClassName();
+
+			if (supClasses.Length != 0)
+			{
+				if (col == null) { Errors.Add("At line " + context.Start.Line + ": Syntax error! Missing ':'!"); }
+				foreach (var sc in supClasses) { VisitSuperClassName(sc); }
+			}
+			else if (col != null) { Errors.Add("At line " + context.Start.Line + ": Syntax error! Unnecessary ':'!"); }
+			return null;
+        }
+
+        /// <summary>
+        /// Iegūstam klases vārdu
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitClassName([NotNull] ClassNameContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			bool found = false;
@@ -62,18 +95,6 @@ namespace AntlrCSharp
 				}
 				if (found == false) { _class.className = context.GetText(); }
 			}
-			return VisitChildren(context);
-		}
-
-		/// <summary>
-		/// Pārbaudam, vai klases definešanai tiek izmantots atslēgvārds 'class'
-		/// </summary>
-		/// <param name="context"></param>
-		/// <returns></returns>
-		public override object VisitClassType([NotNull] ClassTypeContext context)
-		{
-			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
-			if (context.GetText() != "class") { Errors.Add("At line " + context.Start.Line + ": " + context.GetText() + " unrecognized! Did you mean to write 'class' instead?"); }
 			return VisitChildren(context);
 		}
 

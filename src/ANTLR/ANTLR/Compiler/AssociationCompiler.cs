@@ -13,7 +13,7 @@ namespace AntlrCSharp
 		Association _association;
 		Class _source;
 
-		public override object VisitAssociations([NotNull] AssociationsContext context)
+		public override object VisitAssociation([NotNull] AssociationContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			_association = new();

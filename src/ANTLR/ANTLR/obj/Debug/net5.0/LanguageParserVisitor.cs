@@ -40,11 +40,39 @@ public interface ILanguageParserVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitCode([NotNull] LanguageParser.CodeContext context);
 
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.blocks"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBlocks([NotNull] LanguageParser.BlocksContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.blockBody"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBlockBody([NotNull] LanguageParser.BlockBodyContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.blockType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBlockType([NotNull] LanguageParser.BlockTypeContext context);
+
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.webMemoryClass"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitWebMemoryClass([NotNull] LanguageParser.WebMemoryClassContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.classHead"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitClassHead([NotNull] LanguageParser.ClassHeadContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.superClass"/>.
@@ -61,13 +89,6 @@ public interface ILanguageParserVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitClassBody([NotNull] LanguageParser.ClassBodyContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.classType"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitClassType([NotNull] LanguageParser.ClassTypeContext context);
-
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.className"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -82,74 +103,25 @@ public interface ILanguageParserVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitSuperClassName([NotNull] LanguageParser.SuperClassNameContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.method"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.fields"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitMethod([NotNull] LanguageParser.MethodContext context);
+	Result VisitFields([NotNull] LanguageParser.FieldsContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.url"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.field"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUrl([NotNull] LanguageParser.UrlContext context);
+	Result VisitField([NotNull] LanguageParser.FieldContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.urlDefinition"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.fieldDefinition"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUrlDefinition([NotNull] LanguageParser.UrlDefinitionContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.urlType"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitUrlType([NotNull] LanguageParser.UrlTypeContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.protocolName"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitProtocolName([NotNull] LanguageParser.ProtocolNameContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.location"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLocation([NotNull] LanguageParser.LocationContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.methodPath"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitMethodPath([NotNull] LanguageParser.MethodPathContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.methodAnnotation"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitMethodAnnotation([NotNull] LanguageParser.MethodAnnotationContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.annotationType"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitAnnotationType([NotNull] LanguageParser.AnnotationTypeContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.annotationDefinition"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitAnnotationDefinition([NotNull] LanguageParser.AnnotationDefinitionContext context);
+	Result VisitFieldDefinition([NotNull] LanguageParser.FieldDefinitionContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.methodDefinition"/>.
@@ -159,25 +131,102 @@ public interface ILanguageParserVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitMethodDefinition([NotNull] LanguageParser.MethodDefinitionContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.methodProtection"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.fieldProtection"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitMethodProtection([NotNull] LanguageParser.MethodProtectionContext context);
+	Result VisitFieldProtection([NotNull] LanguageParser.FieldProtectionContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.methodDataType"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.fieldDataType"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitMethodDataType([NotNull] LanguageParser.MethodDataTypeContext context);
+	Result VisitFieldDataType([NotNull] LanguageParser.FieldDataTypeContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.methodName"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.fieldName"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitMethodName([NotNull] LanguageParser.MethodNameContext context);
+	Result VisitFieldName([NotNull] LanguageParser.FieldNameContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.annotation"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAnnotation([NotNull] LanguageParser.AnnotationContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.annotationDefinition"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAnnotationDefinition([NotNull] LanguageParser.AnnotationDefinitionContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.annotationAttributes"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAnnotationAttributes([NotNull] LanguageParser.AnnotationAttributesContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.urlAttributes"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitUrlAttributes([NotNull] LanguageParser.UrlAttributesContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.annotationSeperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAnnotationSeperator([NotNull] LanguageParser.AnnotationSeperatorContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.annotationData"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAnnotationData([NotNull] LanguageParser.AnnotationDataContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.annotationType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAnnotationType([NotNull] LanguageParser.AnnotationTypeContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.protocol"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitProtocol([NotNull] LanguageParser.ProtocolContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.location"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLocation([NotNull] LanguageParser.LocationContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.startQuote"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStartQuote([NotNull] LanguageParser.StartQuoteContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.endQuote"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitEndQuote([NotNull] LanguageParser.EndQuoteContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.arguments"/>.
@@ -208,39 +257,39 @@ public interface ILanguageParserVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitArgumentName([NotNull] LanguageParser.ArgumentNameContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.variable"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.coma"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariable([NotNull] LanguageParser.VariableContext context);
+	Result VisitComa([NotNull] LanguageParser.ComaContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.variableProtection"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.association"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariableProtection([NotNull] LanguageParser.VariableProtectionContext context);
+	Result VisitAssociation([NotNull] LanguageParser.AssociationContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.variableDataType"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.associationDefinition"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariableDataType([NotNull] LanguageParser.VariableDataTypeContext context);
+	Result VisitAssociationDefinition([NotNull] LanguageParser.AssociationDefinitionContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.variableName"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.source"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariableName([NotNull] LanguageParser.VariableNameContext context);
+	Result VisitSource([NotNull] LanguageParser.SourceContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.associations"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.target"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitAssociations([NotNull] LanguageParser.AssociationsContext context);
+	Result VisitTarget([NotNull] LanguageParser.TargetContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.associationType"/>.

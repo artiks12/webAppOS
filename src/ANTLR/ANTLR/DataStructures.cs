@@ -16,13 +16,18 @@ namespace AntlrCSharp
         /// Asociācijas avota vārds
         /// </summary>
         public string Definition { get; set; }
+
+        /// <summary>
+        /// Rinda, kurā metode tiek definēts failā
+        /// </summary>
+        public uint Line { get; set; }
     }
     public class URL 
     {
         /// <summary>
         /// Asociācijas avota vārds
         /// </summary>
-        public string Language { get; set; }
+        public string Protocol { get; set; }
 
         /// <summary>
         /// Asociācijas avota vārds
@@ -33,6 +38,11 @@ namespace AntlrCSharp
         /// Asociācijas avota vārds
         /// </summary>
         public string MethodPath { get; set; }
+
+        /// <summary>
+        /// Rinda, kurā metode tiek definēts failā
+        /// </summary>
+        public uint Line { get; set; }
     }
     public class Association 
     {

@@ -7,66 +7,68 @@ options
 }
 
 /// Sākuma punkts
-code:					(webMemoryClass | associations)*;
+code:					( blocks | association | classBody)*;
 
+blocks:					blockType blockBody?;
+blockBody:				(webMemoryClass | association);
+
+blockType:				NAME | PROTECTION;
 
 /// webMemoryClass likumi
-webMemoryClass:			classType className superClass CURLYOPEN classBody CURLYCLOSE;
-superClass:				(COLON superClassName*)?;
-classBody:				((variable | method)? SEMICOLON)*;
+webMemoryClass:			classHead? classBody?;
+classHead:				className superClass;
+superClass:				COLON? superClassName*;
+classBody:				CURLYOPEN fields* CURLYCLOSE;
 
-classType:				CLASS | NAME;
-className:				NAME;
-superClassName:			NAME;
-
-/// Metodes likumi
-method:					url methodAnnotation* methodDefinition;
+className:				NAME | PROTECTION;
+superClassName:			NAME | PROTECTION;
 
 
-/// URL likumi
-url:					SQUAREOPEN urlType BRACKETOPEN QUOTE urlDefinition QUOTE BRACKETCLOSE SQUARECLOSE;
-urlDefinition:			protocolName COLON location COLON methodPath; 
+/// Lauku (mainīgo un funkciju) likumi
+fields:					field? SEMICOLON;
+field:					annotation* fieldDefinition;
 
-urlType:				URL | NAME;
-protocolName:			NAME;
-location:				NAME;
-methodPath:				NAME;
+fieldDefinition:		fieldProtection? fieldDataType? fieldName? methodDefinition?;
+methodDefinition:		BRACKETOPEN arguments BRACKETCLOSE;
 
-
-/// Metodes anotacijas likumi
-methodAnnotation:		SQUAREOPEN annotationType BRACKETOPEN QUOTE annotationDefinition QUOTE BRACKETCLOSE SQUARECLOSE;	
-annotationType:			NAME;
-annotationDefinition:	ANYEXCEPTQUOTE;		/// Any string except ".
+fieldProtection:		PROTECTION;
+fieldDataType:			NAME | PROTECTION;
+fieldName:				NAME | PROTECTION;
 
 
-/// Metodes definicijas likumi
-methodDefinition:		methodProtection? methodDataType methodName BRACKETOPEN arguments* BRACKETCLOSE;
+/// Anotaciju likumi
+annotation:				SQUAREOPEN annotationType? BRACKETOPEN? startQuote? annotationDefinition endQuote? BRACKETCLOSE? SQUARECLOSE;
+annotationDefinition:	urlAttributes? annotationAttributes;
+annotationAttributes:	( annotationSeperator | annotationData )*;
+urlAttributes:			protocol? COLON location? COLON;
 
-methodProtection:		PUBLIC | PRIVATE;
-methodDataType:			TYPE | NAME;
-methodName:				NAME;
+annotationSeperator:	(COLON | HASH | DOT);
+annotationData:			NAME | PROTECTION;
+annotationType:			NAME | PROTECTION;
+protocol:				NAME | PROTECTION;
+location:				NAME | PROTECTION;
+startQuote:				QUOTE;
+endQuote:				QUOTE;
 
 
 /// Argumentu likumi
-arguments:				(argument (COMA argument)*);
-argument:				argumentDataType argumentName;
+arguments:				(coma | argument)*;
+argument:				argumentDataType argumentName?;
 
-argumentDataType:		TYPE | NAME;
-argumentName:			NAME;
-
-/// Mainigo likumi
-variable:				variableProtection? variableDataType variableName;
-
-variableProtection:		PUBLIC | PRIVATE;
-variableDataType:		TYPE | NAME;
-variableName:			NAME;
+argumentDataType:		NAME | PROTECTION;
+argumentName:			NAME | PROTECTION;
+coma:					COMA;
 
 
 /// Asociaciju likumi
-associations:			associationType associationSourceName COLON sourceClass ARROWS associationTargetName COLON targetClass SEMICOLON;
+association:			BRACKETOPEN associationDefinition BRACKETCLOSE;
+associationDefinition:	source ARROWS? target;
+source:					associationSourceName? COLON? sourceClass?; 
+target:					associationTargetName? COLON? targetClass?;
 
-associationType:		ASSOCIATION | NAME;
-associationSourceName:	NAME;
-associationTargetName:	NAME;
-sourceClass:			NAME;
-targetClass:			NAME;
+
+associationType:		NAME | PROTECTION;
+associationSourceName:	NAME | PROTECTION;
+associationTargetName:	NAME | PROTECTION;
+sourceClass:			NAME | PROTECTION;
+targetClass:			NAME | PROTECTION;
