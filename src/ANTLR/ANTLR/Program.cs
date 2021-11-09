@@ -8,9 +8,22 @@ namespace AntlrCSharp
 {
     partial class Program
     {
+        private static Compiler visitor;
+
         private static bool checkNamespace(string _namespace) 
         {
-            return true;
+            if (_namespace[0] == '_' || (_namespace[0] >= 'a' && (int)_namespace[0] <= 'z') || (_namespace[0] >= 'A' && (int)_namespace[0] <= 'Z'))
+            {
+                for (int x = 1; x < _namespace.Length; x++)
+                {
+                    if (!(_namespace[x] == '_' || (_namespace[x] >= '0' && (int)_namespace[x] <= '9') || (_namespace[x] >= 'a' && (int)_namespace[x] <= 'z') || (_namespace[x] >= 'A' && (int)_namespace[x] <= 'Z')))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
         }
 
         private static void Main(string[] args)
@@ -33,7 +46,7 @@ namespace AntlrCSharp
 
                 // Sagatavojam kodu kompilēšanai
                 LanguageParser.CodeContext codeContext = parser.code();
-                Compiler visitor = new Compiler();
+                visitor = new Compiler();
 
                 visitor.Compile(codeContext); // Kompilējam kodu
                 generate(visitor, _namespace); // Ģenerējam kodu
@@ -43,7 +56,6 @@ namespace AntlrCSharp
             {                
                 Console.WriteLine("Error: " + ex);                
             }
-
             /*
                 // args[0] - filename   args[1] - namespace
                 try
@@ -75,4 +87,6 @@ namespace AntlrCSharp
             */
         }
     }
+
+    
 }

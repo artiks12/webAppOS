@@ -93,19 +93,33 @@ namespace AntlrCSharp
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			// Pārbauda, vai argumentam ir dots vārds
 			bool found = false;
-			// Pārbauda, vai arguments ar doto vārdu jau ir definēts
-			foreach (var arg in _method._arguments)
+
+			foreach (var r in Reserved) 
 			{
-				if (arg.Name == context.GetText())
+				if (r == context.GetText()) 
 				{
-					Errors.Add("At line " + context.Start.Line + ": Argument with name '" + context.GetText() + "' already exists! Check line " + arg.Line + "!");
+					Errors.Add("At line " + context.Start.Line + ": Argument cannot be named '" + r + "'!");
 					_argument.Name = " ";
 					found = true;
 					break;
 				}
 			}
-			if (found == false) { _argument.Name = context.GetText(); }
-			return VisitChildren(context);
+			if (found == false) 
+			{
+				// Pārbauda, vai arguments ar doto vārdu jau ir definēts
+				foreach (var arg in _method._arguments)
+				{
+					if (arg.Name == context.GetText())
+					{
+						Errors.Add("At line " + context.Start.Line + ": Argument with name '" + context.GetText() + "' already exists! Check line " + arg.Line + "!");
+						_argument.Name = " ";
+						found = true;
+						break;
+					}
+				}
+				if (found == false) { _argument.Name = context.GetText(); }
+			}
+			return null;
 		}
 	}
 }

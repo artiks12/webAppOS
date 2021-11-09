@@ -15,9 +15,9 @@ blockBody:				(webMemoryClass | association);
 blockType:				NAME | PROTECTION;
 
 /// webMemoryClass likumi
-webMemoryClass:			classHead? classBody?;
-classHead:				className superClass;
-superClass:				COLON? superClassName*;
+webMemoryClass:			classHead classBody?;
+classHead:				className superClass?;
+superClass:				COLON superClassName*;
 classBody:				CURLYOPEN fields* CURLYCLOSE;
 
 className:				NAME | PROTECTION;
@@ -39,11 +39,11 @@ fieldName:				NAME | PROTECTION;
 /// Anotaciju likumi
 annotation:				SQUAREOPEN annotationType? BRACKETOPEN? startQuote? annotationDefinition endQuote? BRACKETCLOSE? SQUARECLOSE;
 annotationDefinition:	urlAttributes? annotationAttributes;
-annotationAttributes:	( annotationSeperator | annotationData )*;
+annotationAttributes:	(annotationData | COLON | SEMICOLON | COMA | DOT | HASH)*;
+
 urlAttributes:			protocol? COLON location? COLON;
 
-annotationSeperator:	(COLON | HASH | DOT);
-annotationData:			NAME | PROTECTION;
+annotationData:			ANYTHING | NAME | PROTECTION;
 annotationType:			NAME | PROTECTION;
 protocol:				NAME | PROTECTION;
 location:				NAME | PROTECTION;

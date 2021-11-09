@@ -11,17 +11,11 @@ namespace AntlrCSharp
     {
         public static void generateBaseObject(StreamWriter sw)
         {
-            bool IsMade = true;
-
-            sw.WriteLine("    class BaseObject");
+            sw.WriteLine("    public class BaseObject");
             sw.WriteLine("    {");
 
-            sw.WriteLine("        protected IWebMemory _wm;");
-            sw.WriteLine("        public WebObject _object;");
-
-            generateConstructor(sw, "BaseObject", ref IsMade);
             generateCheckObject(sw);
-            generateCheckAssociation(sw, "BaseObject");
+            generateCheckAssociation(sw);
 
             sw.WriteLine("    }");
         }
@@ -46,8 +40,7 @@ namespace AntlrCSharp
 
         public static void generateCheckObject(StreamWriter sw) 
         {
-            sw.WriteLine("");
-            sw.WriteLine("        protected void checkObject( string attributeName, string dataType, string className )");
+            sw.WriteLine("        public static void checkObject( string attributeName, string dataType, string className )");
             sw.WriteLine("        {");
             sw.WriteLine("            var c = _wm.findClassByName( className );");
             sw.WriteLine("            if (c == null)");
@@ -66,10 +59,10 @@ namespace AntlrCSharp
             sw.WriteLine("        }");
         }
 
-        public static void generateCheckAssociation(StreamWriter sw, string className)
+        public static void generateCheckAssociation(StreamWriter sw)
         {
             sw.WriteLine("");
-            sw.WriteLine("        protected WebAssociationEnd checkAssociation( string associationNameSource, string associationNameTarget, string sourceClass, string targetClass )");
+            sw.WriteLine("        public static WebAssociationEnd checkAssociation( string associationNameSource, string associationNameTarget, string sourceClass, string targetClass )");
             sw.WriteLine("        {");
             sw.WriteLine("            var cSource = _wm.findClassByName( sourceClass );");
             sw.WriteLine("            if (cSource == null)");
@@ -107,7 +100,7 @@ namespace AntlrCSharp
         {
             sw.WriteLine("            get");
             sw.WriteLine("            {");
-            sw.WriteLine("                checkObject( " + "\"" + _variable.Name + "\" , \"" + _variable.primitiveType + "\" , \"" + _class.className + "\" );");
+            sw.WriteLine("                BaseObject.checkObject( " + "\"" + _variable.Name + "\" , \"" + _variable.primitiveType + "\" , \"" + _class.ClassName + "\" );");
             sw.WriteLine("                return _object[\"" + _variable.Name + "\"];");
             sw.WriteLine("            }");
         }
@@ -116,7 +109,7 @@ namespace AntlrCSharp
         {
             sw.WriteLine("            set");
             sw.WriteLine("            {");
-            sw.WriteLine("                checkObject( " + "\"" + _variable.Name + "\" , \"" + _variable.primitiveType + "\" , \"" + _class.className + "\" );");
+            sw.WriteLine("                BaseObject.checkObject( " + "\"" + _variable.Name + "\" , \"" + _variable.primitiveType + "\" , \"" + _class.ClassName + "\" );");
             sw.WriteLine("                _object[\"" + _variable.Name + "\"] = Convert.ToString( value );");
             sw.WriteLine("            }");
         }
@@ -148,7 +141,7 @@ namespace AntlrCSharp
         {
             sw.WriteLine("            get");
             sw.WriteLine("            {");
-            sw.WriteLine("                var a = checkAssociation( " + "\"" + _association.SourceName + "\" , \"" + _association.TargetName + "\" , \"" + _class.className + "\" , \"" + _association.TargetClass + "\" );");
+            sw.WriteLine("                var a = BaseObject.checkAssociation( " + "\"" + _association.SourceName + "\" , \"" + _association.TargetName + "\" , \"" + _class.ClassName + "\" , \"" + _association.TargetClass + "\" , \"" + _association.IsComposition + "\" );");
             sw.WriteLine("                var list = _object.LinkedObjects(a);");
             sw.WriteLine("                List<" + _association.TargetClass + "> result = _object.LinkedObjects(a);");
             sw.WriteLine("                foreach (var l in list)");
@@ -163,7 +156,7 @@ namespace AntlrCSharp
         {
             sw.WriteLine("            set");
             sw.WriteLine("            {");
-            sw.WriteLine("                var a = checkAssociation( " + "\"" + _association.SourceName + "\" , \"" + _association.TargetName + "\" , \"" + _class.className + "\" , \"" + _association.TargetClass + "\" );");
+            sw.WriteLine("                var a = BaseObject.checkAssociation( " + "\"" + _association.SourceName + "\" , \"" + _association.TargetName + "\" , \"" + _class.ClassName + "\" , \"" + _association.TargetClass + "\" , \"" + _association.IsComposition + "\");");
             sw.WriteLine("                var list = value");
             sw.WriteLine("                List<WebObject> result = new();");
             sw.WriteLine("                foreach (var l in list)");
@@ -175,18 +168,18 @@ namespace AntlrCSharp
 
         public static void generateAssociations(StreamWriter sw, Class _class, ref bool IsMade) 
         {
-            if (_class._associations.Count != 0)
+            if (_class._associationEnds.Count != 0)
             {
-                foreach (var a in _class._associations)
+                foreach (var a in _class._associationEnds)
                 {
                     if (IsMade == true) { sw.WriteLine(""); }
                     else { IsMade = true; }
 
-                    sw.WriteLine("        public List<" + a.TargetClass + "> " + a.TargetName);
+                    sw.WriteLine("        public List<" + a.ClassName + "> " + a.RoleName);
                     sw.WriteLine("        {");
 
-                    generateAssociationGet(sw, a, _class);
-                    generateAssociationSet(sw, a, _class);
+                    generateAssociationGet(sw, visitor.Associations[(int)a.ID], _class);
+                    generateAssociationSet(sw, visitor.Associations[(int)a.ID], _class);
 
                     sw.Write("        }\n");
                 }
@@ -220,19 +213,21 @@ namespace AntlrCSharp
         {
             bool IsMade = false;
 
-            sw.Write("\n    class " + _class.className + " : BaseObject");
-            if (_class._superClasses.Count != 0)
+            sw.Write("    class " + _class.ClassName);
+
+            if (_class.SuperClass != null)
             {
-                foreach (var sup in _class._superClasses) { sw.Write(", " + sup.className); }
+                sw.Write(" : " + _class.SuperClass.ClassName);
             }
             sw.WriteLine("");
 
             sw.WriteLine("    {");
 
-            /*sw.WriteLine("        private IWebMemory _wm;");
-            sw.WriteLine("        public WebObject _object;");
-            generateConstructor(sw, _class.className, ref IsMade);
-            generateCheckObject(sw, _class.className);*/
+            sw.WriteLine("        public IWebMemory _wm;");
+            sw.WriteLine("        public WebObject _object;\n");
+
+            generateConstructor(sw, _class.ClassName, ref IsMade);
+
             generateProperties(sw,_class,ref IsMade);
             generateAssociations(sw, _class, ref IsMade);
             generateMethods(sw, _class,ref IsMade);
@@ -251,17 +246,30 @@ namespace AntlrCSharp
                 }
                 return false;
             }
-            using (StreamWriter sw = new StreamWriter("Test.cs"))
+            if (!checkNamespace(_namespace)) 
+            {
+                Console.WriteLine("'" + _namespace + "' is in incorrect format!");
+                return false; 
+            }
+            using (StreamWriter sw = new StreamWriter("Classes/BaseObject.cs"))
             {
                 sw.WriteLine("using WebAppOS;\n");
                 sw.WriteLine("namespace " + _namespace);
                 sw.WriteLine("{");
                 generateBaseObject(sw);
-                foreach (var _class in visitor.Classes)
-                {
-                    generateClass(sw,_class);
-                }
                 sw.Write('}');
+            }
+            foreach (var _class in visitor.Classes)
+            {
+                string filename = "Classes/" + _class.ClassName + ".cs";
+                using (StreamWriter sw = new StreamWriter(filename))
+                {
+                    sw.WriteLine("using WebAppOS;\n");
+                    sw.WriteLine("namespace " + _namespace);
+                    sw.WriteLine("{");
+                    generateClass(sw, _class);
+                    sw.Write('}');
+                }
             }
             return true;
         }

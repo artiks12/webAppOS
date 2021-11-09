@@ -1,7 +1,7 @@
 class
 _Art_i123s
 {
-	String Vards;
+	Integer Vecums;
 
 	[URL("java:remote:MyPkg.MyJavaClass#myMethodName")]
 	Integer sum1(Integer a, Integer b, Integer c);
@@ -23,3 +23,6 @@ class Raivis : _Art_i123s
 	[URL("java:local:MyPkg.MyJavaClass#myMethodName")]
 	Integer sum1(Integer a, Integer b, Integer c);
 }
+
+association(source1 : _Art_i123s <->target1 : Raivis)
+association(person : Raivis <>- target1 : _Art_i123s)

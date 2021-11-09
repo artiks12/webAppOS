@@ -21,17 +21,8 @@ namespace AntlrCSharp
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			_method = new();
-			_method.Line = (uint)context.Start.Line;
-
-			
-			if (context.annotation().Length > 0)
-			{
-				foreach (var a in context.annotation()) 
-				{
-					VisitAnnotation(a);
-				}
-			}
-			else { Errors.Add("At line " + context.Start.Line + ": Missing method URL!"); }
+			_method.Line = (uint)context.fieldDefinition().Start.Line;
+			_urlFound = false;
 
 			var methodBody = context.fieldDefinition();
 
@@ -46,38 +37,49 @@ namespace AntlrCSharp
 			if (methodBody.methodDefinition() != null) { VisitMethodDefinition(methodBody.methodDefinition()); }
 			else { Errors.Add("At line " + context.Start.Line + ": Missing arguemnt definition!"); }
 
-			/*
+			if (context.annotation().Length > 0)
+			{
+				foreach (var a in context.annotation())
+				{
+					VisitAnnotation(a);
+				}
+			}
+			else { Errors.Add("At line " + context.Start.Line + ": Missing method URL!"); }
+
 			if (_method.Name != " ") 
 			{
-				if (_class._superClasses.Count > 0)
+				if (_class.SuperClass != null)
 				{
-					foreach (var sc in _class._superClasses)
+					var sc = _class.SuperClass;
+					foreach (var m in sc._methods)
 					{
-						foreach (var m in sc._methods)
+						if (m.Name == _method.Name)
 						{
-							if (m.Name == _method.Name) 
+							if (m._arguments.Count == _method._arguments.Count)
 							{
-								if (m._arguments.Count == _method._arguments.Count)
+								bool found = false;
+								for (int x = 0; x < m._arguments.Count; x++)
 								{
-									bool found = false;
-									for (int x = 0; x < m._arguments.Count; x++) 
+									if (m._arguments[x].Name != _method._arguments[x].Name)
 									{
-										if (m._arguments[x].Name != _method._arguments[x].Name) 
-										{
-											Errors.Add("At line " + _method.Line + ": Argument No. " + x+1 + ", does not have the same name as in " + sc.className + "! Check line " + m.Line + "!");
-											found = true;
-										}
-										if (m._arguments[x].Type != _method._arguments[x].Type)
-										{
-											Errors.Add("At line " + _method.Line + ": Argument No. " + x+1 + ", does not have the same datatype as in " + sc.className + "! Check line " + m.Line + "!");
-											found = true;
-										}
+										Errors.Add("At line " + _method.Line + ": Argument No. " + (x+1) + ", does not have the same name as in " + sc.ClassName + "! Check line " + m.Line + "!");
+										found = true;
+									}
+									if (m._arguments[x].Type != _method._arguments[x].Type)
+									{
+										Errors.Add("At line " + _method.Line + ": Argument No. " + (x+1) + ", does not have the same datatype as in " + sc.ClassName + "! Check line " + m.Line + "!");
+										found = true;
 									}
 								}
-								else { Errors.Add("At line " + context.Start.Line + ": Method " + _method.Name + ", that exists in superclass " + sc.className + " does not have equal amount of arguments!"); }
+								if (found == false) 
+								{
+									_class._methods.Add(_method);
+								}
 							}
+							else { Errors.Add("At line " + context.Start.Line + ": Method " + _method.Name + ", that exists in superclass " + sc.ClassName + " does not have equal amount of arguments!"); }
 						}
 					}
+
 				}
 				else
 				{
@@ -88,9 +90,6 @@ namespace AntlrCSharp
 			{
 				_class._methods.Add(_method);
 			}
-			*/
-
-			_class._methods.Add(_method);
 			return null;
 		}
 
@@ -136,7 +135,7 @@ namespace AntlrCSharp
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			var n = context.GetText();
 			// Pārbauda, vai metodes vārds sakrīt ar klases vārdu
-			if (context.GetText() == _class.className)
+			if (context.GetText() == _class.ClassName)
 			{
 				Errors.Add("At line " + context.Start.Line + ": A method cannot be named after class name!");
 				_method.Name = " ";
@@ -181,7 +180,53 @@ namespace AntlrCSharp
 								break;
 							}
 						}
-						if (found == false) { _method.Name = n; }
+						if (found == false) 
+						{
+							foreach (var ae in _class._associationEnds)
+							{
+								if (ae.RoleName == n)
+								{
+									Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists in class! Check line " + Associations[(int)ae.ID].Line + "!");
+									_variable.Name = " ";
+									found = true;
+									break;
+								}
+							}
+							if (found == false)
+							{
+								if (_class.SuperClass != null)
+								{
+									foreach (var v in _class.SuperClass._variables)
+									{
+										if (v.Name == n)
+										{
+											Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists in super class! Check line " + v.Line + "!");
+											_variable.Name = " ";
+											found = true;
+											break;
+										}
+									}
+									if (found == false)
+									{
+										foreach (var ae in _class.SuperClass._associationEnds)
+										{
+											if (ae.RoleName == n)
+											{
+												Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists in super class! Check line " + Associations[(int)ae.ID].Line + "!");
+												_variable.Name = " ";
+												found = true;
+												break;
+											}
+										}
+										if (found == false)
+										{
+											_method.Name = n;
+										}
+									}
+								}
+								else { _method.Name = n; }
+							}
+						}
 					}
 				}
 			}

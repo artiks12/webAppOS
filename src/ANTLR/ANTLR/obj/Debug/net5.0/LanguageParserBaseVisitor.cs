@@ -32,7 +32,7 @@ using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 /// </summary>
 /// <typeparam name="Result">The return type of the visit operation.</typeparam>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
-[System.CLSCompliant(false)]
+
 public partial class LanguageParserBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, ILanguageParserVisitor<Result> {
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.code"/>.
@@ -264,17 +264,6 @@ public partial class LanguageParserBaseVisitor<Result> : AbstractParseTreeVisito
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	public virtual Result VisitUrlAttributes([NotNull] LanguageParser.UrlAttributesContext context) { return VisitChildren(context); }
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.annotationSeperator"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitAnnotationSeperator([NotNull] LanguageParser.AnnotationSeperatorContext context) { return VisitChildren(context); }
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.annotationData"/>.

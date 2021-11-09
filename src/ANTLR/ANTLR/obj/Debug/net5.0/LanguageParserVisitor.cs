@@ -30,7 +30,7 @@ using IToken = Antlr4.Runtime.IToken;
 /// </summary>
 /// <typeparam name="Result">The return type of the visit operation.</typeparam>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
-[System.CLSCompliant(false)]
+
 public interface ILanguageParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.code"/>.
@@ -178,13 +178,6 @@ public interface ILanguageParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitUrlAttributes([NotNull] LanguageParser.UrlAttributesContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.annotationSeperator"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitAnnotationSeperator([NotNull] LanguageParser.AnnotationSeperatorContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.annotationData"/>.

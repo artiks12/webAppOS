@@ -33,7 +33,7 @@ using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 /// of the available methods.
 /// </summary>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
-[System.CLSCompliant(false)]
+
 public partial class LanguageParserBaseListener : ILanguageParserListener {
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="LanguageParser.code"/>.
@@ -307,19 +307,6 @@ public partial class LanguageParserBaseListener : ILanguageParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitUrlAttributes([NotNull] LanguageParser.UrlAttributesContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="LanguageParser.annotationSeperator"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterAnnotationSeperator([NotNull] LanguageParser.AnnotationSeperatorContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="LanguageParser.annotationSeperator"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitAnnotationSeperator([NotNull] LanguageParser.AnnotationSeperatorContext context) { }
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="LanguageParser.annotationData"/>.

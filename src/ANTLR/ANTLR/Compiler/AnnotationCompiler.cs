@@ -10,10 +10,12 @@ namespace AntlrCSharp
 {
 	public partial class Compiler : LanguageParserBaseVisitor<object>
 	{
-        private bool _urlFound;
+        private bool _urlFound; // Vai metodei jau ir URL atribūts
+        private bool _isUrl; // Vai anotācija, kura tiek skatīta ir URL anotācija
+
         public override object VisitAnnotation([NotNull] AnnotationContext context)
         {
-            _urlFound = false;
+            _isUrl = false;
 
             uint line = (uint)context.Start.Line;
 
@@ -65,7 +67,13 @@ namespace AntlrCSharp
         {
             if (context.GetText() == "URL")
             {
-                _urlFound = true;
+                _isUrl = true;
+                if ( _urlFound == true ) { Errors.Add("At line " + context.Start.Line + ": a definition for URL for method '" + _method.Name + "' is already given! Check line " + _method.URL.Line + "!"); }
+                else 
+                { 
+                    _method.URL = new();
+                    _method.URL.Line = (uint)context.Start.Line;
+                }
             }
             else 
             {
@@ -81,7 +89,7 @@ namespace AntlrCSharp
         {
             if (context.urlAttributes() == null)
             {
-                if (_urlFound == true) 
+                if (_isUrl == true) 
                 { 
                     Errors.Add("At line " + context.Start.Line + ": URL attributes for method '" + _method.Name + "' are not given!"); 
                 }
@@ -89,10 +97,13 @@ namespace AntlrCSharp
             }
             else 
             {
-                if (_urlFound == true)
+                if (_isUrl == true)
                 {
-                    _method._url = new();
-                    VisitUrlAttributes(context.urlAttributes());
+                    if (_urlFound == false) 
+                    {
+                        VisitUrlAttributes(context.urlAttributes());
+                        _urlFound = true;
+                    }
                 }
                 else 
                 {
@@ -100,7 +111,6 @@ namespace AntlrCSharp
                 }
             }
             VisitAnnotationAttributes(context.annotationAttributes());
-
             return null;
         }
         public override object VisitUrlAttributes([NotNull] UrlAttributesContext context)
@@ -117,7 +127,7 @@ namespace AntlrCSharp
                     if (p == protocol.GetText()) 
                     {
                         found = true;
-                        _method._url.Protocol = p;
+                        _method.URL.Protocol = p;
                         break;
                     }
                 }
@@ -133,7 +143,7 @@ namespace AntlrCSharp
                     if (l == location.GetText())
                     {
                         found = true;
-                        _method._url.Location = l;
+                        _method.URL.Location = l;
                         break;
                     }
                 }
@@ -147,42 +157,11 @@ namespace AntlrCSharp
         {
             if (_urlFound == true)
             {
-                _method._url.MethodPath = context.GetText();
+                _method.URL.MethodPath = context.GetText();
             }
             else 
             {
                 
-            }
-
-            if (context.children != null) 
-            {
-                if (context.children.Count > 0)
-                {
-                    bool needSeperator = false;
-                    foreach (var c in context.children)
-                    {
-                        switch (c.GetType().ToString())
-                        {
-                            case "ANTLR.LanguageParser+AnnotationSeperatorContext":
-                                if (needSeperator == false)
-                                {
-                                    Errors.Add("At line " + ((AnnotationSeperatorContext)c).Start.Line + ": empty string inbetween seperators!");
-                                }
-                                else { needSeperator = false; }
-                                break;
-                            case "ANTLR.LanguageParser+AnnotationDataContext":
-                                if (needSeperator == false)
-                                {
-                                    needSeperator = true;
-                                }
-                                else
-                                {
-                                    Errors.Add("At line " + ((AnnotationDataContext)c).Start.Line + ": Syntax error! Missing '#', '.' or ':'!");
-                                }
-                                break;
-                        }
-                    }
-                }
             }
             return null;
         }

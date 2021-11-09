@@ -49,12 +49,13 @@ namespace AntlrCSharp
         public override object VisitSuperClass([NotNull] SuperClassContext context)
         {
 			var col = context.COLON();
-			var supClasses = context.superClassName();
+			var sc = context.superClassName();
 
-			if (supClasses.Length != 0)
+			if (sc.Length > 0)
 			{
 				if (col == null) { Errors.Add("At line " + context.Start.Line + ": Syntax error! Missing ':'!"); }
-				foreach (var sc in supClasses) { VisitSuperClassName(sc); }
+				VisitSuperClassName(sc[0]);
+				if (sc.Length > 1)  { Errors.Add("At line " + sc[1].Start.Line + ": Class '" + _class.ClassName + "' cannot have multiple clases to inherit from!"); }
 			}
 			else if (col != null) { Errors.Add("At line " + context.Start.Line + ": Syntax error! Unnecessary ':'!"); }
 			return null;
@@ -75,7 +76,7 @@ namespace AntlrCSharp
 				if (context.GetText() == r) 
 				{ 
 					Errors.Add("At line " + context.Start.Line + ": A class cannot be named '"+r+"'!");
-					_class.className = " ";
+					_class.ClassName = " ";
 					found = true; 
 					break; 
 				}
@@ -85,15 +86,15 @@ namespace AntlrCSharp
 				// Pārbaudam, vai eksistē klase ar doto vārdu
 				foreach (var c in Classes)
 				{
-					if (context.GetText() == c.className) 
+					if (context.GetText() == c.ClassName) 
 					{ 
 						Errors.Add("At line " + context.Start.Line + ": A class '" + context.GetText() + "' already exists! Check line " + c.Line + "!");
-						_class.className = " ";
+						_class.ClassName = " ";
 						found = true; 
 						break; 
 					}
 				}
-				if (found == false) { _class.className = context.GetText(); }
+				if (found == false) { _class.ClassName = context.GetText(); }
 			}
 			return VisitChildren(context);
 		}
@@ -108,42 +109,33 @@ namespace AntlrCSharp
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			bool found = false;
 			// Vispirms pārbaudam, vai virsklasei ir tāds pats vārds, kā pamatklasei
-			if (context.GetText() == _class.className) 
+			if (context.GetText() == _class.ClassName) 
 			{
 				Errors.Add("At line " + context.Start.Line + ": Cannot inherit from class of the same name!"); 
 				found = true;
 			}
 			if (found == false) 
 			{
-				// Tad pārbaudam, vai pamatklase jau manto no virsklases ar doto vārdu.
-				foreach (var s in _class._superClasses)
-				{
-					if (s.className == context.GetText())
-					{
-						Errors.Add("At line " + context.Start.Line + ": There is already a class '" + s.className + "' to inherit from!");
-						found = true;
-						break;
-					}
-				}
-				// Ja nav tādas virsklases, tad meklē, vai eksistē klase ar doto vārdu.
+				// Tad meklē, vai eksistē klase ar doto vārdu.
 				if (found == false)
 				{
 					foreach (var c in Classes)
 					{
-						if (context.GetText() == c.className)
+						if (context.GetText() == c.ClassName)
 						{
-							_class._superClasses.Add(c);
+							_class.SuperClass = c;
+							c.isSuperClass = true;
 							found = true;
 							break;
 						}
 					}
 					if (found == false)
 					{
-						Errors.Add("At line " + context.Start.Line + ": There is no class '" + context.GetText() + "' for class '" + _class.className + "' to inherit from!");
+						Errors.Add("At line " + context.Start.Line + ": There is no class '" + context.GetText() + "' for class '" + _class.ClassName + "' to inherit from!");
 					}
 				}
 			}
-			return VisitChildren(context);
+			return null;
 		}
 	}
 }

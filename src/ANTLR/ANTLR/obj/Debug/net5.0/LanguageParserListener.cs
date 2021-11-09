@@ -29,7 +29,7 @@ using IToken = Antlr4.Runtime.IToken;
 /// <see cref="LanguageParser"/>.
 /// </summary>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
-[System.CLSCompliant(false)]
+
 public interface ILanguageParserListener : IParseTreeListener {
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="LanguageParser.code"/>.
@@ -261,17 +261,6 @@ public interface ILanguageParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitUrlAttributes([NotNull] LanguageParser.UrlAttributesContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="LanguageParser.annotationSeperator"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAnnotationSeperator([NotNull] LanguageParser.AnnotationSeperatorContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="LanguageParser.annotationSeperator"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAnnotationSeperator([NotNull] LanguageParser.AnnotationSeperatorContext context);
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="LanguageParser.annotationData"/>.

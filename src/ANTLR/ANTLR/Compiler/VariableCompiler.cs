@@ -59,29 +59,34 @@ namespace AntlrCSharp
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			var n = context.GetText();
-			// Pārbauda, vai mainīgajam ir dots vārds
-			if (n.StartsWith("<missing"))
+			// Pārbauda, vai mainīgā vārds sakrīt ar klases vārdu
+			if (context.GetText() == _class.ClassName)
 			{
-				Errors.Add("At line " + context.Start.Line + ": Missing variable name!");
+				Errors.Add("At line " + context.Start.Line + ": A variable cannot be named after class name!");
 				_variable.Name = " ";
 			}
 			else
 			{
-				// Pārbauda, vai mainīgā vārds sakrīt ar klases vārdu
-				if (context.GetText() == _class.className)
+				bool found = false;
+				// Pārbauda, vai mainīgā vārds sakrīt ar rezervētajiem vārdiem
+				foreach (var r in Reserved)
 				{
-					Errors.Add("At line " + context.Start.Line + ": A variable cannot be named after class name!");
-					_variable.Name = " ";
-				}
-				else
-				{
-					bool found = false;
-					// Pārbauda, vai mainīgā vārds sakrīt ar rezervētajiem vārdiem
-					foreach (var r in Reserved)
+					if (context.GetText() == r)
 					{
-						if (context.GetText() == r)
+						Errors.Add("At line " + context.Start.Line + ": A variable cannot be named '" + r + "'!");
+						_variable.Name = " ";
+						found = true;
+						break;
+					}
+				}
+				if (found == false)
+				{
+					// Pārbauda, vai mainīgā vārds atkārtojas klasē starp citām metodēm
+					foreach (var m in _class._methods)
+					{
+						if (m.Name == n)
 						{
-							Errors.Add("At line " + context.Start.Line + ": A variable cannot be named '" + r + "'!");
+							Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists! Check line " + m.Line + "!");
 							_variable.Name = " ";
 							found = true;
 							break;
@@ -89,31 +94,79 @@ namespace AntlrCSharp
 					}
 					if (found == false)
 					{
-						// Pārbauda, vai mainīgā vārds atkārtojas klasē starp citām metodēm
-						foreach (var m in _class._methods)
+						// Pārbauda, vai mainīgā vārds atkārtojas klasē starp mainīgajiem
+						foreach (var v in _class._variables)
 						{
-							if (m.Name == n)
+							if (v.Name == n)
 							{
-								Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists! Check line " + m.Line + "!");
+								Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists! Check line " + v.Line + "!");
 								_variable.Name = " ";
 								found = true;
 								break;
 							}
 						}
-						if (found == false)
+						if (found == false) 
 						{
-							// Pārbauda, vai mainīgā vārds atkārtojas klasē starp mainīgajiem
-							foreach (var v in _class._variables)
+							foreach (var ae in _class._associationEnds)
 							{
-								if (v.Name == n)
+								if (ae.RoleName == n)
 								{
-									Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists! Check line " + v.Line + "!");
+									Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists in class! Check line " + Associations[(int)ae.ID].Line + "!");
 									_variable.Name = " ";
 									found = true;
 									break;
 								}
 							}
-							if (found == false) { _variable.Name = n; }
+							if (found == false) 
+							{
+								if (_class.SuperClass != null)
+								{
+									foreach (var v in _class.SuperClass._variables)
+									{
+										if (v.Name == n)
+										{
+											Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists in super class! Check line " + v.Line + "!");
+											_variable.Name = " ";
+											found = true;
+											break;
+										}
+									}
+									if (found == false)
+									{
+										foreach (var m in _class.SuperClass._methods)
+										{
+											if (m.Name == n)
+											{
+												Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists in super class! Check line " + m.Line + "!");
+												_variable.Name = " ";
+												found = true;
+												break;
+											}
+										}
+										if (found == false)
+										{
+											foreach (var ae in _class.SuperClass._associationEnds)
+											{
+												if (ae.RoleName == n)
+												{
+													Errors.Add("At line " + context.Start.Line + ": a field with name '" + n + "' already exists in super class! Check line " + Associations[(int)ae.ID].Line + "!");
+													_variable.Name = " ";
+													found = true;
+													break;
+												}
+											}
+											if (found == false)
+											{
+												_variable.Name = n;
+											}
+										}
+									}
+								}
+								else 
+								{
+									_variable.Name = n;
+								}
+							}
 						}
 					}
 				}

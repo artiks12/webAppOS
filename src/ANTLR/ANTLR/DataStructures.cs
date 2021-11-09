@@ -44,6 +44,29 @@ namespace AntlrCSharp
         /// </summary>
         public uint Line { get; set; }
     }
+
+    public class AssociationEnd 
+    {
+        /// <summary>
+        /// Asociācijas lomas vārds
+        /// </summary>
+        public string RoleName { get; set; }
+
+        /// <summary>
+        /// Asociācijas mērķa klase
+        /// </summary>
+        public string ClassName { get; set; }
+
+        /// <summary>
+        /// Asociācijas ID
+        /// </summary>
+        public uint ID { get; set; }
+
+        /// <summary>
+        /// Vai asociācijas galapunkts ir avots
+        /// </summary>
+        public bool IsSource { get; set; }
+    }
     public class Association 
     {
         /// <summary>
@@ -65,6 +88,11 @@ namespace AntlrCSharp
         /// Asociācijas mērķa klase
         /// </summary>
         public string TargetClass { get; set; }
+
+        /// <summary>
+        /// Vai asociācija ir kompozīcija
+        /// </summary>
+        public bool IsComposition { get; set; }
 
         /// <summary>
         /// Rinda, kurā metode tiek definēts failā
@@ -113,6 +141,7 @@ namespace AntlrCSharp
         /// </summary>
         public uint Line { get; set; }
     }
+
     /// <summary>
     /// Klase, kas glabā informāciju par mainīgajiem
     /// </summary>
@@ -130,7 +159,16 @@ namespace AntlrCSharp
         /// Saraksts ar metodes argumentiem
         /// </summary>
         public List<Variable> _arguments;
-        public URL _url { get; set; }
+
+        /// <summary>
+        /// Saraksts ar anotācijām
+        /// </summary>
+        public List<Annotation> _annotations;
+
+        /// <summary>
+        /// Metodes URL
+        /// </summary>
+        public URL URL { get; set; }
 
         public Method()
         {
@@ -166,9 +204,9 @@ namespace AntlrCSharp
     public class Class
     {
         /// <summary>
-        /// Saraksts ar mainīgajiem
+        /// Saraksts ar metodes argumentiem
         /// </summary>
-        public List<Association> _associations;
+        public List<AssociationEnd> _associationEnds;
 
         /// <summary>
         /// Saraksts ar mainīgajiem
@@ -183,21 +221,29 @@ namespace AntlrCSharp
         /// <summary>
         /// Saraksts ar virsklasēm
         /// </summary>
-        public List<Class> _superClasses { get; set; }
+        public Class SuperClass { get; set; }
 
         /// <summary>
         /// Klases vārds
         /// </summary>
-        public string className { get; set; }
+        public string ClassName { get; set; }
 
+        /// <summary>
+        /// Rinda, kurā klase tiek definēts failā
+        /// </summary>
         public uint Line { get; set; }
 
+
+        /// <summary>
+        /// Vai šī klase ir virsklase
+        /// </summary>
+        public bool isSuperClass { get; set; }
+        
         public Class()
         {
             _variables = new();
             _methods = new();
-            _superClasses = new();
-            _associations = new();
+            _associationEnds = new();
         }
     }
 }
