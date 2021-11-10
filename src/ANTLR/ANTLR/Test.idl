@@ -1,0 +1,28 @@
+class
+_Art_i123s
+{
+	Integer Vecums;
+
+	[URL("java:remote:MyPkg.MyJavaClass#myMethodName")]
+	Integer sum1(Integer a, Integer b, Integer c);
+
+	[URL("java:remote:MyPkg.MyJavaClass#myMethodName")]
+	String sum2(Integer a);
+
+	[URL("java:remote:MyPkg.MyJavaClass#myMethodName")]
+	[classPath("directoryPath1")]
+	[classPath("directoryPath2")]
+	Boolean sum3();
+
+	[URL("dotnet:local:dllName#namespaceName.className.methodName")]
+	Integer sum4();
+}
+
+class Raivis : _Art_i123s
+{
+	[URL("java:local:MyPkg.MyJavaClass#myMethodName")]
+	Integer sum1(Integer a, Integer b, Integer c);
+}
+
+association(source1 : _Art_i123s <->target1 : Raivis)
+association(person : Raivis <>- account : _Art_i123s)
