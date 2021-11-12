@@ -20,7 +20,6 @@ namespace AntlrCSharp
 		private List<string> URLProtocols = new() { "java", "dotnet" }; // Saraksts ar URL Valodu protokoliem
 		private List<string> URLlocations = new() { "local", "remote"}; // Saraksts ar URL lokāciju vērtībām
 
-
 		/// <summary>
 		/// Kļūdainie mezgli (apstrādā visas pārējās kļūdas)
 		/// </summary>

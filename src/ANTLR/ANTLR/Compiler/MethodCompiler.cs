@@ -105,24 +105,15 @@ namespace AntlrCSharp
 										found = true;
 									}
 								}
-								if (found == false) 
-								{
-									_class._methods.Add(_method);
-								}
+								if (found == false) { _class._methods.Add(_method); }
 							}
 							else { Errors.Add("At line " + context.Start.Line + ": Method " + _method.Name + ", that exists in superclass " + sc.ClassName + " does not have equal amount of arguments!"); }
 						}
 					}
 				}
-				else
-				{
-					_class._methods.Add(_method);
-				}
+				else { _class._methods.Add(_method); }
 			}
-			else 
-			{
-				_class._methods.Add(_method);
-			}
+			else { _class._methods.Add(_method); }
 			return null;
 		}
 
@@ -165,7 +156,6 @@ namespace AntlrCSharp
 			}
 			else
 			{
-				bool found = false;
 				// Pārbauda, vai metodes vārds sakrīt ar rezervētajiem vārdiem
 				foreach (var r in Reserved)
 				{
@@ -173,86 +163,71 @@ namespace AntlrCSharp
 					{
 						Errors.Add("At line " + context.Start.Line + ": A method cannot be named '" + r + "'!");
 						_method.Name = " ";
-						found = true;
-						break;
+						return null;
 					}
 				}
-				if (found == false)
+
+				// Pārbauda, vai metodes vārds atkārtojas klasē starp citām metodēm
+				foreach (var m in _class._methods)
 				{
-					// Pārbauda, vai metodes vārds atkārtojas klasē starp citām metodēm
-					foreach (var m in _class._methods)
+					if (m.Name == context.GetText())
 					{
-						if (m.Name == context.GetText())
-						{
-							Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists! Check line " + m.Line + "!");
-							_method.Name = " ";
-							found = true;
-							break;
-						}
-					}
-					if (found == false)
-					{
-						// Pārbauda, vai metodes vārds atkārtojas klasē starp mainīgajiem
-						foreach (var v in _class._variables)
-						{
-							if (v.Name == context.GetText())
-							{
-								Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists! Check line " + v.Line + "!");
-								_method.Name = " ";
-								found = true;
-								break;
-							}
-						}
-						if (found == false) 
-						{
-							// Pārbauda, vai metodes vārds atkārtojas klasē starp asociācijām
-							foreach (var ae in _class._associationEnds)
-							{
-								if (ae.RoleName == context.GetText())
-								{
-									Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class! Check line " + Associations[(int)ae.ID].Line + "!");
-									_variable.Name = " ";
-									found = true;
-									break;
-								}
-							}
-							if (found == false)
-							{
-								// Pārbauda, vai klasei ir virsklase, kuru pārbaudīt
-								if (_class.SuperClass != null)
-								{
-									// Pārbauda, vai metodes vārds atkārtojas virsklasē starp mainīgajiem
-									foreach (var v in _class.SuperClass._variables)
-									{
-										if (v.Name == context.GetText())
-										{
-											Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in super class! Check line " + v.Line + "!");
-											_variable.Name = " ";
-											found = true;
-											break;
-										}
-									}
-									if (found == false)
-									{
-										// Pārbauda, vai metodes vārds atkārtojas virsklasē starp asociācijām
-										foreach (var ae in _class.SuperClass._associationEnds)
-										{
-											if (ae.RoleName == context.GetText())
-											{
-												Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in super class! Check line " + Associations[(int)ae.ID].Line + "!");
-												_variable.Name = " ";
-												found = true;
-												break;
-											}
-										}
-										if (found == false) { _method.Name = context.GetText(); }
-									}
-								}
-								else { _method.Name = context.GetText(); }
-							}
-						}
+						Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists! Check line " + m.Line + "!");
+						_method.Name = " ";
+						return null;
 					}
 				}
+
+				// Pārbauda, vai metodes vārds atkārtojas klasē starp mainīgajiem
+				foreach (var v in _class._variables)
+				{
+					if (v.Name == context.GetText())
+					{
+						Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists! Check line " + v.Line + "!");
+						_method.Name = " ";
+						return null;
+					}
+				}
+
+				// Pārbauda, vai metodes vārds atkārtojas klasē starp asociācijām
+				foreach (var ae in _class._associationEnds)
+				{
+					if (ae.RoleName == context.GetText())
+					{
+						Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class! Check line " + Associations[(int)ae.ID].Line + "!");
+						_variable.Name = " ";
+						return null;
+					}
+				}
+
+				// Pārbauda, vai klasei ir virsklase, kuru pārbaudīt
+				if (_class.SuperClass != null)
+				{
+					// Pārbauda, vai metodes vārds atkārtojas virsklasē starp mainīgajiem
+					foreach (var v in _class.SuperClass._variables)
+					{
+						if (v.Name == context.GetText())
+						{
+							Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in super class! Check line " + v.Line + "!");
+							_variable.Name = " ";
+							return null;
+						}
+					}
+
+					// Pārbauda, vai metodes vārds atkārtojas virsklasē starp asociācijām
+					foreach (var ae in _class.SuperClass._associationEnds)
+					{
+						if (ae.RoleName == context.GetText())
+						{
+							Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in super class! Check line " + Associations[(int)ae.ID].Line + "!");
+							_variable.Name = " ";
+							return null;
+						}
+					}
+					
+					_method.Name = context.GetText();
+				}
+				else { _method.Name = context.GetText(); }
 			}
 			return null;
 		}

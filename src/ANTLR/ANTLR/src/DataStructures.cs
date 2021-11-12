@@ -252,7 +252,6 @@ namespace AntlrCSharp
         /// </summary>
         public uint Line { get; set; }
 
-
         /// <summary>
         /// Vai šī klase ir virsklase
         /// </summary>
