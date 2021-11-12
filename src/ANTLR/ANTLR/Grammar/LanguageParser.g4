@@ -1,6 +1,5 @@
 ﻿parser grammar LanguageParser;	/// Parsera gramatikas nosaukums
 
-
 options 
 { 
 	tokenVocab=LanguageLexer; /// Norādam, ka vēl tiks izmantota gramatika ar nosaukumu LanguageLexer
@@ -41,14 +40,18 @@ fieldName:					NAME | BLOCKTYPE;
 
 
 /// Anotaciju likumi
-annotation:					SQUAREOPEN annotationType? BRACKETOPEN? startQuote? annotationDefinition endQuote? BRACKETCLOSE? SQUARECLOSE;
-annotationDefinition:		urlAttributes? annotationAttributes;
-annotationAttributes:		(annotationData | COLON | SEMICOLON | COMA | DOT | HASH)*;
+annotation:					SQUAREOPEN annotationContent? SQUARECLOSE;
+annotationContent:			(annotationType? annotationBody | annotationType annotationBody? );
+annotationBody:				BRACKETOPEN annotationDefinition BRACKETCLOSE;			
+annotationDefinition:		startQuote? annotationValue? endQuote?;
+annotationValue:			urlAttributes? annotationAttributes;
+annotationAttributes:		(annotationData | annotationSeperator)+;
 
 urlAttributes:				protocol? COLON location? COLON;
 
 annotationData:				ANYTHING | NAME | PROTECTION | BLOCKTYPE | DATATYPE;
 annotationType:				NAME | PROTECTION | BLOCKTYPE | DATATYPE;
+annotationSeperator:		COLON | SEMICOLON | COMA | DOT | HASH;
 protocol:					NAME | PROTECTION | BLOCKTYPE | DATATYPE;
 location:					NAME | PROTECTION | BLOCKTYPE | DATATYPE;
 startQuote:					QUOTE;

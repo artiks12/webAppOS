@@ -295,6 +295,32 @@ public partial class LanguageParserBaseListener : ILanguageParserListener {
 	public virtual void ExitAnnotation([NotNull] LanguageParser.AnnotationContext context) { }
 
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="LanguageParser.annotationContent"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAnnotationContent([NotNull] LanguageParser.AnnotationContentContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="LanguageParser.annotationContent"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAnnotationContent([NotNull] LanguageParser.AnnotationContentContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="LanguageParser.annotationBody"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAnnotationBody([NotNull] LanguageParser.AnnotationBodyContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="LanguageParser.annotationBody"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAnnotationBody([NotNull] LanguageParser.AnnotationBodyContext context) { }
+
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="LanguageParser.annotationDefinition"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -306,6 +332,19 @@ public partial class LanguageParserBaseListener : ILanguageParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAnnotationDefinition([NotNull] LanguageParser.AnnotationDefinitionContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="LanguageParser.annotationValue"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAnnotationValue([NotNull] LanguageParser.AnnotationValueContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="LanguageParser.annotationValue"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAnnotationValue([NotNull] LanguageParser.AnnotationValueContext context) { }
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="LanguageParser.annotationAttributes"/>.
@@ -358,6 +397,19 @@ public partial class LanguageParserBaseListener : ILanguageParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAnnotationType([NotNull] LanguageParser.AnnotationTypeContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="LanguageParser.annotationSeperator"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAnnotationSeperator([NotNull] LanguageParser.AnnotationSeperatorContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="LanguageParser.annotationSeperator"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAnnotationSeperator([NotNull] LanguageParser.AnnotationSeperatorContext context) { }
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="LanguageParser.protocol"/>.

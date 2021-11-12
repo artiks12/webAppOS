@@ -1,6 +1,6 @@
 using WebAppOS;
 
-namespace test
+namespace Test
 {
     class _Art_i123s
     {

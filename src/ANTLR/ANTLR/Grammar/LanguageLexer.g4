@@ -1,6 +1,5 @@
 ﻿lexer grammar LanguageLexer;
 
-
 /// Iekavas
 CURLYOPEN:			'{';
 CURLYCLOSE:			'}';
@@ -8,7 +7,6 @@ BRACKETOPEN:		'(';
 BRACKETCLOSE:		')';
 SQUAREOPEN:			'[';
 SQUARECLOSE:		']';
-
 
 /// Citi simboli
 SEMICOLON:				';';
@@ -19,12 +17,10 @@ COMA:					',';
 HASH:					'#';
 ARROWS:					'<' ('-')+ '>' | '<>' ('-')+;
 
-
 /// Atslēgvārdi
 PROTECTION:				'public' | 'private';
 BLOCKTYPE:				'class' | 'association';
 DATATYPE:				'Integer' | 'String' | 'Boolean' | 'Real';
-
 
 /// Dažādi
 NAME:					[_a-zA-Z]+[_a-zA-Z0-9]*; /// Identifikatori

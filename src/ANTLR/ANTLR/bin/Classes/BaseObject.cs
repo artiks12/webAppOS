@@ -1,6 +1,6 @@
 using WebAppOS;
 
-namespace test
+namespace Test
 {
     public class BaseObject
     {

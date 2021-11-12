@@ -31,6 +31,24 @@ namespace AntlrCSharp
             if (context.SQUAREOPEN() == null) { Errors.Add("At line " + line + ": Syntax error! Missing '['!"); }
             else { line = (uint)context.SQUAREOPEN().Symbol.Line; }
 
+            // Pārbauda, vai anotācijai ir saturs
+            if (context.annotationContent() == null) { Errors.Add("At line " + line + ": Missing annotation content!"); }
+            else 
+            {
+                line = (uint)context.annotationContent().Stop.Line;
+                VisitAnnotationContent(context.annotationContent());
+            }
+
+            // Pārbauda, vai ir aizverošā kvadrātiekava
+            if (context.SQUARECLOSE() == null) { Errors.Add("At line " + line + ": Syntax error! Missing ']'!"); }
+
+            return null;
+        }
+
+        public override object VisitAnnotationContent([NotNull] AnnotationContentContext context)
+        {
+            uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+
             // Parbauda, vai ir anotācijas tips
             if (context.annotationType() == null) { Errors.Add("At line " + line + ": Missing annotation type!"); }
             else
@@ -39,32 +57,87 @@ namespace AntlrCSharp
                 line = (uint)context.annotationType().Stop.Line;
             }
 
+            // Pārbauda, vai anotācijas saturam ir ķermenis
+            if (context.annotationBody() == null) { Errors.Add("At line " + line + ": Missing annotation body!"); }
+            else { VisitAnnotationBody(context.annotationBody()); }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Apstaigā anotācijas ķermeni
+        /// </summary>
+        public override object VisitAnnotationBody([NotNull] AnnotationBodyContext context)
+        {
+            uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+
             // Pārbauda, vai ir atverošā apaļā iekava
             if (context.BRACKETOPEN() == null) { Errors.Add("At line " + line + ": Syntax error! Missing '('!"); }
             else { line = (uint)context.BRACKETOPEN().Symbol.Line; }
+
+            // Pārbauda, vai anotācijas ķermenī ir definīcija
+            if (context.annotationDefinition() == null) { Errors.Add("At line " + line + ": Missing annotation definition!"); }
+            else 
+            {
+                line = (uint)context.BRACKETOPEN().Symbol.Line;
+                VisitAnnotationDefinition(context.annotationDefinition());
+            }
+
+            // Pārbauda, vai ir aizverošā apaļā iekava
+            if (context.BRACKETCLOSE() == null) { Errors.Add("At line " + line + ": Syntax error! Missing ')'!"); }
+            
+            return null;
+        }
+
+        /// <summary>
+        /// Apstaigā anotācijas definīciju
+        /// </summary>
+        public override object VisitAnnotationDefinition([NotNull] AnnotationDefinitionContext context)
+        {
+            uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
             // Pārbauda, vai ir sākumpēdiņas
             if (context.startQuote() == null) { Errors.Add("At line " + line + ": Syntax error! Missing '\"'!"); }
             else { line = (uint)context.startQuote().Stop.Line; }
 
-            // Pārbauda, vai ir anotācijas definīcija
-            if (context.annotationDefinition() == null) { Errors.Add("At line " + line + ": Missing annotation definition!"); }
+            // Pārbauda, vai ir anotācijas vērtība
+            if (context.annotationValue() == null) { Errors.Add("At line " + line + ": Missing annotation definition!"); }
             else
             {
-                VisitAnnotationDefinition(context.annotationDefinition());
-                line = (uint)context.annotationDefinition().Stop.Line;
+                VisitAnnotationValue(context.annotationValue());
+                line = (uint)context.annotationValue().Stop.Line;
             }
 
             // Pārbauda, vai ir beigu pēdiņa
             if (context.endQuote() == null) { Errors.Add("At line " + line + ": Syntax error! Missing '\"'!"); }
-            else { line = (uint)context.endQuote().Stop.Line; }
 
-            // Pārbauda, vai ir aizverošā apaļā iekava
-            if (context.BRACKETCLOSE() == null) { Errors.Add("At line " + line + ": Syntax error! Missing ')'!"); }
-            else { line = (uint)context.BRACKETCLOSE().Symbol.Line; }
+            return null;
+        }
 
-            // Pārbauda, vai ir aizverošā kvadrātiekava
-            if (context.SQUARECLOSE() == null) { Errors.Add("At line " + line + ": Syntax error! Missing ']'!"); }
+        /// <summary>
+        /// Apstaigā anotācijas vērtību
+        /// </summary>
+        public override object VisitAnnotationValue([NotNull] AnnotationValueContext context)
+        {
+            // Pārbauda, vai pašreizējā anotācija ir URL
+            if (_isUrl == true)
+            {
+                // Pārbauda, vai metodei jau ir definēts URL
+                if (_urlFound == false)
+                {
+                    // Pārbauda, vai ir doti URL būtiskie attribūti
+                    if (context.urlAttributes() == null) { Errors.Add("At line " + context.Start.Line + ": URL attributes for method '" + _method.Name + "' are not given!"); }
+                    else
+                    {
+                        VisitChildren(context);
+                        _urlFound = true;
+                    }
+                }
+            }
+            else
+            {
+                _annotation.Definition = context.GetText();
+            }
 
             return null;
         }
@@ -100,34 +173,6 @@ namespace AntlrCSharp
                     }
                 }
             }
-            return null;
-        }
-
-        /// <summary>
-        /// Apstaigā anotācijas definīciju
-        /// </summary>
-        public override object VisitAnnotationDefinition([NotNull] AnnotationDefinitionContext context)
-        {
-            // Pārbauda, vai pašreizējā anotācija ir URL
-            if (_isUrl == true)
-            {
-                // Pārbauda, vai metodei jau ir definēts URL
-                if (_urlFound == false) 
-                {
-                    // Pārbauda, vai ir doti URL būtiskie attribūti
-                    if (context.urlAttributes() == null) { Errors.Add("At line " + context.Start.Line + ": URL attributes for method '" + _method.Name + "' are not given!"); }
-                    else
-                    {
-                        VisitChildren(context);
-                        _urlFound = true;
-                    }
-                }
-            }
-            else 
-            {
-                _annotation.Definition = context.GetText();
-            }
-
             return null;
         }
 

@@ -172,11 +172,32 @@ public interface ILanguageParserVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitAnnotation([NotNull] LanguageParser.AnnotationContext context);
 
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.annotationContent"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAnnotationContent([NotNull] LanguageParser.AnnotationContentContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.annotationBody"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAnnotationBody([NotNull] LanguageParser.AnnotationBodyContext context);
+
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.annotationDefinition"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitAnnotationDefinition([NotNull] LanguageParser.AnnotationDefinitionContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.annotationValue"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAnnotationValue([NotNull] LanguageParser.AnnotationValueContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.annotationAttributes"/>.
@@ -205,6 +226,13 @@ public interface ILanguageParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitAnnotationType([NotNull] LanguageParser.AnnotationTypeContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.annotationSeperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAnnotationSeperator([NotNull] LanguageParser.AnnotationSeperatorContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.protocol"/>.

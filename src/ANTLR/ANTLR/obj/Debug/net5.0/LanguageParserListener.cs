@@ -251,6 +251,28 @@ public interface ILanguageParserListener : IParseTreeListener {
 	void ExitAnnotation([NotNull] LanguageParser.AnnotationContext context);
 
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="LanguageParser.annotationContent"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAnnotationContent([NotNull] LanguageParser.AnnotationContentContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="LanguageParser.annotationContent"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAnnotationContent([NotNull] LanguageParser.AnnotationContentContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="LanguageParser.annotationBody"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAnnotationBody([NotNull] LanguageParser.AnnotationBodyContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="LanguageParser.annotationBody"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAnnotationBody([NotNull] LanguageParser.AnnotationBodyContext context);
+
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="LanguageParser.annotationDefinition"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -260,6 +282,17 @@ public interface ILanguageParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitAnnotationDefinition([NotNull] LanguageParser.AnnotationDefinitionContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="LanguageParser.annotationValue"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAnnotationValue([NotNull] LanguageParser.AnnotationValueContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="LanguageParser.annotationValue"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAnnotationValue([NotNull] LanguageParser.AnnotationValueContext context);
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="LanguageParser.annotationAttributes"/>.
@@ -304,6 +337,17 @@ public interface ILanguageParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitAnnotationType([NotNull] LanguageParser.AnnotationTypeContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="LanguageParser.annotationSeperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAnnotationSeperator([NotNull] LanguageParser.AnnotationSeperatorContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="LanguageParser.annotationSeperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAnnotationSeperator([NotNull] LanguageParser.AnnotationSeperatorContext context);
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="LanguageParser.protocol"/>.

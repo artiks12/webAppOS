@@ -1,6 +1,6 @@
 using WebAppOS;
 
-namespace test
+namespace Test
 {
     class Raivis : _Art_i123s
     {
