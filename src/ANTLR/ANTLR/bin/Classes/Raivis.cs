@@ -1,29 +1,19 @@
 using WebAppOS;
+using System.Text.Json;
 
-namespace Classes
+namespace Test
 {
     class Raivis : _Art_i123s
     {
-        public IWebMemory _wm;
-        public WebObject _object;
+        public Raivis ( IWebMemory wm , IWebCalls wc ) : base( _wm , _wc ) { }
 
-        public Raivis ( IWebMemory wm )
-        {
-            _wm = wm;
-            _object = null;
-        }
-
-        public Raivis ( IWebMemory wm, long rObject )
-        {
-            _wm = wm;
-            _object = new( rObject, wm );
-        }
+        public Raivis ( IWebMemory wm, IWebCalls wc , long rObject ) : base( _wm , _wc , rObject ) { }
 
         public List<_Art_i123s> source1
         {
             get
             {
-                var a = BaseObject.checkAssociation( "source1" , "target1" , "Raivis" , "Raivis" , "False" );
+                var a = checkAssociation( "source1" , "target1" , "Raivis" , "Raivis" , "False" );
                 var list = _object.LinkedObjects(a);
                 List<Raivis> result = _object.LinkedObjects(a);
                 foreach (var l in list)
@@ -34,7 +24,7 @@ namespace Classes
             }
             set
             {
-                var a = BaseObject.checkAssociation( "source1" , "target1" , "Raivis" , "Raivis" , "False");
+                var a = checkAssociation( "source1" , "target1" , "Raivis" , "Raivis" , "False");
                 var list = value;
                 List<WebObject> result = new();
                 foreach (var l in list)
@@ -48,7 +38,7 @@ namespace Classes
         {
             get
             {
-                var a = BaseObject.checkAssociation( "person" , "account" , "Raivis" , "_Art_i123s" , "True" );
+                var a = checkAssociation( "person" , "account" , "Raivis" , "_Art_i123s" , "True" );
                 var list = _object.LinkedObjects(a);
                 List<_Art_i123s> result = _object.LinkedObjects(a);
                 foreach (var l in list)
@@ -59,7 +49,7 @@ namespace Classes
             }
             set
             {
-                var a = BaseObject.checkAssociation( "person" , "account" , "Raivis" , "_Art_i123s" , "True");
+                var a = checkAssociation( "person" , "account" , "Raivis" , "_Art_i123s" , "True");
                 var list = value;
                 List<WebObject> result = new();
                 foreach (var l in list)
@@ -69,8 +59,10 @@ namespace Classes
             }
         }
 
-        public int sum1 ( )
+        public int sum1 ( int a , int b , int c )
         {
+            string json = JsonSerializer.Serialize( new { a , b , c } );
+            string result = wc.webCall( _wm , _object.getReference() , "sum1" , json );
             return 0;
         }
     }

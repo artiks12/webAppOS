@@ -1,10 +1,27 @@
 using WebAppOS;
 
-namespace Classes
+namespace Test
 {
     public class BaseObject
     {
-        public static void checkObject( string attributeName, string dataType, string className )
+        protected IWebMemory _wm;
+        protected IWebCalls _wc;
+        protected WebObject _object;
+
+        public BaseObject ( IWebMemory wm , IWebCalls wc )
+        {
+            _wm = wm;
+            _wc = wc;
+            _object = null;
+        }
+
+        public BaseObject ( IWebMemory wm , IWebCalls wc , long rObject )
+        {
+            _wc = wc;
+            _object = new( rObject, wm );
+        }
+
+        protected void checkObject( string attributeName, string dataType, string className )
         {
             var c = _wm.findClassByName( className );
             if (c == null)
@@ -22,7 +39,7 @@ namespace Classes
             }
         }
 
-        public static WebAssociationEnd checkAssociation( string associationNameSource, string associationNameTarget, string sourceClass, string targetClass )
+        protected WebAssociationEnd checkAssociation( string associationNameSource, string associationNameTarget, string sourceClass, string targetClass )
         {
             var cSource = _wm.findClassByName( sourceClass );
             if (cSource == null)

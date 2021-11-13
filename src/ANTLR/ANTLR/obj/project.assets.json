@@ -4267,11 +4267,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Artis\\source\\repos\\ANTLR\\ANTLR\\ANTLR.csproj",
+      "projectUniqueName": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\ANTLR\\ANTLR\\ANTLR.csproj",
       "projectName": "ANTLR",
-      "projectPath": "C:\\Users\\Artis\\source\\repos\\ANTLR\\ANTLR\\ANTLR.csproj",
+      "projectPath": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\ANTLR\\ANTLR\\ANTLR.csproj",
       "packagesPath": "C:\\Users\\Artis\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Artis\\source\\repos\\ANTLR\\ANTLR\\obj\\",
+      "outputPath": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\ANTLR\\ANTLR\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Program Files\\Visual Studio\\Shared\\NuGetPackages",

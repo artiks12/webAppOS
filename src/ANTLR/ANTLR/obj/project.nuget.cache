@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qh3D/zOfA+1iHbhDgbX1qQQuHTEL5p3Q5AMPwtQCyJeNBh6M413xRhQ7I4zas9n8x28HJoF1r0JMepau99ZJ0A==",
+  "dgSpecHash": "2pme7gL8jxx4QgDUEwuXub/zRzKeo7sxWWjOFImmDbCWb4XxbQcqPIigf6bEUnLz05geX+B7EP0k8usOFMTYrA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Artis\\source\\repos\\ANTLR\\ANTLR\\ANTLR.csproj",
+  "projectFilePath": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\ANTLR\\ANTLR\\ANTLR.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Artis\\.nuget\\packages\\antlr4\\4.6.6\\antlr4.4.6.6.nupkg.sha512",
     "C:\\Users\\Artis\\.nuget\\packages\\antlr4.codegenerator\\4.6.6\\antlr4.codegenerator.4.6.6.nupkg.sha512",

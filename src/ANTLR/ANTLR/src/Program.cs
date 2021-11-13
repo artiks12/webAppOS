@@ -33,21 +33,11 @@ namespace AntlrCSharp
             return false;
         }
 
-        public static int sum1(int a, string b) 
-        {
-            string json = JsonSerializer.Serialize( new { a, b }) ;
-            Console.WriteLine(json);
-            return 0;
-
-        }
-
         /// <summary>
         /// Palaišana pa tiešo
         /// </summary>
         private static void Main(string []args) 
         {
-            sum1(5, "Janis");
-            
             try
             {
                 // Iegūstam faila nosaukumu
