@@ -5,7 +5,7 @@ options
 	tokenVocab=LanguageLexer; /// Norādam, ka vēl tiks izmantota gramatika ar nosaukumu LanguageLexer
 }
 
-/// Sākuma punkts
+/// Sākuma shēma
 code:						blocks*;
 
 blocks:						(blockType? blockBody | blockType blockBody?);
@@ -14,40 +14,48 @@ blockBody:					webMemoryClass | association;
 blockType:					BLOCKTYPE;
 
 
-/// webMemoryClass likumi
+/// Asociacijas shēma
+association:				BRACKETOPEN associationDefinition BRACKETCLOSE;
+
+associationDefinition:		associationSource ARROWS? associationTarget;
+
+associationSource:			associationSourceName? COLON? associationSourceClass?; 
+associationTarget:			associationTargetName? COLON? associationTargetClass?;
+
+associationSourceName:		NAME | PROTECTION | DATATYPE | BLOCKTYPE;
+associationTargetName:		NAME | PROTECTION | DATATYPE | BLOCKTYPE;
+associationSourceClass:		NAME | PROTECTION | DATATYPE | BLOCKTYPE;
+associationTargetClass:		NAME | PROTECTION | DATATYPE | BLOCKTYPE;
+
+
+/// webMemoryClass shēma
 webMemoryClass:				(classHead classBody? | classHead? classBody);
 
 classHead:					(className superClass? | className? superClass);
-superClass:					COLON superClassName?;
 classBody:					CURLYOPEN fields* CURLYCLOSE;
+
+superClass:					COLON superClassName?;
+fields:						(field? SEMICOLON | field SEMICOLON?);
+
+field:						(annotation* fieldDefinition | annotation+ fieldDefinition?);
 
 className:					NAME | PROTECTION | DATATYPE;
 superClassName:				NAME | PROTECTION | DATATYPE;
 
 
-/// Lauku (mainīgo un funkciju) likumi
-fields:						(field? SEMICOLON | field SEMICOLON?);
-field:						(annotation* fieldDefinition | annotation+ fieldDefinition?);
-
-fieldDefinition:			(variableDefinition methodDefinition? | variableDefinition? methodDefinition);
-variableDefinition:			(fieldProtection? variable | fieldProtection variable?);
-variable:					(fieldDataType? fieldName | fieldDataType fieldName?);
-methodDefinition:			BRACKETOPEN arguments BRACKETCLOSE;
-
-fieldProtection:			PROTECTION;
-fieldDataType:				DATATYPE;
-fieldName:					NAME | BLOCKTYPE;
-
-
-/// Anotaciju likumi
+/// Anotacijas shēma
 annotation:					SQUAREOPEN annotationContent? SQUARECLOSE;
+
 annotationContent:			(annotationType? annotationBody | annotationType annotationBody? );
+
 annotationBody:				BRACKETOPEN annotationDefinition BRACKETCLOSE;			
+
 annotationDefinition:		startQuote? annotationValue? endQuote?;
+
 annotationValue:			urlAttributes? annotationAttributes;
-annotationAttributes:		(annotationData | annotationSeperator)+;
 
 urlAttributes:				protocol? COLON location? COLON;
+annotationAttributes:		(annotationData | annotationSeperator)+;
 
 annotationData:				ANYTHING | NAME | PROTECTION | BLOCKTYPE | DATATYPE;
 annotationType:				NAME | PROTECTION | BLOCKTYPE | DATATYPE;
@@ -58,23 +66,20 @@ startQuote:					QUOTE;
 endQuote:					QUOTE;
 
 
-/// Argumentu likumi
+/// Lauka definīcijas shēma
+fieldDefinition:			(variableDefinition methodDefinition? | variableDefinition? methodDefinition);
+
+variableDefinition:			(fieldProtection? variable | fieldProtection variable?);
+methodDefinition:			BRACKETOPEN arguments BRACKETCLOSE;
+
+variable:					(fieldDataType? fieldName | fieldDataType fieldName?);
 arguments:					(coma | argument)*;
+
 argument:					(argumentDataType? argumentName | argumentDataType argumentName?);
 
+fieldProtection:			PROTECTION;
+fieldDataType:				DATATYPE;
+fieldName:					NAME | BLOCKTYPE;
 argumentDataType:			DATATYPE;
 argumentName:				NAME | BLOCKTYPE | PROTECTION;
 coma:						COMA;
-
-
-/// Asociaciju likumi
-association:				BRACKETOPEN associationDefinition BRACKETCLOSE;
-associationDefinition:		associationSource ARROWS? associationTarget;
-associationSource:			associationSourceName? COLON? associationSourceClass?; 
-associationTarget:			associationTargetName? COLON? associationTargetClass?;
-
-
-associationSourceName:		NAME | PROTECTION | DATATYPE | BLOCKTYPE;
-associationTargetName:		NAME | PROTECTION | DATATYPE | BLOCKTYPE;
-associationSourceClass:		NAME | PROTECTION | DATATYPE | BLOCKTYPE;
-associationTargetClass:		NAME | PROTECTION | DATATYPE | BLOCKTYPE;

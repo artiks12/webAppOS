@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Users\Artis\source\repos\ANTLR\ANTLR\Grammar\LanguageLexer.g4 by ANTLR 4.6.6
+// Generated from C:\Users\Artis\Documents\GitHub\webAppOS\src\ANTLR\ANTLR\Grammar\LanguageLexer.g4 by ANTLR 4.6.6
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -26,6 +26,7 @@ using Antlr4.Runtime.Misc;
 using DFA = Antlr4.Runtime.Dfa.DFA;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
+[System.CLSCompliant(false)]
 public partial class LanguageLexer : Lexer {
 	public const int
 		CURLYOPEN=1, CURLYCLOSE=2, BRACKETOPEN=3, BRACKETCLOSE=4, SQUAREOPEN=5, 

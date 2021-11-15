@@ -61,8 +61,8 @@ namespace Test
 
         public int sum1 ( int a , int b , int c )
         {
-            string json = JsonSerializer.Serialize( new { a , b , c } );
-            string result = wc.webCall( _wm , _object.getReference() , "sum1" , json );
+            string s = JsonSerializer.Serialize( new { a , b , c } );
+            string result = wc.webCall( _wm , _object.getReference() , "sum1" , s );
             return 0;
         }
     }

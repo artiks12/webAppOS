@@ -75,29 +75,29 @@ namespace Test
 
         public int sum1 ( int a , int b , int c )
         {
-            string json = JsonSerializer.Serialize( new { a , b , c } );
-            string result = wc.webCall( _wm , _object.getReference() , "sum1" , json );
+            string s = JsonSerializer.Serialize( new { a , b , c } );
+            string result = wc.webCall( _wm , _object.getReference() , "sum1" , s );
             return 0;
         }
 
         public string sum2 ( int a )
         {
-            string json = JsonSerializer.Serialize( new { a } );
-            string result = wc.webCall( _wm , _object.getReference() , "sum2" , json );
+            string s = JsonSerializer.Serialize( new { a } );
+            string result = wc.webCall( _wm , _object.getReference() , "sum2" , s );
             return null;
         }
 
         public bool sum3 ( )
         {
-            string json = JsonSerializer.Serialize( new {  } );
-            string result = wc.webCall( _wm , _object.getReference() , "sum3" , json );
+            string s = JsonSerializer.Serialize( new {  } );
+            string result = wc.webCall( _wm , _object.getReference() , "sum3" , s );
             return false;
         }
 
         public int sum4 ( )
         {
-            string json = JsonSerializer.Serialize( new {  } );
-            string result = wc.webCall( _wm , _object.getReference() , "sum4" , json );
+            string s = JsonSerializer.Serialize( new {  } );
+            string result = wc.webCall( _wm , _object.getReference() , "sum4" , s );
             return 0;
         }
     }

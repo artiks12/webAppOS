@@ -269,8 +269,8 @@ namespace AntlrCSharp
 
                     // Ģenerē metodes "ķermeni"
                     sw.WriteLine("        {");
-                    sw.WriteLine("            string json = JsonSerializer.Serialize( new { " + argumentList(m._arguments) + " } );");
-                    sw.WriteLine("            string result = wc.webCall( _wm , _object.getReference() , \"" + m.Name + "\" , json );");
+                    sw.WriteLine("            string s = JsonSerializer.Serialize( new { " + argumentList(m._arguments) + " } );");
+                    sw.WriteLine("            string result = wc.webCall( _wm , _object.getReference() , \"" + m.Name + "\" , s );");
                     sw.WriteLine("            return " + m.ReturnValue + ";");
                     sw.WriteLine("        }");
                 }
