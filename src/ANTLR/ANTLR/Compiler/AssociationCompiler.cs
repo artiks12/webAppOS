@@ -37,6 +37,10 @@ namespace AntlrCSharp
 			_source.ID = (uint)Associations.Count;
 			_target.ID = (uint)Associations.Count;
 
+			// Saglabājam asociācijas galapunktiem faktu, vai tas ir avots
+			_source.IsSource = true;
+			_target.IsSource = false;
+
 			// Pievienojam asociāciju galapunktus klasēm
 			Classes[_sourceClass]._associationEnds.Add(_source);
 			Classes[_targetClass]._associationEnds.Add(_target);

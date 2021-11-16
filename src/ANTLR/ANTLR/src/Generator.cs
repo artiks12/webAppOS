@@ -22,9 +22,9 @@ namespace AntlrCSharp
             sw.WriteLine("    public class BaseObject");
             sw.WriteLine("    {");
 
-            // M,ainīgo generēšana
-            sw.WriteLine("        protected IWebMemory _wm;");
-            sw.WriteLine("        protected IWebCalls _wc;");
+            // Mainīgo generēšana
+            sw.WriteLine("        protected static IWebMemory _wm;");
+            sw.WriteLine("        protected static IWebCalls _wc;");
             sw.WriteLine("        protected WebObject _object;\n");
 
             generateConstructor(sw, "BaseObject", ref IsMade);
@@ -64,19 +64,19 @@ namespace AntlrCSharp
         {
             sw.WriteLine("        protected void checkObject( string attributeName, string dataType, string className )");
             sw.WriteLine("        {");
-            sw.WriteLine("            var c = _wm.findClassByName( className );");
+            sw.WriteLine("            var c = _wm.FindClassByName( className );");
             sw.WriteLine("            if (c == null)");
             sw.WriteLine("            {");
-            sw.WriteLine("                c = _wm.createClass( className );");
+            sw.WriteLine("                c = _wm.CreateClass( className );");
             sw.WriteLine("            }");
-            sw.WriteLine("            var a = c.findAttribute( attributeName );");
+            sw.WriteLine("            var a = c.FindAttribute( attributeName );");
             sw.WriteLine("            if (a == null)");
             sw.WriteLine("            {");
-            sw.WriteLine("                a = _wm.createAttribute( attributeName , dataType );");
+            sw.WriteLine("                a = c.CreateAttribute( attributeName , dataType );");
             sw.WriteLine("            }");
             sw.WriteLine("            if (_object == null)");
             sw.WriteLine("            {");
-            sw.WriteLine("                _object = c.createObject();");
+            sw.WriteLine("                _object = c.CreateObject();");
             sw.WriteLine("            }");
             sw.WriteLine("        }");
         }
@@ -87,22 +87,22 @@ namespace AntlrCSharp
         public static void generateCheckAssociation(StreamWriter sw)
         {
             sw.WriteLine("");
-            sw.WriteLine("        protected WebAssociationEnd checkAssociation( string associationNameSource, string associationNameTarget, string sourceClass, string targetClass )");
+            sw.WriteLine("        protected WebAssociationEnd checkAssociation( string associationNameSource, string associationNameTarget, string sourceClass, string targetClass, bool IsComposition )");
             sw.WriteLine("        {");
-            sw.WriteLine("            var cSource = _wm.findClassByName( sourceClass );");
+            sw.WriteLine("            var cSource = _wm.FindClassByName( sourceClass );");
             sw.WriteLine("            if (cSource == null)");
             sw.WriteLine("            {");
-            sw.WriteLine("                cSource = _wm.createClass( sourceClass );");
+            sw.WriteLine("                cSource = _wm.CreateClass( sourceClass );");
             sw.WriteLine("            }");
-            sw.WriteLine("            var cTarget = _wm.findClassByName( targetClass );");
+            sw.WriteLine("            var cTarget = _wm.FindClassByName( targetClass );");
             sw.WriteLine("            if (cTarget == null)");
             sw.WriteLine("            {");
-            sw.WriteLine("                cTarget = _wm.createClass( targetClass );");
+            sw.WriteLine("                cTarget = _wm.CreateClass( targetClass );");
             sw.WriteLine("            }");
-            sw.WriteLine("            var a = c.findAssociationEnd( associationNameTarget );");
+            sw.WriteLine("            var a = cSource.FindAssociationEnd( associationNameTarget );");
             sw.WriteLine("            if (a == null)");
             sw.WriteLine("            {");
-            sw.WriteLine("                a = _wm.createAssociationEnd( cSource , cTarget , associationNameSource , associationNameTarget );");
+            sw.WriteLine("                a = cSource.CreateAssociationEnd( cSource , cTarget , associationNameSource , associationNameTarget , IsComposition );");
             sw.WriteLine("            }");
             sw.WriteLine("            return a;");
             sw.WriteLine("        }");
@@ -129,10 +129,28 @@ namespace AntlrCSharp
         /// </summary>
         public static void generatePropertyGet(StreamWriter sw, Variable _variable, Class _class) 
         {
+            string conversion = "";
+
+            switch (_variable.Type) 
+            {
+                case "int":
+                    conversion = "Convert.ToInt32( _object[\"" + _variable.Name + "\"] )";
+                    break;
+                case "string":
+                    conversion = "_object[\"" + _variable.Name + "\"]";
+                    break;
+                case "bool":
+                    conversion = "Convert.ToBoolean( _object[\"" + _variable.Name + "\"] )";
+                    break;
+                case "double":
+                    conversion = "Convert.ToDouble( _object[\"" + _variable.Name + "\"] )";
+                    break;
+            }
+
             sw.WriteLine("            get");
             sw.WriteLine("            {");
             sw.WriteLine("                checkObject( " + "\"" + _variable.Name + "\" , \"" + _variable.primitiveType + "\" , \"" + _class.ClassName + "\" );");
-            sw.WriteLine("                return _object[\"" + _variable.Name + "\"];");
+            sw.WriteLine("                return " + conversion + ";");
             sw.WriteLine("            }");
         }
 
@@ -178,16 +196,40 @@ namespace AntlrCSharp
         /// <summary>
         /// Metode, kas ģenerē asociācijām "get" funkciju
         /// </summary>
-        public static void generateAssociationGet(StreamWriter sw, Association _association, Class _class)
+        public static void generateAssociationGet(StreamWriter sw, Association _association, AssociationEnd a)
         {
+            string sourceName;
+            string targetName;
+            string sourceClass;
+            string targetClass;
+            string IsComposition;
+
+            if (a.IsSource == true)
+            {
+                sourceName = _association.SourceName;
+                targetName = _association.TargetName;
+                sourceClass = _association.SourceClass;
+                targetClass = _association.TargetClass;
+            }
+            else
+            {
+                sourceName = _association.TargetName;
+                targetName = _association.SourceName;
+                sourceClass = _association.TargetClass;
+                targetClass = _association.SourceClass;
+            }
+
+            if (_association.IsComposition == true) { IsComposition = "true"; }
+            else { IsComposition = "false"; }
+
             sw.WriteLine("            get");
             sw.WriteLine("            {");
-            sw.WriteLine("                var a = checkAssociation( " + "\"" + _association.SourceName + "\" , \"" + _association.TargetName + "\" , \"" + _class.ClassName + "\" , \"" + _association.TargetClass + "\" , \"" + _association.IsComposition + "\" );");
+            sw.WriteLine("                var a = checkAssociation( " + "\"" + sourceName + "\" , \"" + targetName + "\" , \"" + sourceClass + "\" , \"" + targetClass + "\" , " + IsComposition + ");");
             sw.WriteLine("                var list = _object.LinkedObjects(a);");
-            sw.WriteLine("                List<" + _association.TargetClass + "> result = _object.LinkedObjects(a);");
+            sw.WriteLine("                List<" + targetClass + "> result = new();");
             sw.WriteLine("                foreach (var l in list)");
             sw.WriteLine("                {");
-            sw.WriteLine("                    result.add( new " + _association.TargetClass + "( _vm , l.getReference() ));");
+            sw.WriteLine("                    result.Add( new " + targetClass + "( _wm , _wc , l.GetReference() ));");
             sw.WriteLine("                }");
             sw.WriteLine("                return result;");
             sw.WriteLine("            }");
@@ -196,16 +238,40 @@ namespace AntlrCSharp
         /// <summary>
         /// Metode, kas ģenerē asociācijām "set" funkciju
         /// </summary>
-        public static void generateAssociationSet(StreamWriter sw, Association _association, Class _class)
+        public static void generateAssociationSet(StreamWriter sw, Association _association, AssociationEnd a)
         {
+            string sourceName;
+            string targetName;
+            string sourceClass;
+            string targetClass;
+            string IsComposition;
+
+            if (a.IsSource == true) 
+            {
+                sourceName = _association.SourceName;
+                targetName = _association.TargetName;
+                sourceClass = _association.SourceClass;
+                targetClass = _association.TargetClass;
+            }
+            else
+            {
+                sourceName = _association.TargetName;
+                targetName = _association.SourceName;
+                sourceClass = _association.TargetClass;
+                targetClass = _association.SourceClass;
+            }
+
+            if (_association.IsComposition == true) { IsComposition = "true"; }
+            else { IsComposition = "false"; }
+
             sw.WriteLine("            set");
             sw.WriteLine("            {");
-            sw.WriteLine("                var a = checkAssociation( " + "\"" + _association.SourceName + "\" , \"" + _association.TargetName + "\" , \"" + _class.ClassName + "\" , \"" + _association.TargetClass + "\" , \"" + _association.IsComposition + "\");");
+            sw.WriteLine("                var a = checkAssociation( " + "\"" + sourceName + "\" , \"" + targetName + "\" , \"" + sourceClass + "\" , \"" + targetClass + "\" , " + IsComposition + ");");
             sw.WriteLine("                var list = value;");
             sw.WriteLine("                List<WebObject> result = new();");
             sw.WriteLine("                foreach (var l in list)");
             sw.WriteLine("                {");
-            sw.WriteLine("                    result.add( l._object );");
+            sw.WriteLine("                    result.Add( l._object );");
             sw.WriteLine("                }");
             sw.WriteLine("            }");
         }
@@ -228,8 +294,8 @@ namespace AntlrCSharp
 
                     // Ģenerē metodes "ķermeni"
                     sw.WriteLine("        {");
-                    generateAssociationGet(sw, compiler.Associations[(int)a.ID], _class); // funkcijas "get" ģenerēšana
-                    generateAssociationSet(sw, compiler.Associations[(int)a.ID], _class); // funkcijas "set" ģenerēšana
+                    generateAssociationGet(sw, compiler.Associations[(int)a.ID], a); // funkcijas "get" ģenerēšana
+                    generateAssociationSet(sw, compiler.Associations[(int)a.ID], a); // funkcijas "set" ģenerēšana
                     sw.Write("        }\n");
                 }
             }
@@ -270,7 +336,7 @@ namespace AntlrCSharp
                     // Ģenerē metodes "ķermeni"
                     sw.WriteLine("        {");
                     sw.WriteLine("            string s = JsonSerializer.Serialize( new { " + argumentList(m._arguments) + " } );");
-                    sw.WriteLine("            string result = wc.webCall( _wm , _object.getReference() , \"" + m.Name + "\" , s );");
+                    sw.WriteLine("            string result = _wc.WebCall( _wm , _object.GetReference() , \"" + m.Name + "\" , s );");
                     sw.WriteLine("            return " + m.ReturnValue + ";");
                     sw.WriteLine("        }");
                 }
@@ -292,8 +358,8 @@ namespace AntlrCSharp
             // Ģenerē klases "ķermeni"
             sw.WriteLine("    {");
 
-            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IWebCalls wc ) : base( _wm , _wc ) { }\n");
-            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm, IWebCalls wc , long rObject ) : base( _wm , _wc , rObject ) { }");
+            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IWebCalls wc ) : base( wm , wc ) { }\n");
+            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm, IWebCalls wc , long rObject ) : base( wm , wc , rObject ) { }");
 
             generateProperties(sw,_class,ref IsMade); // Īpašību ģenerēšana
             generateAssociations(sw, _class, ref IsMade); // Asociāciju ģenerēsana
@@ -344,7 +410,9 @@ namespace AntlrCSharp
                 using (StreamWriter sw = new StreamWriter(filename))
                 {
                     sw.WriteLine("using WebAppOS;");
-                    sw.WriteLine("using System.Text.Json;\n");
+                    sw.WriteLine("using System.Text.Json;");
+                    sw.WriteLine("using System;");
+                    sw.WriteLine("using System.Collections.Generic;\n");
                     sw.WriteLine("namespace " + _namespace);
                     sw.WriteLine("{");
                     generateClass(sw, _class);
