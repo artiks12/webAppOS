@@ -138,6 +138,8 @@ namespace AntlrCSharp
 
 			_method.Type = context.GetText();
 
+			if (_method.Type == null) { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a valid data type!"); }
+			
 			return null;
 		}
 

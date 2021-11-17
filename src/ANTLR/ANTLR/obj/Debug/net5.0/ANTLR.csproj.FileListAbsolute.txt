@@ -46,3 +46,4 @@ C:\Users\Artis\Documents\GitHub\webAppOS\src\ANTLR\ANTLR\obj\Debug\net5.0\Langua
 C:\Users\Artis\Documents\GitHub\webAppOS\src\ANTLR\ANTLR\obj\Debug\net5.0\LanguageParserBaseListener.cs
 C:\Users\Artis\Documents\GitHub\webAppOS\src\ANTLR\ANTLR\obj\Debug\net5.0\LanguageParserVisitor.cs
 C:\Users\Artis\Documents\GitHub\webAppOS\src\ANTLR\ANTLR\obj\Debug\net5.0\LanguageParserBaseVisitor.cs
+C:\Users\Artis\Documents\GitHub\webAppOS\src\ANTLR\ANTLR\obj\Debug\net5.0\ANTLR.csproj.CopyComplete

@@ -11,7 +11,7 @@ code:						blocks*;
 blocks:						(blockType? blockBody | blockType blockBody?);
 blockBody:					webMemoryClass | association;
 
-blockType:					BLOCKTYPE;
+blockType:					BLOCKTYPE | PROTECTION | DATATYPE;
 
 
 /// Asociacijas shēma
@@ -39,8 +39,8 @@ fields:						(field? SEMICOLON | field SEMICOLON?);
 
 field:						(annotation* fieldDefinition | annotation+ fieldDefinition?);
 
-className:					NAME | PROTECTION | DATATYPE;
-superClassName:				NAME | PROTECTION | DATATYPE;
+className:					NAME;
+superClassName:				NAME;
 
 
 /// Anotacijas shēma
@@ -78,8 +78,8 @@ arguments:					(coma | argument)*;
 argument:					(argumentDataType? argumentName | argumentDataType argumentName?);
 
 fieldProtection:			PROTECTION;
-fieldDataType:				DATATYPE;
-fieldName:					NAME | BLOCKTYPE;
-argumentDataType:			DATATYPE;
-argumentName:				NAME | BLOCKTYPE | PROTECTION;
+fieldDataType:				DATATYPE | BLOCKTYPE;
+fieldName:					NAME;
+argumentDataType:			DATATYPE | BLOCKTYPE | PROTECTION;
+argumentName:				NAME;
 coma:						COMA;

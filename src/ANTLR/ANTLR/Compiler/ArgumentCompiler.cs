@@ -95,6 +95,8 @@ namespace AntlrCSharp
 			
 			_argument.Type = context.GetText();
 
+			if (_argument.Type == null) { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a valid data type!"); }
+
 			return VisitChildren(context);
 		}
 

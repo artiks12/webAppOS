@@ -81,7 +81,7 @@ namespace AntlrCSharp
 						if (context.blockBody().webMemoryClass() == null) { Errors.Add("At line " + line + ": class definition is given as association definition!"); }
 						else { VisitBlockBody(context.blockBody()); }
 					}
-					else 
+					else if (context.blockType().GetText() == "association")
 					{
 						if (context.blockBody().association() == null) { Errors.Add("At line " + line + ": association definition is given as class definition!"); }
 						else { VisitBlockBody(context.blockBody()); }
@@ -93,8 +93,20 @@ namespace AntlrCSharp
         }
 
 		/// <summary>
-		/// Kompilēšanas pamtfunkcija
+		/// Apstaigā bloka tipu
 		/// </summary>
-		public void Compile(LanguageParser.CodeContext context) { Visit(context); }
+		/// <param name="context"></param>
+		/// <returns></returns>
+        public override object VisitBlockType([NotNull] BlockTypeContext context)
+        {
+			if (context.BLOCKTYPE() == null) { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a block type! Use 'class' or 'association' instead!"); }
+            
+			return null;
+        }
+
+        /// <summary>
+        /// Kompilēšanas pamtfunkcija
+        /// </summary>
+        public void Compile(LanguageParser.CodeContext context) { Visit(context); }
 	}
 }
