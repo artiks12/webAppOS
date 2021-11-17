@@ -394,7 +394,7 @@ namespace AntlrCSharp
             }
 
             // Ģenerē klases "BaseObject" kodu
-            using (StreamWriter sw = new StreamWriter("bin/Classes/BaseObject.cs"))
+            using (StreamWriter sw = new StreamWriter("Classes/BaseObject.cs"))
             {
                 sw.WriteLine("using WebAppOS;\n");
                 sw.WriteLine("namespace " + _namespace);
@@ -406,7 +406,7 @@ namespace AntlrCSharp
             // Ģenerē kodu visām klasēm.
             foreach (var _class in compiler.Classes)
             {
-                string filename = "bin/Classes/" + _class.ClassName + ".cs";
+                string filename = "Classes/" + _class.ClassName + ".cs";
                 using (StreamWriter sw = new StreamWriter(filename))
                 {
                     sw.WriteLine("using WebAppOS;");
