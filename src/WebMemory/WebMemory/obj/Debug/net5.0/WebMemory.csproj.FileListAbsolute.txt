@@ -1,0 +1,12 @@
+C:\Users\Artis\source\repos\WebMemory\WebMemory\bin\Debug\net5.0\WebMemory.deps.json
+C:\Users\Artis\source\repos\WebMemory\WebMemory\bin\Debug\net5.0\WebMemory.dll
+C:\Users\Artis\source\repos\WebMemory\WebMemory\bin\Debug\net5.0\ref\WebMemory.dll
+C:\Users\Artis\source\repos\WebMemory\WebMemory\bin\Debug\net5.0\WebMemory.pdb
+C:\Users\Artis\source\repos\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.csproj.AssemblyReference.cache
+C:\Users\Artis\source\repos\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Artis\source\repos\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.AssemblyInfoInputs.cache
+C:\Users\Artis\source\repos\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.AssemblyInfo.cs
+C:\Users\Artis\source\repos\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.csproj.CoreCompileInputs.cache
+C:\Users\Artis\source\repos\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.dll
+C:\Users\Artis\source\repos\WebMemory\WebMemory\obj\Debug\net5.0\ref\WebMemory.dll
+C:\Users\Artis\source\repos\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.pdb

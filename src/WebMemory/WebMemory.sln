@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebMemory", "WebMemory\WebMemory.csproj", "{2FC6FE90-7C7D-46CD-BCB3-652B48505CB0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FC6FE90-7C7D-46CD-BCB3-652B48505CB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FC6FE90-7C7D-46CD-BCB3-652B48505CB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FC6FE90-7C7D-46CD-BCB3-652B48505CB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FC6FE90-7C7D-46CD-BCB3-652B48505CB0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {484B6E12-FE65-482D-97F8-8E0EB521BCC1}
+	EndGlobalSection
+EndGlobal
