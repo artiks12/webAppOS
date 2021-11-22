@@ -13,18 +13,16 @@ namespace TestProgram
 
             DirWebMemory memory = new();
             WebCalls calls = new();
-            memory.Open("ar:D:/sample");
+            memory.Open("ar:C:/sample");
 
-            Artis temp = new(memory, calls);
-
-            temp.Vecums = 21;
-            temp.Vards = "Artis Paunins";
-            temp.IrStudents = true;
-            temp.Nauda = 222.99;
-
-            Console.WriteLine(temp.Vecums + " " + temp.Vards + " " + temp.IrStudents + " " + temp.Nauda);
+            BaseObject temp = new(memory, calls);
 
             Artis temp1 = new(memory, calls);
+
+            foreach (var c in memory.Classes())
+            {
+                Console.WriteLine(c.Name);
+            }
 
             temp1.Vecums = 25;
             temp1.Vards = "Raivis Paunins";

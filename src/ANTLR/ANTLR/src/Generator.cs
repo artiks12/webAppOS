@@ -27,18 +27,18 @@ namespace AntlrCSharp
             sw.WriteLine("        protected static IWebCalls _wc;");
             sw.WriteLine("        protected WebObject _object;\n");
 
-            generateConstructor(sw, "BaseObject", ref IsMade);
+            generateBaseConstructor(sw, "BaseObject", ref IsMade);
 
             // Ģenerē "BaseObject" "ķermeni"
-            generateCheckObject(sw); // Funkcijas "CheckObject" ģenerēšana
+            generateCheckClass(sw); // Funkcijas "CheckObject" ģenerēšana
             generateCheckAssociation(sw); // Funkcijas "CheckAssociation" ģenerēšana
             sw.WriteLine("    }");
         }
 
         /// <summary>
-        /// Metode, kas ģenerē konstruktorus
+        /// Metode, kas ģenerē konstruktoru bāzes klasei
         /// </summary>
-        public static void generateConstructor(StreamWriter sw, string className, ref bool IsMade) 
+        public static void generateBaseConstructor(StreamWriter sw, string className, ref bool IsMade) 
         {
             if (IsMade == true) { sw.WriteLine(""); }
             else { IsMade = true; }
@@ -52,31 +52,62 @@ namespace AntlrCSharp
 
             sw.WriteLine("        public " + className + " ( IWebMemory wm , IWebCalls wc , long rObject )");
             sw.WriteLine("        {");
+            sw.WriteLine("            _wm = wm;");
             sw.WriteLine("            _wc = wc;");
             sw.WriteLine("            _object = new( rObject, wm );");
             sw.WriteLine("        }\n");
         }
 
         /// <summary>
+        /// Metode, kas ģenerē konstruktorus ģenerējamajām klasēm
+        /// </summary>
+        public static void generateConstructor(StreamWriter sw, Class _class, ref bool IsMade)
+        {
+            if (IsMade == true) { sw.WriteLine(""); }
+            else { IsMade = true; }
+
+            string list = "";
+            foreach (var v in _class._variables) 
+            {
+                if (list == "") { list += "\"" + v.Name + "\" , \"" + v.primitiveType + "\""; }
+                else { list += " , \"" + v.Name + "\" , \"" + v.primitiveType + "\""; }
+            }
+
+            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IWebCalls wc ) : base( wm , wc )");
+            sw.WriteLine("        {");
+            sw.WriteLine("            List<string> attributes = new() { " + list + " };");
+            sw.WriteLine("            checkClass( attributes , \"" + _class.ClassName + "\" );");
+            sw.WriteLine("        }\n");
+
+            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm, IWebCalls wc , long rObject ) : base( wm , wc , rObject )");
+            sw.WriteLine("        {");
+            sw.WriteLine("            List<string> attributes = new() { " + list + " };");
+            sw.WriteLine("            checkClass( attributes , \"" + _class.ClassName + "\" );");
+            sw.WriteLine("        }\n");
+        }
+
+        /// <summary>
         /// Metode, kas ģenerē metodi "CheckObject"
         /// </summary>
-        public static void generateCheckObject(StreamWriter sw) 
+        public static void generateCheckClass(StreamWriter sw) 
         {
-            sw.WriteLine("        protected void checkObject( string attributeName, string dataType, string className )");
+            sw.WriteLine("        protected void checkClass( List<string> attributes , string className )");
             sw.WriteLine("        {");
             sw.WriteLine("            var c = _wm.FindClassByName( className );");
             sw.WriteLine("            if (c == null)");
             sw.WriteLine("            {");
             sw.WriteLine("                c = _wm.CreateClass( className );");
             sw.WriteLine("            }");
-            sw.WriteLine("            var a = c.FindAttribute( attributeName );");
-            sw.WriteLine("            if (a == null)");
+            sw.WriteLine("            else");
             sw.WriteLine("            {");
-            sw.WriteLine("                a = c.CreateAttribute( attributeName , dataType );");
-            sw.WriteLine("            }");
-            sw.WriteLine("            if (_object == null)");
-            sw.WriteLine("            {");
-            sw.WriteLine("                _object = c.CreateObject();");
+            sw.WriteLine("                for(int x=0; x<attributes.Count; x+=2)");
+            sw.WriteLine("                {");
+            sw.WriteLine("                    var a = c.FindAttribute( attributes[x] );");
+            sw.WriteLine("                    if (a == null)");
+            sw.WriteLine("                    {");
+            sw.WriteLine("                        a = c.CreateAttribute( attributes[x] , attributes[x+1] );");
+            sw.WriteLine("                    }");
+            sw.WriteLine("                }");
             sw.WriteLine("            }");
             sw.WriteLine("        }");
         }
@@ -149,7 +180,7 @@ namespace AntlrCSharp
 
             sw.WriteLine("            get");
             sw.WriteLine("            {");
-            sw.WriteLine("                checkObject( " + "\"" + _variable.Name + "\" , \"" + _variable.primitiveType + "\" , \"" + _class.ClassName + "\" );");
+            sw.WriteLine("                if (_object == null) { _object = _wm.FindClassByName( \"" + _class.ClassName + "\" ).CreateObject(); }");
             sw.WriteLine("                return " + conversion + ";");
             sw.WriteLine("            }");
         }
@@ -161,7 +192,7 @@ namespace AntlrCSharp
         {
             sw.WriteLine("            set");
             sw.WriteLine("            {");
-            sw.WriteLine("                checkObject( " + "\"" + _variable.Name + "\" , \"" + _variable.primitiveType + "\" , \"" + _class.ClassName + "\" );");
+            sw.WriteLine("                if (_object == null) { _object = _wm.FindClassByName( \"" + _class.ClassName + "\" ).CreateObject(); }");
             sw.WriteLine("                _object[\"" + _variable.Name + "\"] = Convert.ToString( value );");
             sw.WriteLine("            }");
         }
@@ -358,8 +389,7 @@ namespace AntlrCSharp
             // Ģenerē klases "ķermeni"
             sw.WriteLine("    {");
 
-            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IWebCalls wc ) : base( wm , wc ) { }\n");
-            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm, IWebCalls wc , long rObject ) : base( wm , wc , rObject ) { }");
+            generateConstructor(sw,_class,ref IsMade);
 
             generateProperties(sw,_class,ref IsMade); // Īpašību ģenerēšana
             generateAssociations(sw, _class, ref IsMade); // Asociāciju ģenerēsana
@@ -396,7 +426,8 @@ namespace AntlrCSharp
             // Ģenerē klases "BaseObject" kodu
             using (StreamWriter sw = new StreamWriter("Classes/BaseObject.cs"))
             {
-                sw.WriteLine("using WebAppOS;\n");
+                sw.WriteLine("using WebAppOS;");
+                sw.WriteLine("using System.Collections.Generic;\n");
                 sw.WriteLine("namespace " + _namespace);
                 sw.WriteLine("{");
                 generateBaseObject(sw);

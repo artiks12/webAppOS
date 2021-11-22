@@ -1,5 +1,5 @@
 using WebAppOS;
-using System;
+using System.Collections.Generic;
 
 namespace Test
 {
@@ -18,25 +18,28 @@ namespace Test
 
         public BaseObject ( IWebMemory wm , IWebCalls wc , long rObject )
         {
+            _wm = wm;
             _wc = wc;
             _object = new( rObject, wm );
         }
 
-        protected void checkObject( string attributeName, string dataType, string className )
+        protected void checkClass( List<string> attributes , string className )
         {
             var c = _wm.FindClassByName( className );
             if (c == null)
             {
                 c = _wm.CreateClass( className );
             }
-            var a = c.FindAttribute( attributeName );
-            if (a == null)
+            else
             {
-                a = c.CreateAttribute( attributeName , dataType );
-            }
-            if (_object == null)
-            {
-                _object = c.CreateObject();
+                for(int x=0; x<attributes.Count; x+=2)
+                {
+                    var a = c.FindAttribute( attributes[x] );
+                    if (a == null)
+                    {
+                        a = c.CreateAttribute( attributes[x] , attributes[x+1] );
+                    }
+                }
             }
         }
 

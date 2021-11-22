@@ -7,20 +7,30 @@ namespace Test
 {
     class Artis : BaseObject
     {
-        public Artis ( IWebMemory wm , IWebCalls wc ) : base( wm , wc ) { }
 
-        public Artis ( IWebMemory wm, IWebCalls wc , long rObject ) : base( wm , wc , rObject ) { }
+        public Artis ( IWebMemory wm , IWebCalls wc ) : base( wm , wc )
+        {
+            List<string> attributes = new() { "Vecums" , "Integer" , "Vards" , "String" , "IrStudents" , "Boolean" , "Nauda" , "Real" };
+            checkClass( attributes , "Artis" );
+        }
+
+        public Artis ( IWebMemory wm, IWebCalls wc , long rObject ) : base( wm , wc , rObject )
+        {
+            List<string> attributes = new() { "Vecums" , "Integer" , "Vards" , "String" , "IrStudents" , "Boolean" , "Nauda" , "Real" };
+            checkClass( attributes , "Artis" );
+        }
+
 
         public int Vecums 
         {
             get
             {
-                checkObject( "Vecums" , "Integer" , "Artis" );
+                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
                 return Convert.ToInt32( _object["Vecums"] );
             }
             set
             {
-                checkObject( "Vecums" , "Integer" , "Artis" );
+                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
                 _object["Vecums"] = Convert.ToString( value );
             }
         }
@@ -29,12 +39,12 @@ namespace Test
         {
             get
             {
-                checkObject( "Vards" , "String" , "Artis" );
+                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
                 return _object["Vards"];
             }
             set
             {
-                checkObject( "Vards" , "String" , "Artis" );
+                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
                 _object["Vards"] = Convert.ToString( value );
             }
         }
@@ -43,12 +53,12 @@ namespace Test
         {
             get
             {
-                checkObject( "IrStudents" , "Boolean" , "Artis" );
+                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
                 return Convert.ToBoolean( _object["IrStudents"] );
             }
             set
             {
-                checkObject( "IrStudents" , "Boolean" , "Artis" );
+                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
                 _object["IrStudents"] = Convert.ToString( value );
             }
         }
@@ -57,12 +67,12 @@ namespace Test
         {
             get
             {
-                checkObject( "Nauda" , "Real" , "Artis" );
+                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
                 return Convert.ToDouble( _object["Nauda"] );
             }
             set
             {
-                checkObject( "Nauda" , "Real" , "Artis" );
+                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
                 _object["Nauda"] = Convert.ToString( value );
             }
         }
