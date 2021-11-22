@@ -3,9 +3,17 @@ using System.Reflection;
 
 namespace WebAppOS
 {
-    public class Reflection
+    public class Reflection : ILocalWebCalls
     {
-        public void webcall(string whatToInvoke, WebObject rObject, IWebMemory raapi, string pwd, string project_id, string appFullName, string login)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_k"></param>
+        /// <param name="wmObjRef"></param>
+        /// <param name="methodURL">ir formātā "dotnet:local:namespace.classname#methodname"</param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public string WebCall(TDAKernel _k, long wmObjRef, string methodURL, string arguments, IRemoteWebCalls wc)
         {
             Type t = Type.GetType("Namespace.ClassName");
 
@@ -13,19 +21,13 @@ namespace WebAppOS
 
             if (mInfo != null) 
             {
-                ParameterInfo[] parameters = mInfo.GetParameters();
-                object classInstance = Activator.CreateInstance(t, null);
+                object classInstance = Activator.CreateInstance(t, _k, wmObjRef, wc);
 
-                if (parameters.Length == 0)
-                {
-                    var result = mInfo.Invoke(classInstance, null);
-                }
-                else
-                {
-                    object[] parametersArray = new object[] { null, rObject, raapi, pwd, project_id, appFullName, login };
-                    var result = mInfo.Invoke(classInstance, parametersArray);
-                }
+                string result = (string)mInfo.Invoke(classInstance, new[]{ arguments });
+
+                return result;
             }
+            return "{ \"error\": \"method not found\" }";
         }
     }
 }

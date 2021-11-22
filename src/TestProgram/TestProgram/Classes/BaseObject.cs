@@ -6,17 +6,17 @@ namespace Test
     public class BaseObject
     {
         protected static IWebMemory _wm;
-        protected static IWebCalls _wc;
+        protected static IRemoteWebCalls _wc;
         protected WebObject _object;
 
-        public BaseObject ( IWebMemory wm , IWebCalls wc )
+        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc )
         {
             _wm = wm;
             _wc = wc;
             _object = null;
         }
 
-        public BaseObject ( IWebMemory wm , IWebCalls wc , long rObject )
+        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )
         {
             _wm = wm;
             _wc = wc;
@@ -30,15 +30,12 @@ namespace Test
             {
                 c = _wm.CreateClass( className );
             }
-            else
+            for (int x = 0; x < attributes.Count; x += 2)
             {
-                for(int x=0; x<attributes.Count; x+=2)
+                var a = c.FindAttribute(attributes[x]);
+                if (a == null)
                 {
-                    var a = c.FindAttribute( attributes[x] );
-                    if (a == null)
-                    {
-                        a = c.CreateAttribute( attributes[x] , attributes[x+1] );
-                    }
+                    a = c.CreateAttribute(attributes[x], attributes[x + 1]);
                 }
             }
         }

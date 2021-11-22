@@ -2,14 +2,19 @@
 
 namespace WebAppOS
 {
-    public interface IWebCalls 
+    public interface IRemoteWebCalls 
     {
-        public string WebCall(IWebMemory wm, long wmObjRef, string methodName, string arguments);
+        public string WebCall(TDAKernel _k, long wmObjRef, string methodName, string arguments);
     }
 
-    public class WebCalls : IWebCalls
+    public interface ILocalWebCalls
     {
-        public string WebCall(IWebMemory wm, long wmObjRef, string methodName, string arguments) 
+        public string WebCall(TDAKernel _k, long wmObjRef, string methodURL, string arguments, IRemoteWebCalls wc);
+    }
+
+    public class RemoteWebCalls : IRemoteWebCalls
+    {
+        public string WebCall(TDAKernel _k, long wmObjRef, string methodName, string arguments) 
         {
             Console.WriteLine(wmObjRef + " " + methodName + " " + arguments);
 

@@ -24,7 +24,7 @@ namespace AntlrCSharp
 
             // Mainīgo generēšana
             sw.WriteLine("        protected static IWebMemory _wm;");
-            sw.WriteLine("        protected static IWebCalls _wc;");
+            sw.WriteLine("        protected static IRemoteWebCalls _wc;");
             sw.WriteLine("        protected WebObject _object;\n");
 
             generateBaseConstructor(sw, "BaseObject", ref IsMade);
@@ -43,14 +43,14 @@ namespace AntlrCSharp
             if (IsMade == true) { sw.WriteLine(""); }
             else { IsMade = true; }
 
-            sw.WriteLine("        public "+ className +" ( IWebMemory wm , IWebCalls wc )");
+            sw.WriteLine("        public "+ className + " ( IWebMemory wm , IRemoteWebCalls wc )");
             sw.WriteLine("        {");
             sw.WriteLine("            _wm = wm;");
             sw.WriteLine("            _wc = wc;");
             sw.WriteLine("            _object = null;");
             sw.WriteLine("        }\n");
 
-            sw.WriteLine("        public " + className + " ( IWebMemory wm , IWebCalls wc , long rObject )");
+            sw.WriteLine("        public " + className + " ( IWebMemory wm , IRemoteWebCalls wc , long rObject )");
             sw.WriteLine("        {");
             sw.WriteLine("            _wm = wm;");
             sw.WriteLine("            _wc = wc;");
@@ -73,13 +73,13 @@ namespace AntlrCSharp
                 else { list += " , \"" + v.Name + "\" , \"" + v.primitiveType + "\""; }
             }
 
-            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IWebCalls wc ) : base( wm , wc )");
+            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )");
             sw.WriteLine("        {");
             sw.WriteLine("            List<string> attributes = new() { " + list + " };");
             sw.WriteLine("            checkClass( attributes , \"" + _class.ClassName + "\" );");
             sw.WriteLine("        }\n");
 
-            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm, IWebCalls wc , long rObject ) : base( wm , wc , rObject )");
+            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )");
             sw.WriteLine("        {");
             sw.WriteLine("            List<string> attributes = new() { " + list + " };");
             sw.WriteLine("            checkClass( attributes , \"" + _class.ClassName + "\" );");
@@ -98,15 +98,12 @@ namespace AntlrCSharp
             sw.WriteLine("            {");
             sw.WriteLine("                c = _wm.CreateClass( className );");
             sw.WriteLine("            }");
-            sw.WriteLine("            else");
+            sw.WriteLine("            for(int x=0; x<attributes.Count; x+=2)");
             sw.WriteLine("            {");
-            sw.WriteLine("                for(int x=0; x<attributes.Count; x+=2)");
+            sw.WriteLine("                var a = c.FindAttribute( attributes[x] );");
+            sw.WriteLine("                if (a == null)");
             sw.WriteLine("                {");
-            sw.WriteLine("                    var a = c.FindAttribute( attributes[x] );");
-            sw.WriteLine("                    if (a == null)");
-            sw.WriteLine("                    {");
-            sw.WriteLine("                        a = c.CreateAttribute( attributes[x] , attributes[x+1] );");
-            sw.WriteLine("                    }");
+            sw.WriteLine("                    a = c.CreateAttribute( attributes[x] , attributes[x+1] );");
             sw.WriteLine("                }");
             sw.WriteLine("            }");
             sw.WriteLine("        }");
@@ -367,8 +364,18 @@ namespace AntlrCSharp
                     // Ģenerē metodes "ķermeni"
                     sw.WriteLine("        {");
                     sw.WriteLine("            string arguments = JsonSerializer.Serialize( new { " + argumentList(m._arguments) + " } );");
-                    sw.WriteLine("            string result = _wc.WebCall( _wm , _object.GetReference() , \"" + m.Name + "\" , arguments );");
-                    sw.WriteLine("            return " + m.ReturnValue + ";");
+                    sw.WriteLine("            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference() , \"" + m.Name + "\" , arguments );");
+                    sw.WriteLine("            var json = JsonDocument.Parse(result);");
+                    sw.WriteLine("            JsonElement errorMessage;");
+                    sw.WriteLine("            if (json.RootElement.TryGetProperty(\"error\", out errorMessage) == true)");
+                    sw.WriteLine("            {");
+                    sw.WriteLine("                throw new Exception(errorMessage.GetString());");
+                    sw.WriteLine("            }");
+                    sw.WriteLine("            else");
+                    sw.WriteLine("            {");
+                    sw.WriteLine("                var r = json.RootElement.GetProperty(\"result\");");
+                    sw.WriteLine("                return r.GetInt32();");
+                    sw.WriteLine("            }");
                     sw.WriteLine("        }");
                 }
             }

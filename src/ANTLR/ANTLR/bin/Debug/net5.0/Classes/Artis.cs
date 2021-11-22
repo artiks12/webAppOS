@@ -8,13 +8,13 @@ namespace Test
     class Artis : BaseObject
     {
 
-        public Artis ( IWebMemory wm , IWebCalls wc ) : base( wm , wc )
+        public Artis ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
         {
             List<string> attributes = new() { "Vecums" , "Integer" , "Vards" , "String" , "IrStudents" , "Boolean" , "Nauda" , "Real" };
             checkClass( attributes , "Artis" );
         }
 
-        public Artis ( IWebMemory wm, IWebCalls wc , long rObject ) : base( wm , wc , rObject )
+        public Artis ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )
         {
             List<string> attributes = new() { "Vecums" , "Integer" , "Vards" , "String" , "IrStudents" , "Boolean" , "Nauda" , "Real" };
             checkClass( attributes , "Artis" );
@@ -80,8 +80,18 @@ namespace Test
         public int sum ( int a , int b )
         {
             string arguments = JsonSerializer.Serialize( new { a , b } );
-            string result = _wc.WebCall( _wm , _object.GetReference() , "sum" , arguments );
-            return 0;
+            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference() , "sum" , arguments );
+            var json = JsonDocument.Parse(result);
+            JsonElement errorMessage;
+            if (json.RootElement.TryGetProperty("error", out errorMessage) == true)
+            {
+                throw new Exception(errorMessage.GetString());
+            }
+            else
+            {
+                var r = json.RootElement.GetProperty("result");
+                return r.GetInt32();
+            }
         }
     }
 }
