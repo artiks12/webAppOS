@@ -77,10 +77,10 @@ namespace Test
             }
         }
 
-        public int sum ( int a , int b )
+        public int sum1 ( int a , int b )
         {
             string arguments = JsonSerializer.Serialize( new { a , b } );
-            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference() , "sum" , arguments );
+            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference() , "sum1" , arguments );
             var json = JsonDocument.Parse(result);
             JsonElement errorMessage;
             if (json.RootElement.TryGetProperty("error", out errorMessage) == true)
@@ -91,6 +91,57 @@ namespace Test
             {
                 var r = json.RootElement.GetProperty("result");
                 return r.GetInt32();
+            }
+        }
+
+        public string sum2 ( int a , int b )
+        {
+            string arguments = JsonSerializer.Serialize( new { a , b } );
+            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference() , "sum2" , arguments );
+            var json = JsonDocument.Parse(result);
+            JsonElement errorMessage;
+            if (json.RootElement.TryGetProperty("error", out errorMessage) == true)
+            {
+                throw new Exception(errorMessage.GetString());
+            }
+            else
+            {
+                var r = json.RootElement.GetProperty("result");
+                return r.GetString();
+            }
+        }
+
+        public bool sum3 ( int a , int b )
+        {
+            string arguments = JsonSerializer.Serialize( new { a , b } );
+            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference() , "sum3" , arguments );
+            var json = JsonDocument.Parse(result);
+            JsonElement errorMessage;
+            if (json.RootElement.TryGetProperty("error", out errorMessage) == true)
+            {
+                throw new Exception(errorMessage.GetString());
+            }
+            else
+            {
+                var r = json.RootElement.GetProperty("result");
+                return r.GetBoolean();
+            }
+        }
+
+        public double sum4 ( int a , int b )
+        {
+            string arguments = JsonSerializer.Serialize( new { a , b } );
+            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference() , "sum4" , arguments );
+            var json = JsonDocument.Parse(result);
+            JsonElement errorMessage;
+            if (json.RootElement.TryGetProperty("error", out errorMessage) == true)
+            {
+                throw new Exception(errorMessage.GetString());
+            }
+            else
+            {
+                var r = json.RootElement.GetProperty("result");
+                return r.GetDouble();
             }
         }
     }

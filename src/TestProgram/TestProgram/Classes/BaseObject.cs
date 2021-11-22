@@ -30,12 +30,12 @@ namespace Test
             {
                 c = _wm.CreateClass( className );
             }
-            for (int x = 0; x < attributes.Count; x += 2)
+            for(int x=0; x<attributes.Count; x+=2)
             {
-                var a = c.FindAttribute(attributes[x]);
+                var a = c.FindAttribute( attributes[x] );
                 if (a == null)
                 {
-                    a = c.CreateAttribute(attributes[x], attributes[x + 1]);
+                    a = c.CreateAttribute( attributes[x] , attributes[x+1] );
                 }
             }
         }

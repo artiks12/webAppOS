@@ -353,6 +353,23 @@ namespace AntlrCSharp
                     if (IsMade == true) { sw.WriteLine(""); }
                     else { IsMade = true; }
 
+                    string conversion = "";
+                    switch (m.Type)
+                    {
+                        case "int":
+                            conversion = "return r.GetInt32();";
+                            break;
+                        case "string":
+                            conversion = "return r.GetString();";
+                            break;
+                        case "bool":
+                            conversion = "return r.GetBoolean();";
+                            break;
+                        case "double":
+                            conversion = "return r.GetDouble();";
+                            break;
+                    }
+
                     // Ģenerē metodes "galvu"
                     if (m.Protection != null) { sw.Write("\n        " + m.Protection); }
                     else { sw.Write("        public"); }
@@ -374,7 +391,7 @@ namespace AntlrCSharp
                     sw.WriteLine("            else");
                     sw.WriteLine("            {");
                     sw.WriteLine("                var r = json.RootElement.GetProperty(\"result\");");
-                    sw.WriteLine("                return r.GetInt32();");
+                    sw.WriteLine("                " + conversion);
                     sw.WriteLine("            }");
                     sw.WriteLine("        }");
                 }

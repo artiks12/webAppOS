@@ -24,7 +24,7 @@ namespace TestProgram
 
             Console.WriteLine(temp1.Vecums + " " + temp1.Vards + " " + temp1.IrStudents + " " + temp1.Nauda);
 
-            Console.WriteLine(temp1.sum(5, 5));
+            Console.WriteLine(temp1.sum1(5, 5));
         }
     }
 }
