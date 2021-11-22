@@ -15,8 +15,6 @@ namespace TestProgram
             WebCalls calls = new();
             memory.Open("ar:C:/sample");
 
-            BaseObject temp = new(memory, calls);
-
             Artis temp1 = new(memory, calls);
 
             foreach (var c in memory.Classes())
@@ -31,12 +29,9 @@ namespace TestProgram
 
             Console.WriteLine(temp1.Vecums + " " + temp1.Vards + " " + temp1.IrStudents + " " + temp1.Nauda);
 
-            memory.DeleteClass("Artis");
+            Console.WriteLine(temp1.sum(5, 5));
 
-            foreach (var c in memory.Classes()) 
-            {
-                Console.WriteLine(c.Name);
-            }
+            memory.DeleteClass("Artis");
         }
     }
 }

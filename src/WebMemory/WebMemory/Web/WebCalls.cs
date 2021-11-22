@@ -12,7 +12,9 @@ namespace WebAppOS
         public string WebCall(IWebMemory wm, long wmObjRef, string methodName, string arguments) 
         {
             Console.WriteLine(wmObjRef + " " + methodName + " " + arguments);
-            return "{ \"error\": \"not implemented\" }";
+
+            return "{ \"result\": 5 }";
+            //return "{ \"error\": \"not implemented\" }";
         }
     }
 }

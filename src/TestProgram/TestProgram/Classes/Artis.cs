@@ -81,7 +81,19 @@ namespace Test
         {
             string arguments = JsonSerializer.Serialize( new { a , b } );
             string result = _wc.WebCall( _wm , _object.GetReference() , "sum" , arguments );
-            return 0;
+
+            var json = JsonDocument.Parse(result);
+
+            JsonElement errorMessage;
+            if (json.RootElement.TryGetProperty("error", out errorMessage) == true)
+            {
+                throw new Exception(errorMessage.GetString());
+            }
+            else 
+            {
+                var r = json.RootElement.GetProperty("result");
+                return r.GetInt32();
+            }
         }
     }
 }
