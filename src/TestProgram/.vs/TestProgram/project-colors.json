@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "59651c48-1bf2-49c3-b005-30807990adf1": {
+      "ProjectGuid": "59651c48-1bf2-49c3-b005-30807990adf1",
+      "DisplayName": "TestProgram",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}

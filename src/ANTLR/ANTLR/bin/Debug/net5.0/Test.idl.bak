@@ -6,5 +6,5 @@ class Artis
 	Real Nauda;
 	
 	[URL("java:local:path")]
-	Integer sum(Integer a, Integer b);
+	Integer sum(int a, int b);
 }

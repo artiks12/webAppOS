@@ -76,5 +76,12 @@ namespace Test
                 _object["Nauda"] = Convert.ToString( value );
             }
         }
+
+        public int sum ( int a , int b )
+        {
+            string arguments = JsonSerializer.Serialize( new { a , b } );
+            string result = _wc.WebCall( _wm , _object.GetReference() , "sum" , arguments );
+            return 0;
+        }
     }
 }
