@@ -28,7 +28,7 @@ namespace AntlrCSharp
             }
 
             // Pārbauda, vai lauks beidzas ar semikolu
-            if (context.SEMICOLON().GetText() != ";") { Errors.Add("At line " + line + ": Syntax error! Missing ';'!"); }
+            if (context.SEMICOLON() == null) { Errors.Add("At line " + line + ": Syntax error! Missing ';'!"); }
             
             return null;
         }

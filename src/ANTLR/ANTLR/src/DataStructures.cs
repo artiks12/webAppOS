@@ -59,14 +59,14 @@ namespace AntlrCSharp
     public class AssociationEnd 
     {
         /// <summary>
-        /// Asociācijas lomas vārds
+        /// Asociācijas galapunkta lomas vārds
         /// </summary>
         public string RoleName { get; set; }
 
         /// <summary>
-        /// Asociācijas mērķa klase
+        /// Asociācijas galapunkta klase
         /// </summary>
-        public string ClassName { get; set; }
+        public Class Class { get; set; }
 
         /// <summary>
         /// Asociācijas ID
@@ -92,7 +92,7 @@ namespace AntlrCSharp
         /// <summary>
         /// Asociācijas avota klase
         /// </summary>
-        public string SourceClass { get; set; }
+        public Class SourceClass { get; set; }
 
         /// <summary>
         /// Asociācijas mērķa vārds
@@ -102,7 +102,7 @@ namespace AntlrCSharp
         /// <summary>
         /// Asociācijas mērķa klase
         /// </summary>
-        public string TargetClass { get; set; }
+        public Class TargetClass { get; set; }
 
         /// <summary>
         /// Vai asociācija ir kompozīcija

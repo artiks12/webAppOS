@@ -26,27 +26,29 @@ namespace AntlrCSharp
 				bool needComa = false; // Vai ir vajadzīgs komats
 				uint line = (uint)context.Start.Line;  // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
+				var c = context.children;
 				// Pārbaudam visu, kas ir ierakstīts iekavās
-				foreach (var c in context.children)
+				for (int x = 0; x < c.Count; x++) 
 				{
 					// Ir divi gadījumi - ir argumenta definīcija vai komats
-					switch (c.GetType().ToString())
+					switch (c[x].GetType().ToString())
 					{
 						// Komats
 						case "ANTLR.Grammar.LanguageParser+ComaContext":
+							line = (uint)((ComaContext)c[x]).Start.Line;
+							if (x + 1 == c.Count) { Errors.Add("At line " + (uint)((ComaContext)c[x]).Stop.Line + ": argument expected!"); }
+
 							if (needComa == false) { Errors.Add("At line " + line + ": argument expected!"); }
 							else { needComa = false; }
 						break;
-						
+
 						// Argumenta definīcija
 						case "ANTLR.Grammar.LanguageParser+ArgumentContext":
-							if (needComa == false) 
-							{
-								needComa = true;
-								line = (uint)((ArgumentContext)c).Stop.Line;
-							}
+							line = (uint)((ArgumentContext)c[x]).Start.Line;
+							
+							if (needComa == false) { needComa = true; }
 							else { Errors.Add("At line " + line + ": Syntax error! Missing ','!"); }
-							VisitArgument((ArgumentContext)c);
+							VisitArgument((ArgumentContext)c[x]);
 						break;
 					}
 				}

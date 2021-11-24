@@ -5,38 +5,38 @@ using System.Collections.Generic;
 
 namespace Test
 {
-    class Artis : BaseObject
+    class Raivis : BaseObject
     {
 
-        public Artis ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
+        public Raivis ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
         {
             List<string> attributes = new() {  };
-            checkClass( attributes , "Artis" );
+            checkClass( attributes , "Raivis" );
         }
 
-        public Artis ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )
+        public Raivis ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )
         {
             List<string> attributes = new() {  };
-            checkClass( attributes , "Artis" );
+            checkClass( attributes , "Raivis" );
         }
 
 
-        public List<Raivis> target1
+        public List<Artis> source1
         {
             get
             {
-                var a = checkAssociation( "source1" , "target1" , "Artis" , "Raivis" , false);
+                var a = checkAssociation( "target1" , "source1" , "Raivis" , "Artis" , false);
                 var list = _object.LinkedObjects(a);
-                List<Raivis> result = new();
+                List<Artis> result = new();
                 foreach (var l in list)
                 {
-                    result.Add( new Raivis( _wm , _wc , l.GetReference() ));
+                    result.Add( new Artis( _wm , _wc , l.GetReference() ));
                 }
                 return result;
             }
             set
             {
-                var a = checkAssociation( "source1" , "target1" , "Artis" , "Raivis" , false);
+                var a = checkAssociation( "target1" , "source1" , "Raivis" , "Artis" , false);
                 var list = value;
                 List<WebObject> result = new();
                 foreach (var l in list)

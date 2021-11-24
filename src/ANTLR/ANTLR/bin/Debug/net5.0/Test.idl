@@ -1,20 +1,11 @@
 class Artis
 {
-	Integer Vecums;
-	String Vards;
-	Boolean IrStudents;
-	Real Nauda;
-	
-	[URL("java:local:path")]
-	Integer sum1(Integer a, Integer b);
+	String sum1(,Integer s,,)
+}
 
-	[URL("java:local:path")]
-	String sum2(Integer a, Integer b);
-
-	[URL("java:local:path")]
-	Boolean sum3(Integer a, Integer b);
-
-	[URL("java:local:path")]
-	Real sum4(Integer a, Integer b);
+class Raivis
+{
 
 }
+
+association(source1:Artis<->target1:Raivis)

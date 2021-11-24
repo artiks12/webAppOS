@@ -236,15 +236,15 @@ namespace AntlrCSharp
             {
                 sourceName = _association.SourceName;
                 targetName = _association.TargetName;
-                sourceClass = _association.SourceClass;
-                targetClass = _association.TargetClass;
+                sourceClass = _association.SourceClass.ClassName;
+                targetClass = _association.TargetClass.ClassName;
             }
             else
             {
                 sourceName = _association.TargetName;
                 targetName = _association.SourceName;
-                sourceClass = _association.TargetClass;
-                targetClass = _association.SourceClass;
+                sourceClass = _association.TargetClass.ClassName;
+                targetClass = _association.SourceClass.ClassName;
             }
 
             if (_association.IsComposition == true) { IsComposition = "true"; }
@@ -278,15 +278,15 @@ namespace AntlrCSharp
             {
                 sourceName = _association.SourceName;
                 targetName = _association.TargetName;
-                sourceClass = _association.SourceClass;
-                targetClass = _association.TargetClass;
+                sourceClass = _association.SourceClass.ClassName;
+                targetClass = _association.TargetClass.ClassName;
             }
             else
             {
                 sourceName = _association.TargetName;
                 targetName = _association.SourceName;
-                sourceClass = _association.TargetClass;
-                targetClass = _association.SourceClass;
+                sourceClass = _association.TargetClass.ClassName;
+                targetClass = _association.SourceClass.ClassName;
             }
 
             if (_association.IsComposition == true) { IsComposition = "true"; }
@@ -318,7 +318,7 @@ namespace AntlrCSharp
                     else { IsMade = true; }
 
                     // Ģenerē asociācijas "galvu"
-                    sw.WriteLine("        public List<" + a.ClassName + "> " + a.RoleName);
+                    sw.WriteLine("        public List<" + a.Class.ClassName + "> " + a.RoleName);
 
                     // Ģenerē metodes "ķermeni"
                     sw.WriteLine("        {");

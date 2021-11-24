@@ -126,6 +126,18 @@ namespace AntlrCSharp
 			}
 			if (found == false) 
 			{
+				// Klases vārds nedrīkst būt rezervētais vārds
+				foreach (var r in Reserved)
+				{
+					if (context.GetText() == r)
+					{
+						Errors.Add("At line " + context.Start.Line + ": A class cannot be named '" + r + "'!");
+						_class.ClassName = " ";
+						found = true;
+						break;
+					}
+				}
+
 				// Tad meklē, vai eksistē klase ar doto vārdu.
 				if (found == false)
 				{
