@@ -27,7 +27,7 @@ namespace AntlrCSharp
             sw.WriteLine("        protected static IRemoteWebCalls _wc;");
             sw.WriteLine("        protected WebObject _object;\n");
 
-            generateBaseConstructor(sw, "BaseObject", ref IsMade);
+            generateBaseConstructor(sw, ref IsMade);
 
             // Ģenerē "BaseObject" "ķermeni"
             generateCheckClass(sw); // Funkcijas "CheckObject" ģenerēšana
@@ -38,19 +38,19 @@ namespace AntlrCSharp
         /// <summary>
         /// Metode, kas ģenerē konstruktoru bāzes klasei
         /// </summary>
-        public static void generateBaseConstructor(StreamWriter sw, string className, ref bool IsMade) 
+        public static void generateBaseConstructor(StreamWriter sw, ref bool IsMade) 
         {
             if (IsMade == true) { sw.WriteLine(""); }
             else { IsMade = true; }
 
-            sw.WriteLine("        public "+ className + " ( IWebMemory wm , IRemoteWebCalls wc )");
+            sw.WriteLine("        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc )");
             sw.WriteLine("        {");
             sw.WriteLine("            _wm = wm;");
             sw.WriteLine("            _wc = wc;");
             sw.WriteLine("            _object = null;");
             sw.WriteLine("        }\n");
 
-            sw.WriteLine("        public " + className + " ( IWebMemory wm , IRemoteWebCalls wc , long rObject )");
+            sw.WriteLine("        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )");
             sw.WriteLine("        {");
             sw.WriteLine("            _wm = wm;");
             sw.WriteLine("            _wc = wc;");
