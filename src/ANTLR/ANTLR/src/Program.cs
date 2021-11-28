@@ -5,6 +5,7 @@ using System.IO;
 using Antlr4.Runtime.Tree;
 using ANTLR.Grammar;
 using System.Text.Json;
+using static ANTLR.Grammar.LanguageParser;
 
 namespace AntlrCSharp
 {
@@ -65,7 +66,7 @@ namespace AntlrCSharp
                 LanguageParser parser = new LanguageParser(commonTokenStream);
 
                 // Sagatavojam kodu kompilēšanai
-                LanguageParser.CodeContext codeContext = parser.code();
+                CodeContext codeContext = parser.code();
                 compiler = new Compiler();
 
                 compiler.Compile(codeContext); // Kompilējam kodu
