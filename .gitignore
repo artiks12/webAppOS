@@ -37,3 +37,7 @@ dist/etc/registry/xusers/webappos
 *.iml
 *.eml
 .settings
+dist/apps/google_scopes.webservice/webservice.properties
+dist/etc/registry/xusers/webappos
+dist/etc/registry/xusers/webappos
+dist/etc/registry/xusers/webappos

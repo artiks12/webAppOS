@@ -47,14 +47,12 @@ namespace AntlrCSharp
             sw.WriteLine("        {");
             sw.WriteLine("            _wm = wm;");
             sw.WriteLine("            _wc = wc;");
-            sw.WriteLine("            _object = null;");
             sw.WriteLine("        }\n");
 
             sw.WriteLine("        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )");
             sw.WriteLine("        {");
             sw.WriteLine("            _wm = wm;");
             sw.WriteLine("            _wc = wc;");
-            sw.WriteLine("            _object = new( rObject, wm );");
             sw.WriteLine("        }\n");
         }
 
@@ -75,12 +73,14 @@ namespace AntlrCSharp
 
             sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )");
             sw.WriteLine("        {");
+            sw.WriteLine("            _object = _wm.FindClassByName( " + _class.ClassName + " ).CreateObject();");
             sw.WriteLine("            List<string> attributes = new() { " + list + " };");
             sw.WriteLine("            checkClass( attributes , \"" + _class.ClassName + "\" );");
             sw.WriteLine("        }\n");
 
             sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )");
             sw.WriteLine("        {");
+            sw.WriteLine("            _object = new( rObject, wm );");
             sw.WriteLine("            List<string> attributes = new() { " + list + " };");
             sw.WriteLine("            checkClass( attributes , \"" + _class.ClassName + "\" );");
             sw.WriteLine("        }\n");
@@ -175,11 +175,7 @@ namespace AntlrCSharp
                     break;
             }
 
-            sw.WriteLine("            get");
-            sw.WriteLine("            {");
-            sw.WriteLine("                if (_object == null) { _object = _wm.FindClassByName( \"" + _class.ClassName + "\" ).CreateObject(); }");
-            sw.WriteLine("                return " + conversion + ";");
-            sw.WriteLine("            }");
+            sw.WriteLine("            get { return " + conversion + "; }");
         }
 
         /// <summary>
@@ -187,11 +183,7 @@ namespace AntlrCSharp
         /// </summary>
         public static void generatePropertySet(StreamWriter sw, Variable _variable, Class _class)
         {
-            sw.WriteLine("            set");
-            sw.WriteLine("            {");
-            sw.WriteLine("                if (_object == null) { _object = _wm.FindClassByName( \"" + _class.ClassName + "\" ).CreateObject(); }");
-            sw.WriteLine("                _object[\"" + _variable.Name + "\"] = Convert.ToString( value );");
-            sw.WriteLine("            }");
+            sw.WriteLine("            set { _object[\"" + _variable.Name + "\"] = Convert.ToString( value ); }");
         }
 
         /// <summary>
@@ -296,7 +288,6 @@ namespace AntlrCSharp
             sw.WriteLine("            {");
             sw.WriteLine("                var a = checkAssociation( " + "\"" + sourceName + "\" , \"" + targetName + "\" , \"" + sourceClass + "\" , \"" + targetClass + "\" , " + IsComposition + ");");
             sw.WriteLine("                var list = value;");
-            sw.WriteLine("                List<WebObject> result = new();");
             sw.WriteLine("                foreach (var l in list)");
             sw.WriteLine("                {");
             sw.WriteLine("                    result.Add( l._object );");
