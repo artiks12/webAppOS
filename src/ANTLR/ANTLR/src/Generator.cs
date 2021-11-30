@@ -161,7 +161,7 @@ namespace AntlrCSharp
 
             switch (_variable.Type) 
             {
-                case "int":
+                case "long":
                     conversion = "Convert.ToInt32( _object[\"" + _variable.Name + "\"] )";
                     break;
                 case "string":
@@ -381,12 +381,15 @@ namespace AntlrCSharp
                     sw.WriteLine("            }");
 
                     // Neģenerējam, ja ir void.
-                    sw.WriteLine("            else");
-                    sw.WriteLine("            {");
-                    sw.WriteLine("                var r = json.RootElement.GetProperty(\"result\");");
-                    sw.WriteLine("                " + conversion);
-                    sw.WriteLine("            }");
-
+                    if (m.Type != "void") 
+                    {
+                        sw.WriteLine("            else");
+                        sw.WriteLine("            {");
+                        sw.WriteLine("                var r = json.RootElement.GetProperty(\"result\");");
+                        sw.WriteLine("                " + conversion);
+                        sw.WriteLine("            }");
+                    }
+                    
                     sw.WriteLine("        }");
                 }
             }

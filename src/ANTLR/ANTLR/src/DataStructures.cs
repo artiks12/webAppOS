@@ -138,8 +138,11 @@ namespace AntlrCSharp
                         return "bool";
                     case "Real":
                         return "double";
+                    case "Void":
+                        return "void";
+                    default:
+                        return _type;
                 }
-                return null;
             }
             set { _type = value; }
         }

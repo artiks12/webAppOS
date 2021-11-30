@@ -20,7 +20,7 @@ ARROWS:					'<' ('-')+ '>' | '<>' ('-')+;
 /// Atslēgvārdi
 PROTECTION:				'public' | 'private';
 BLOCKTYPE:				'class' | 'association';
-DATATYPE:				'Integer' | 'String' | 'Boolean' | 'Real';
+DATATYPE:				'Integer' | 'String' | 'Boolean' | 'Real' | 'Void';
 
 /// Dažādi
 NAME:					[_a-zA-Z]+[_a-zA-Z0-9]*; /// Identifikatori

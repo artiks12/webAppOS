@@ -79,8 +79,8 @@ namespace AntlrCSharp
 
 			_variable.Type = context.GetText();
 
-			if (_variable.Type == null) { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a valid data type!"); }
-			
+			if (_variable.Type == null || _variable.Type == "void") { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a valid data type for variable!"); }
+
 			return null;
 		}
 

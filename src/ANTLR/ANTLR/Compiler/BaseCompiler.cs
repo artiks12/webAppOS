@@ -14,7 +14,7 @@ namespace AntlrCSharp
 		public List<Class> Classes; // Saraksts ar klasēm.
 		public List<Association> Associations; // Saraksts ar asociācijām.
 		public List<string> Errors; // Saraksts ar kļūdām.
-		public List<string> Reserved = new() { "class", "association", "Integer", "String", "Boolean", "Real", "URL", "private", "public", "BaseObject" }; // Saraksts ar rezervētajiem vārdiem.
+		public List<string> Reserved = new() { "class", "association", "Void" , "Integer", "String", "Boolean", "Real", "URL", "private", "public", "BaseObject" }; // Saraksts ar rezervētajiem vārdiem.
 
 		private List<string> AnnotationTypes = new() { }; // Saraksts ar anotāciju tipiem
 		private List<string> URLProtocols = new() { "java", "dotnet" }; // Saraksts ar URL Valodu protokoliem

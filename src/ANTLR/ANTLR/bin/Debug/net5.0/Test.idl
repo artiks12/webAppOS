@@ -1,6 +1,8 @@
 class Artis
 {
-	String sum1(,Integer s,,)
+	Void sum1();
+
+	Void suml;
 }
 
 class Raivis
