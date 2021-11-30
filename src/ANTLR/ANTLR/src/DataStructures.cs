@@ -169,7 +169,27 @@ namespace AntlrCSharp
     /// </summary>
     public class Variable : Field
     {
-        
+        /// <summary>
+        /// Mainīgā atgriežamā vērtība
+        /// </summary>
+        public string GetValue
+        {
+            get
+            {
+                switch (_type)
+                {
+                    case "Integer":
+                        return "return Convert.ToInt32( _object[\"" + Name + "\"] )";
+                    case "String":
+                        return "return _object[\"" + Name + "\"]";
+                    case "Boolean":
+                        return "return Convert.ToBoolean( _object[\"" + Name + "\"] )";
+                    case "Real":
+                        return "return Convert.ToDouble( _object[\"" + Name + "\"] )";
+                }
+                return null;
+            }
+        }
     }
 
     /// <summary>
@@ -207,13 +227,13 @@ namespace AntlrCSharp
                 switch (_type)
                 {
                     case "Integer":
-                        return "0";
+                        return "return r.GetInt64();";
                     case "String":
-                        return "null";
+                        return "return r.GetString();";
                     case "Boolean":
-                        return "false";
+                        return "return r.GetBoolean();";
                     case "Real":
-                        return "0";
+                        return "return r.GetDouble();";
                 }
                 return null;
             }
