@@ -21,6 +21,27 @@ namespace AntlrCSharp
 		private List<string> URLlocations = new() { "local", "remote"}; // Saraksts ar URL lokāciju vērtībām
 
 		/// <summary>
+		/// Metode, kas pārbauda, vai vārdtelpa ir sintaktiski pareiza
+		/// </summary>
+		private static bool checkNamespace(string _namespace)
+		{
+			// Pārbauda, vai pirmais simbols ir burts vai apakšsvītra
+			if (_namespace[0] == '_' || (_namespace[0] >= 'a' && (int)_namespace[0] <= 'z') || (_namespace[0] >= 'A' && (int)_namespace[0] <= 'Z'))
+			{
+				// Pārbauda vai visi pārejie simboli ir burti, cipari vai apakšsvītras
+				for (int x = 1; x < _namespace.Length; x++)
+				{
+					if (!(_namespace[x] == '_' || (_namespace[x] >= '0' && (int)_namespace[x] <= '9') || (_namespace[x] >= 'a' && (int)_namespace[x] <= 'z') || (_namespace[x] >= 'A' && (int)_namespace[x] <= 'Z')))
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+			return false;
+		}
+
+		/// <summary>
 		/// Kļūdainie mezgli (apstrādā visas pārējās kļūdas)
 		/// </summary>
 		/// <param name="node"></param>
@@ -107,6 +128,34 @@ namespace AntlrCSharp
         /// <summary>
         /// Kompilēšanas pamtfunkcija
         /// </summary>
-        public void Compile(LanguageParser.CodeContext context) { Visit(context); }
+        public void Compile(LanguageParser.CodeContext context, string _namespace) 
+		{
+			// Pārbauda, vai padotā vārdtelpa ir sintaktiski pareizs
+			if (!checkNamespace(_namespace))
+			{
+				Errors.Add("'" + _namespace + "' is in incorrect format!");
+			}
+
+			// Apstaigā kodu
+			Visit(context);
+
+			// Pārbauda, vai kodā nav kļūdu. Ja nav, tad ģenerējam starpkodu
+			if (Errors.Count != 0)
+			{
+				Console.WriteLine("");
+				Console.WriteLine("Compilation unsuccessful! Errors encountered:");
+				foreach (var error in Errors)
+				{
+					Console.WriteLine(error);
+				}
+			}
+			else 
+			{ 
+				Program.generate(_namespace);
+
+				Console.WriteLine("");
+				Console.WriteLine("Compilation successful!");
+			}
+		}
 	}
 }

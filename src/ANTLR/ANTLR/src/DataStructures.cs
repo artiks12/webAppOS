@@ -131,7 +131,7 @@ namespace AntlrCSharp
                 switch (_type)
                 {
                     case "Integer":
-                        return "int";
+                        return "long";
                     case "String":
                         return "string";
                     case "Boolean":

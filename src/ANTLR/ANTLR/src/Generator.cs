@@ -347,8 +347,8 @@ namespace AntlrCSharp
                     string conversion = "";
                     switch (m.Type)
                     {
-                        case "int":
-                            conversion = "return r.GetInt32();";
+                        case "long":
+                            conversion = "return r.GetInt64();";
                             break;
                         case "string":
                             conversion = "return r.GetString();";
@@ -379,11 +379,14 @@ namespace AntlrCSharp
                     sw.WriteLine("            {");
                     sw.WriteLine("                throw new Exception(errorMessage.GetString());");
                     sw.WriteLine("            }");
+
+                    // Neģenerējam, ja ir void.
                     sw.WriteLine("            else");
                     sw.WriteLine("            {");
                     sw.WriteLine("                var r = json.RootElement.GetProperty(\"result\");");
                     sw.WriteLine("                " + conversion);
                     sw.WriteLine("            }");
+
                     sw.WriteLine("        }");
                 }
             }
@@ -417,27 +420,8 @@ namespace AntlrCSharp
         /// <summary>
         /// Ģenerēšanas pamatmetode
         /// </summary>
-        public static bool generate(string _namespace)
+        public static void generate(string _namespace)
         {
-            Console.WriteLine("");
-
-            // Pārbauda, vai kodā nav kļūdu
-            if (compiler.Errors.Count != 0)
-            {
-                foreach (var error in compiler.Errors)
-                {
-                    Console.WriteLine(error);
-                }
-                return false;
-            }
-
-            // Pārbauda, vai padotā vārdtelpa ir sintaktiski pareizs
-            if (!checkNamespace(_namespace)) 
-            {
-                Console.WriteLine("'" + _namespace + "' is in incorrect format!");
-                return false; 
-            }
-
             // Ģenerē klases "BaseObject" kodu
             using (StreamWriter sw = new StreamWriter("Classes/BaseObject.cs"))
             {
@@ -465,10 +449,6 @@ namespace AntlrCSharp
                     sw.Write('}');
                 }
             }
-
-            Console.WriteLine("Compilation successful!");
-
-            return true;
         }
     }
 }
