@@ -10,12 +10,14 @@ namespace Test
 
         public Raivis ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
         {
+            _object = _wm.FindClassByName( Raivis ).CreateObject();
             List<string> attributes = new() {  };
             checkClass( attributes , "Raivis" );
         }
 
         public Raivis ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )
         {
+            _object = new( rObject, wm );
             List<string> attributes = new() {  };
             checkClass( attributes , "Raivis" );
         }
@@ -38,7 +40,6 @@ namespace Test
             {
                 var a = checkAssociation( "target1" , "source1" , "Raivis" , "Artis" , false);
                 var list = value;
-                List<WebObject> result = new();
                 foreach (var l in list)
                 {
                     result.Add( l._object );

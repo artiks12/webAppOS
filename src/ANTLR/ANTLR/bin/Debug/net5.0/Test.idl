@@ -1,8 +1,5 @@
 class Artis
 {
-	Void sum1();
-
-	Void suml;
 }
 
 class Raivis

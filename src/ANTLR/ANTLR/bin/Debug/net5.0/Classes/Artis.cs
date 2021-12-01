@@ -10,12 +10,14 @@ namespace Test
 
         public Artis ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
         {
+            _object = _wm.FindClassByName( Artis ).CreateObject();
             List<string> attributes = new() {  };
             checkClass( attributes , "Artis" );
         }
 
         public Artis ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )
         {
+            _object = new( rObject, wm );
             List<string> attributes = new() {  };
             checkClass( attributes , "Artis" );
         }
@@ -38,7 +40,6 @@ namespace Test
             {
                 var a = checkAssociation( "source1" , "target1" , "Artis" , "Raivis" , false);
                 var list = value;
-                List<WebObject> result = new();
                 foreach (var l in list)
                 {
                     result.Add( l._object );

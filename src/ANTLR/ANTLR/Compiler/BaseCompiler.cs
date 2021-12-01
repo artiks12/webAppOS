@@ -26,12 +26,12 @@ namespace AntlrCSharp
 		private static bool checkNamespace(string _namespace)
 		{
 			// Pārbauda, vai pirmais simbols ir burts vai apakšsvītra
-			if (_namespace[0] == '_' || (_namespace[0] >= 'a' && (int)_namespace[0] <= 'z') || (_namespace[0] >= 'A' && (int)_namespace[0] <= 'Z'))
+			if (_namespace[0] == '_' || (_namespace[0] >= 'a' && _namespace[0] <= 'z') || (_namespace[0] >= 'A' && _namespace[0] <= 'Z'))
 			{
 				// Pārbauda vai visi pārejie simboli ir burti, cipari vai apakšsvītras
 				for (int x = 1; x < _namespace.Length; x++)
 				{
-					if (!(_namespace[x] == '_' || (_namespace[x] >= '0' && (int)_namespace[x] <= '9') || (_namespace[x] >= 'a' && (int)_namespace[x] <= 'z') || (_namespace[x] >= 'A' && (int)_namespace[x] <= 'Z')))
+					if (!(_namespace[x] == '_' || (_namespace[x] >= '0' && _namespace[x] <= '9') || (_namespace[x] >= 'a' && _namespace[x] <= 'z') || (_namespace[x] >= 'A' && _namespace[x] <= 'Z')))
 					{
 						return false;
 					}
@@ -55,22 +55,6 @@ namespace AntlrCSharp
 		}
 
 		/// <summary>
-		/// Apstaigajam kodu
-		/// </summary>
-		/// <returns></returns>
-		public override object VisitCode([NotNull] CodeContext context)
-		{
-			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
-			
-			// Sākam kompilēšanu ar sarakstu iestatīsanu
-			Classes = new();
-			Associations = new();
-			Errors = new();
-
-			return VisitChildren(context);
-		}
-
-		/// <summary>
 		/// Apstaigajam blokus
 		/// </summary>
         public override object VisitBlocks([NotNull] BlocksContext context)
@@ -78,36 +62,39 @@ namespace AntlrCSharp
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 
 			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+			object type;
+			string body;
 
 			// Pārbauda, vai blokam ir "galva" jeb tips.
 			if (context.blockType() == null)
 			{
 				if (context.blockBody().webMemoryClass() != null) { Errors.Add("At line " + line + ": Missing keyword 'class'!"); }
 				else { Errors.Add("At line " + line + ": Missing keyword 'association'!"); }
+				type = "";
 			}
 			else 
 			{
-                line = (uint)context.blockType().Stop.Line; 
-				VisitBlockType(context.blockType()); 
+                line = (uint)context.blockType().Stop.Line;
+				if (VisitBlockType(context.blockType()) == null) { type = ""; }
+				else { type = context.blockType().GetText(); } 
 			}
 
 			// Pārbauda, vai blokam ir ķermenis
 			if (context.blockBody() == null) { Errors.Add("At line " + line + ": Missing " + context.blockType().GetText() + " body!"); }
 			else 
 			{
-				if (context.blockType() != null) 
+				if (context.blockBody().webMemoryClass() != null) { body = "class"; }
+				else { body = "association"; }
+				
+				if (type != "") 
 				{
-					if (context.blockType().GetText() == "class")
+					if (type.ToString() != body) 
 					{
-						if (context.blockBody().webMemoryClass() == null) { Errors.Add("At line " + line + ": class definition is given as association definition!"); }
-						else { VisitBlockBody(context.blockBody()); }
-					}
-					else if (context.blockType().GetText() == "association")
-					{
-						if (context.blockBody().association() == null) { Errors.Add("At line " + line + ": association definition is given as class definition!"); }
-						else { VisitBlockBody(context.blockBody()); }
+						Errors.Add("At line " + line + ": " + type + " definition is given as " + body + " definition!");
 					}
 				}
+
+				VisitBlockBody(context.blockBody());
 			}
 
 			return null;
@@ -122,14 +109,19 @@ namespace AntlrCSharp
         {
 			if (context.BLOCKTYPE() == null) { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a block type! Use 'class' or 'association' instead!"); }
             
-			return null;
+			return context.BLOCKTYPE();
         }
 
-        /// <summary>
-        /// Kompilēšanas pamtfunkcija
-        /// </summary>
-        public void Compile(LanguageParser.CodeContext context, string _namespace) 
+		/// <summary>
+		/// Kompilēšanas pamtfunkcija
+		/// </summary>
+		public void Compile(LanguageParser.CodeContext context, string _namespace) 
 		{
+			// Sākam kompilēšanu ar sarakstu iestatīsanu
+			Classes = new();
+			Associations = new();
+			Errors = new();
+
 			// Pārbauda, vai padotā vārdtelpa ir sintaktiski pareizs
 			if (!checkNamespace(_namespace))
 			{
@@ -137,7 +129,7 @@ namespace AntlrCSharp
 			}
 
 			// Apstaigā kodu
-			Visit(context);
+			VisitChildren(context);
 
 			// Pārbauda, vai kodā nav kļūdu. Ja nav, tad ģenerējam starpkodu
 			if (Errors.Count != 0)

@@ -13,14 +13,12 @@ namespace Test
         {
             _wm = wm;
             _wc = wc;
-            _object = null;
         }
 
         public BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )
         {
             _wm = wm;
             _wc = wc;
-            _object = new( rObject, wm );
         }
 
         protected void checkClass( List<string> attributes , string className )
