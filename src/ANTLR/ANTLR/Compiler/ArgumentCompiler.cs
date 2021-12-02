@@ -78,7 +78,7 @@ namespace AntlrCSharp
 			else { Errors.Add("At line " + line + ": Missing datatype for argument!"); }
 
 
-			// Pārbauda, vai mainīgajam ir datu tips
+			// Pārbauda, vai mainīgajam ir vārds
 			if (context.argumentName() != null) { VisitArgumentName(context.argumentName()); }
 			else { Errors.Add("At line " + line + ": Missing name for argument!"); }
 
@@ -111,8 +111,6 @@ namespace AntlrCSharp
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 
-			bool found = false;
-
 			// Pārbauda, vai argumenta vārds sakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved) 
 			{
@@ -120,26 +118,23 @@ namespace AntlrCSharp
 				{
 					Errors.Add("At line " + context.Start.Line + ": Argument cannot be named '" + r + "'!");
 					_argument.Name = " ";
-					found = true;
-					break;
+					return null;
 				}
 			}
 
-			if (found == false) 
+			// Pārbauda, vai arguments ar doto vārdu jau ir definēts starp citiem argumentiem
+			foreach (var arg in _method._arguments)
 			{
-				// Pārbauda, vai arguments ar doto vārdu jau ir definēts starp citiem argumentiem
-				foreach (var arg in _method._arguments)
+				if (arg.Name == context.GetText())
 				{
-					if (arg.Name == context.GetText())
-					{
-						Errors.Add("At line " + context.Start.Line + ": Argument with name '" + context.GetText() + "' already exists! Check line " + arg.Line + "!");
-						_argument.Name = " ";
-						found = true;
-						break;
-					}
+					Errors.Add("At line " + context.Start.Line + ": Argument with name '" + context.GetText() + "' already exists! Check line " + arg.Line + "!");
+					_argument.Name = " ";
+					return null;
 				}
-				if (found == false) { _argument.Name = context.GetText(); }
 			}
+			
+			_argument.Name = context.GetText();
+
 			return null;
 		}
 	}

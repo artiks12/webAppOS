@@ -96,92 +96,69 @@ namespace AntlrCSharp
 				_variable.Name = " ";
 				return null;
 			}
-			else
+			// Pārbauda, vai mainīgā vārds sakrīt ar rezervētajiem vārdiem
+			foreach (var r in Reserved)
 			{
-				// Pārbauda, vai mainīgā vārds sakrīt ar rezervētajiem vārdiem
-				foreach (var r in Reserved)
+				if (context.GetText() == r)
 				{
-					if (context.GetText() == r)
-					{
-						Errors.Add("At line " + context.Start.Line + ": A variable cannot be named '" + r + "'!");
-						_variable.Name = " ";
-						return null;
-					}
+					Errors.Add("At line " + context.Start.Line + ": A variable cannot be named '" + r + "'!");
+					_variable.Name = " ";
+					return null;
 				}
+			}
 
-				// Pārbauda, vai mainīgā vārds atkārtojas klasē starp metodēm
-				foreach (var m in _class._methods)
-				{
-					if (m.Name == context.GetText())
-					{
-						Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists! Check line " + m.Line + "!");
-						_variable.Name = " ";
-						return null;
-					}
-				}
-
-				// Pārbauda, vai mainīgā vārds atkārtojas klasē starp citiem mainīgajiem
-				foreach (var v in _class._variables)
-				{
-					if (v.Name == context.GetText())
-					{
-						Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists! Check line " + v.Line + "!");
-						_variable.Name = " ";
-						return null;
-					}
-				}
-				// Pārbauda, vai mainīgā vārds atkārtojas klasē starp asociācijām
-				foreach (var ae in _class._associationEnds)
-				{
-					if (ae.RoleName == context.GetText())
-					{
-						Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class! Check line " + Associations[(int)ae.ID].Line + "!");
-						_variable.Name = " ";
-						return null;
-					}
-				}
-
+			if (checkVariableName(context,_class) == true) 
+			{
 				// Pārbauda, vai klasei ir virsklase
 				if (_class.SuperClass != null)
 				{
-					// Pārbauda, vai mainīgā vārds atkārtojas virsklasē starp citiem mainīgajiem
-					foreach (var v in _class.SuperClass._variables)
+					if (checkVariableName(context,_class.SuperClass) == true)
 					{
-						if (v.Name == context.GetText())
-						{
-							Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in super class! Check line " + v.Line + "!");
-							_variable.Name = " ";
-							return null;
-						}
+						_variable.Name = context.GetText();
 					}
-
-					// Pārbauda, vai mainīgā vārds atkārtojas virsklasē starp metodēm
-					foreach (var m in _class.SuperClass._methods)
-					{
-						if (m.Name == context.GetText())
-						{
-							Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in super class! Check line " + m.Line + "!");
-							_variable.Name = " ";
-							return null;
-						}
-					}
-
-					// Pārbauda, vai mainīgā vārds atkārtojas virsklasē starp asociācijām
-					foreach (var ae in _class.SuperClass._associationEnds)
-					{
-						if (ae.RoleName == context.GetText())
-						{
-							Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in super class! Check line " + Associations[(int)ae.ID].Line + "!");
-							_variable.Name = " ";
-							return null;
-						}
-					}
-					
-					_variable.Name = context.GetText();
 				}
 				else { _variable.Name = context.GetText(); }
 			}
+			
 			return null;
 		}
+
+		public bool checkVariableName([NotNull] FieldNameContext context, Class _class)
+		{
+			// Pārbauda, vai mainīgā vārds atkārtojas klasē starp metodēm
+			foreach (var m in _class._methods)
+			{
+				if (m.Name == context.GetText())
+				{
+					Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists! Check line " + m.Line + "!");
+					_variable.Name = " ";
+					return false;
+				}
+			}
+
+			// Pārbauda, vai mainīgā vārds atkārtojas klasē starp citiem mainīgajiem
+			foreach (var v in _class._variables)
+			{
+				if (v.Name == context.GetText())
+				{
+					Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists! Check line " + v.Line + "!");
+					_variable.Name = " ";
+					return false;
+				}
+			}
+			// Pārbauda, vai mainīgā vārds atkārtojas klasē starp asociācijām
+			foreach (var ae in _class._associationEnds)
+			{
+				if (ae.RoleName == context.GetText())
+				{
+					Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class! Check line " + Associations[(int)ae.ID].Line + "!");
+					_variable.Name = " ";
+					return false;
+				}
+			}
+
+			return true;
+		}
 	}
+	
 }

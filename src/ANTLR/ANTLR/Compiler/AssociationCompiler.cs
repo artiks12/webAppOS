@@ -141,37 +141,31 @@ namespace AntlrCSharp
 		public override object VisitAssociationSourceClass([NotNull] AssociationSourceClassContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n"); 
-			
-			bool found = false;
-
 			foreach (var r in Reserved)
 			{
 				if (context.GetText() == r)
 				{
 					Errors.Add("At line " + context.Start.Line + ": A class cannot be named '" + r + "'!");
 					_class.ClassName = " ";
+					return null;
+				}
+			}
+
+			bool found = false;
+
+			// Pārbauda, vai eksiste avotklase.
+			for (int x = 0; x < Classes.Count; x++)
+			{
+				if (Classes[x].ClassName == context.GetText())
+				{
+					_association.SourceClass = Classes[x];
+					_target.Class = Classes[x];
+					_sourceClass = x;
 					found = true;
 					break;
 				}
 			}
-
-			if (found == false) 
-			{
-				// Pārbauda, vai eksiste avotklase.
-				for (int x = 0; x < Classes.Count; x++)
-				{
-					if (Classes[x].ClassName == context.GetText())
-					{
-						_association.SourceClass = Classes[x];
-						_target.Class = Classes[x];
-						_sourceClass = x;
-						found = true;
-						break;
-					}
-				}
-				if (found == false) { Errors.Add("At line " + context.Start.Line + ": there is no class '" + context.GetText() + "' to use as source class!"); }
-				return VisitChildren(context);
-			}
+			if (found == false) { Errors.Add("At line " + context.Start.Line + ": there is no class '" + context.GetText() + "' to use as source class!"); }
 
 			return null;
 		}
@@ -223,8 +217,6 @@ namespace AntlrCSharp
 		public override object VisitAssociationTargetClass([NotNull] AssociationTargetClassContext context)
         {
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n"); 
-			
-			bool found = false;
 
 			foreach (var r in Reserved)
 			{
@@ -232,28 +224,25 @@ namespace AntlrCSharp
 				{
 					Errors.Add("At line " + context.Start.Line + ": A class cannot be named '" + r + "'!");
 					_class.ClassName = " ";
+					return null;
+				}
+			}
+
+			bool found = false;
+
+			// Pārbauda, vai eksistē mērķklase
+			for (int x = 0; x < Classes.Count; x++)
+			{
+				if (Classes[x].ClassName == context.GetText())
+				{
+					_association.TargetClass = Classes[x];
+					_source.Class = Classes[x];
+					_targetClass = x;
 					found = true;
 					break;
 				}
 			}
-
-			if (found == false) 
-			{
-				// Pārbauda, vai eksistē mērķklase
-				for (int x = 0; x < Classes.Count; x++)
-				{
-					if (Classes[x].ClassName == context.GetText())
-					{
-						_association.TargetClass = Classes[x];
-						_source.Class = Classes[x];
-						_targetClass = x;
-						found = true;
-						break;
-					}
-				}
-				if (found == false) { Errors.Add("At line " + context.Start.Line + ": there is no class '" + context.GetText() + "' to use as target class!"); }
-				return VisitChildren(context);
-			}
+			if (found == false) { Errors.Add("At line " + context.Start.Line + ": there is no class '" + context.GetText() + "' to use as target class!"); }
 
 			return null;
 		}

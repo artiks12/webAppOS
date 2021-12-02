@@ -77,8 +77,7 @@ namespace AntlrCSharp
         public override object VisitClassName([NotNull] ClassNameContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
-			
-			bool found = false;
+
 			// Klases vārds nedrīkst būt rezervētais vārds
 			foreach (var r in Reserved) 
 			{
@@ -86,26 +85,22 @@ namespace AntlrCSharp
 				{ 
 					Errors.Add("At line " + context.Start.Line + ": A class cannot be named '" + r + "'!");
 					_class.ClassName = " ";
-					found = true; 
-					break; 
+					return null;
 				}
 			}
 
-			if (found == false)
+			// Pārbaudam, vai eksistē klase ar doto vārdu
+			foreach (var c in Classes)
 			{
-				// Pārbaudam, vai eksistē klase ar doto vārdu
-				foreach (var c in Classes)
+				if (context.GetText() == c.ClassName)
 				{
-					if (context.GetText() == c.ClassName) 
-					{ 
-						Errors.Add("At line " + context.Start.Line + ": A class '" + context.GetText() + "' already exists! Check line " + c.Line + "!");
-						_class.ClassName = " ";
-						found = true; 
-						break; 
-					}
+					Errors.Add("At line " + context.Start.Line + ": A class '" + context.GetText() + "' already exists! Check line " + c.Line + "!");
+					_class.ClassName = " ";
+					return null;
 				}
-				if (found == false) { _class.ClassName = context.GetText(); }
 			}
+			
+			_class.ClassName = context.GetText();
 
 			return null;
 		}
@@ -124,7 +119,6 @@ namespace AntlrCSharp
 			}
 			else 
 			{
-				bool found = false;
 				// Klases vārds nedrīkst būt rezervētais vārds
 				foreach (var r in Reserved)
 				{
@@ -132,28 +126,25 @@ namespace AntlrCSharp
 					{
 						Errors.Add("At line " + context.Start.Line + ": A class cannot be named '" + r + "'!");
 						_class.ClassName = " ";
+						return null;
+					}
+				}
+
+				bool found = false;
+
+				foreach (var c in Classes)
+				{
+					if (context.GetText() == c.ClassName)
+					{
+						_class.SuperClass = c;
+						c.isSuperClass = true;
 						found = true;
 						break;
 					}
 				}
-
-				// Tad meklē, vai eksistē klase ar doto vārdu.
 				if (found == false)
 				{
-					foreach (var c in Classes)
-					{
-						if (context.GetText() == c.ClassName)
-						{
-							_class.SuperClass = c;
-							c.isSuperClass = true;
-							found = true;
-							break;
-						}
-					}
-					if (found == false)
-					{
-						Errors.Add("At line " + context.Start.Line + ": There is no class '" + context.GetText() + "' for class '" + _class.ClassName + "' to inherit from!");
-					}
+					Errors.Add("At line " + context.Start.Line + ": There is no class '" + context.GetText() + "' for class '" + _class.ClassName + "' to inherit from!");
 				}
 			}
 			return null;
