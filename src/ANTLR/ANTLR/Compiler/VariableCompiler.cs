@@ -16,7 +16,7 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Apstaigājam mainīgo
 		/// </summary>
-		public object VisitVariable([NotNull] FieldContext context) 
+		public object VisitVariable([NotNull] VariableDefinitionContext context) 
 		{
 			// Sagatavojam īpašību
 			_variable = new();
@@ -24,30 +24,28 @@ namespace AntlrCSharp
 
 			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
-			var variableBody = context.fieldDefinition().variableDefinition(); // Mainīgā ķermenis
-
 			// Pārbauda, vai mainīgajam ir aizsardzība
-			if (variableBody.fieldProtection() != null) 
+			if (context.fieldProtection() != null) 
 			{
-				line = (uint)variableBody.fieldProtection().Stop.Line;
-				VisitVariableProtection(variableBody.fieldProtection()); 
+				line = (uint)context.fieldProtection().Stop.Line;
+				VisitVariableProtection(context.fieldProtection()); 
 			}
 
 			// Pārbauda, vai mainīgajam ir datu tips un/vai vārds
-			if (variableBody.variable() != null) 
+			if (context.variable() != null) 
 			{
 				// Pārbauda, vai mainīgajam ir datu tips
-				if (variableBody.variable().fieldDataType() != null) 
+				if (context.variable().fieldDataType() != null) 
 				{
-					line = (uint)variableBody.variable().fieldDataType().Stop.Line;
-					VisitVariableDataType(variableBody.variable().fieldDataType()); 
+					line = (uint)context.variable().fieldDataType().Stop.Line;
+					VisitVariableDataType(context.variable().fieldDataType()); 
 				}
 				else { Errors.Add("At line " + line + ": Missing datatype for property!"); }
 
 				// Pārbauda, vai mainīgajam ir vārds
-				if (variableBody.variable().fieldName() != null) 
+				if (context.variable().fieldName() != null) 
 				{
-					VisitVariableName(variableBody.variable().fieldName()); 
+					VisitVariableName(context.variable().fieldName()); 
 				}
 				else { Errors.Add("At line " + line + ": Missing name for property!"); }
 			}

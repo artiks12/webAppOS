@@ -263,80 +263,89 @@ namespace AntlrCSharp
 		/// </summary>
 		public bool checkRoleName(string rolename, Class _class, uint line) 
 		{
-			// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
-			foreach (var r in Reserved)
+			// Pārbauda, vai lomas vārds nesakrīt ar pretējās klases vārdu
+			if (rolename == _class.ClassName)
 			{
-				if (r == rolename)
-				{
-					Errors.Add("At line " + line + ": association source role name cannot be '" + r + "'!");
-					return false;
-				}
+				Errors.Add("At line " + line + ": association source role name cannot be '" + _class.ClassName + "'!");
+				return false;
 			}
-			
-			// Pārbauda, vai klasē ir īpasība, kura vārds sakrīit ar lomas vārdu
-			foreach (var v in _class._variables)
+			else 
 			{
-				if (v.Name == rolename)
+				// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
+				foreach (var r in Reserved)
 				{
-					Errors.Add("At line " + line + ": a field with name '" + v.Name + "' already exists in class '" + _class.ClassName + "'! Check line " + v.Line + "!");
-					return false;
-				}
-			}
-
-			// Pārbauda, vai klasē ir metode, kura vārds sakrīit ar lomas vārdu
-			foreach (var m in _class._methods)
-			{
-				if (m.Name == rolename)
-				{
-					Errors.Add("At line " + line + ": a field with name '" + m.Name + "' already exists in class '" + _class.ClassName + "'! Check line " + m.Line + "!");
-					return false;
-				}
-			}
-
-			// Pārbauda, vai klasē ir asociācijas galapunkts, kura vārds sakrīit ar lomas vārdu
-			foreach (var ae in _class._associationEnds)
-			{
-				if (ae.RoleName == rolename)
-				{
-					Errors.Add("At line " + line + ": an association with role name '" + ae.RoleName + "' already exists in class '" + _class.ClassName + "'! Check line " + Associations[(int)ae.ID].Line + "!");
-					return false;
-				}
-			}
-
-			// Pārbauda, vai klasei ir virsklase, kuru pārbaudīt
-			if (_class.SuperClass != null)
-			{
-				// Pārbauda, vai virsklasē ir metode, kura vārds sakrīit ar lomas vārdu
-				foreach (var m in _class.SuperClass._methods)
-				{
-					if (m.Name == rolename)
+					if (r == rolename)
 					{
-						Errors.Add("At line " + line + ": a field with name '" + m.Name + "' already exists in super class '" + _class.SuperClass.ClassName + "'! Check line " + m.Line + "!");
+						Errors.Add("At line " + line + ": association source role name cannot be '" + r + "'!");
 						return false;
 					}
 				}
 
-				// Pārbauda, vai virsklasē ir īpašība, kura vārds sakrīit ar lomas vārdu
-				foreach (var v in _class.SuperClass._variables)
+				// Pārbauda, vai klasē ir īpasība, kura vārds sakrīit ar lomas vārdu
+				foreach (var v in _class._variables)
 				{
 					if (v.Name == rolename)
 					{
-						Errors.Add("At line " + line + ": a field with name '" + v.Name + "' already exists in super class '" + _class.SuperClass.ClassName + "'! Check line " + v.Line + "!");
+						Errors.Add("At line " + line + ": a field with name '" + v.Name + "' already exists in class '" + _class.ClassName + "'! Check line " + v.Line + "!");
 						return false;
 					}
 				}
 
-				// Pārbauda, vai virsklasē ir asociācijas galapunkts, kura vārds sakrīit ar lomas vārdu
-				foreach (var ae in _class.SuperClass._associationEnds)
+				// Pārbauda, vai klasē ir metode, kura vārds sakrīit ar lomas vārdu
+				foreach (var m in _class._methods)
 				{
-					if (ae.RoleName == rolename)
+					if (m.Name == rolename)
 					{
-						Errors.Add("At line " + line + ": an association with role name '" + ae.RoleName + "' already exists in super class '" + _class.SuperClass.ClassName + "'! Check line " + Associations[(int)ae.ID].Line + "!");
+						Errors.Add("At line " + line + ": a field with name '" + m.Name + "' already exists in class '" + _class.ClassName + "'! Check line " + m.Line + "!");
 						return false;
 					}
 				}
+
+				// Pārbauda, vai klasē ir asociācijas galapunkts, kura vārds sakrīit ar lomas vārdu
+				foreach (var ae in _class._associationEnds)
+				{
+					if (ae.RoleName == rolename)
+					{
+						Errors.Add("At line " + line + ": an association with role name '" + ae.RoleName + "' already exists in class '" + _class.ClassName + "'! Check line " + Associations[(int)ae.ID].Line + "!");
+						return false;
+					}
+				}
+
+				// Pārbauda, vai klasei ir virsklase, kuru pārbaudīt
+				if (_class.SuperClass != null)
+				{
+					// Pārbauda, vai virsklasē ir metode, kura vārds sakrīit ar lomas vārdu
+					foreach (var m in _class.SuperClass._methods)
+					{
+						if (m.Name == rolename)
+						{
+							Errors.Add("At line " + line + ": a field with name '" + m.Name + "' already exists in super class '" + _class.SuperClass.ClassName + "'! Check line " + m.Line + "!");
+							return false;
+						}
+					}
+
+					// Pārbauda, vai virsklasē ir īpašība, kura vārds sakrīit ar lomas vārdu
+					foreach (var v in _class.SuperClass._variables)
+					{
+						if (v.Name == rolename)
+						{
+							Errors.Add("At line " + line + ": a field with name '" + v.Name + "' already exists in super class '" + _class.SuperClass.ClassName + "'! Check line " + v.Line + "!");
+							return false;
+						}
+					}
+
+					// Pārbauda, vai virsklasē ir asociācijas galapunkts, kura vārds sakrīit ar lomas vārdu
+					foreach (var ae in _class.SuperClass._associationEnds)
+					{
+						if (ae.RoleName == rolename)
+						{
+							Errors.Add("At line " + line + ": an association with role name '" + ae.RoleName + "' already exists in super class '" + _class.SuperClass.ClassName + "'! Check line " + Associations[(int)ae.ID].Line + "!");
+							return false;
+						}
+					}
+				}
+				return true;
 			}
-			return true;
 		}
 	}
 }

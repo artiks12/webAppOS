@@ -45,7 +45,7 @@ namespace AntlrCSharp
             {
                 // Pārbauda, vai laukam ir iekavas
                 if (context.fieldDefinition().methodDefinition() != null) { VisitMethod(context); }
-                else { VisitVariable(context); }
+                else { VisitVariable(context.fieldDefinition().variableDefinition()); }
             }
             
             return null;

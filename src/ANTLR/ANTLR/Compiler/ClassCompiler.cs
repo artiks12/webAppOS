@@ -117,15 +117,14 @@ namespace AntlrCSharp
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			
-			bool found = false;
 			// Vispirms pārbaudam, vai virsklasei ir tāds pats vārds, kā pamatklasei
-			if (context.GetText() == _class.ClassName) 
+			if (context.GetText() == _class.ClassName)
 			{
-				Errors.Add("At line " + context.Start.Line + ": Cannot inherit from class of the same name!"); 
-				found = true;
+				Errors.Add("At line " + context.Start.Line + ": Cannot inherit from class of the same name!");
 			}
-			if (found == false) 
+			else 
 			{
+				bool found = false;
 				// Klases vārds nedrīkst būt rezervētais vārds
 				foreach (var r in Reserved)
 				{
