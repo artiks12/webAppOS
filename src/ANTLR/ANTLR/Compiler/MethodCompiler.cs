@@ -113,51 +113,51 @@ namespace AntlrCSharp
 		public object VisitMethodName([NotNull] FieldNameContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
-			
+
+			_method.Name = context.GetText();
+
 			// Pārbauda, vai metodes vārds sakrīt ar klases vārdu
-			if (context.GetText() == _class.ClassName)
+			if (_method.Name == _class.ClassName)
 			{
 				Errors.Add("At line " + context.Start.Line + ": A method cannot be named after class name!");
-				_method.Name = " ";
+				return null;
 			}
-			else
-			{
-				// Pārbauda, vai metodes vārds sakrīt ar rezervētajiem vārdiem
-				foreach (var r in Reserved)
-				{
-					if (context.GetText() == r)
-					{
-						Errors.Add("At line " + context.Start.Line + ": A method cannot be named '" + r + "'!");
-						_method.Name = " ";
-						return null;
-					}
-				}
 
-				if (checkMethodName(context, _class, false) == true)
+			// Pārbauda, vai metodes vārds sakrīt ar rezervētajiem vārdiem
+			foreach (var r in Reserved)
+			{
+				if (_method.Name == r)
 				{
-					// Pārbauda, vai klasei ir virsklase
-					if (_class.SuperClass != null)
-					{
-						if (checkMethodName(context, _class.SuperClass, true) == true)
-						{
-							_variable.Name = context.GetText();
-						}
-					}
-					else { _variable.Name = context.GetText(); }
+					Errors.Add("At line " + context.Start.Line + ": A method cannot be named '" + r + "'!");
+					return null;
 				}
 			}
+
+			if (checkMethodName(context, _class, false) == true)
+			{
+				// Pārbauda, vai klasei ir virsklase
+				if (_class.SuperClass != null)
+				{
+					checkMethodName(context, _class.SuperClass, true);
+				}
+			}
+
 			return null;
 		}
 
 		public bool checkMethodName([NotNull] FieldNameContext context, Class _class, bool isSuperClass) 
 		{
+			string message;
+
+			if (isSuperClass == false) { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class " + _class.ClassName + "! Check line "; }
+			else { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass " + _class.ClassName + "! Check line "; }
+
 			// Pārbauda, vai metodes vārds atkārtojas klasē starp mainīgajiem
 			foreach (var v in _class._variables)
 			{
 				if (v.Name == context.GetText())
 				{
-					Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists! Check line " + v.Line + "!");
-					_method.Name = " ";
+					Errors.Add(message + v.Line + "!");
 					return false;
 				}
 			}
@@ -167,8 +167,7 @@ namespace AntlrCSharp
 			{
 				if (ae.RoleName == context.GetText())
 				{
-					Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class! Check line " + Associations[(int)ae.ID].Line + "!");
-					_method.Name = " ";
+					Errors.Add(message + Associations[(int)ae.ID].Line + "!");
 					return false;
 				}
 			}
@@ -180,8 +179,7 @@ namespace AntlrCSharp
 				{
 					if (m.Name == context.GetText())
 					{
-						Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists! Check line " + m.Line + "!");
-						_method.Name = " ";
+						Errors.Add(message + m.Line + "!");
 						return false;
 					}
 				}
@@ -194,6 +192,8 @@ namespace AntlrCSharp
 					// Pārbauda, vai metožu vārdi sakrīt
 					if (m.Name == _method.Name)
 					{
+						if (m.primitiveType == _method.primitiveType) { Errors.Add("At line " + context.Start.Line + ": Method " + _variable.Name + ", that exists in superclass " + _class.ClassName + " does not have the same datatype!"); }
+						
 						// Pārbauda, vai metožu argumentu skaits sakrīt
 						if (m._arguments.Count == _method._arguments.Count)
 						{
@@ -211,6 +211,7 @@ namespace AntlrCSharp
 							}
 						}
 						else { Errors.Add("At line " + context.Start.Line + ": Method " + _method.Name + ", that exists in superclass " + _class.ClassName + " does not have equal amount of arguments!"); }
+						return true;
 					}
 				}
 			}

@@ -88,72 +88,90 @@ namespace AntlrCSharp
 		public object VisitVariableName([NotNull] FieldNameContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
-			
+
+			_variable.Name = context.GetText();
+
 			// Pārbauda, vai mainīgā vārds sakrīt ar klases vārdu
-			if (context.GetText() == _class.ClassName)
+			if (_variable.Name == _class.ClassName)
 			{
 				Errors.Add("At line " + context.Start.Line + ": A variable cannot be named after class name!");
-				_variable.Name = " ";
 				return null;
 			}
 			// Pārbauda, vai mainīgā vārds sakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved)
 			{
-				if (context.GetText() == r)
+				if (_variable.Name == r)
 				{
 					Errors.Add("At line " + context.Start.Line + ": A variable cannot be named '" + r + "'!");
-					_variable.Name = " ";
 					return null;
 				}
 			}
 
-			if (checkVariableName(context,_class) == true) 
+			if (checkVariableName(context,_class,false) == true) 
 			{
 				// Pārbauda, vai klasei ir virsklase
 				if (_class.SuperClass != null)
 				{
-					if (checkVariableName(context,_class.SuperClass) == true)
-					{
-						_variable.Name = context.GetText();
-					}
+					checkVariableName(context, _class.SuperClass, true);
 				}
-				else { _variable.Name = context.GetText(); }
 			}
 			
 			return null;
 		}
 
-		public bool checkVariableName([NotNull] FieldNameContext context, Class _class)
+		public bool checkVariableName([NotNull] FieldNameContext context, Class _class, bool isSuperClass)
 		{
+			string message;
+
+			if (isSuperClass == false) { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class " + _class.ClassName + "! Check line "; }
+			else { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass " + _class.ClassName + "! Check line "; }
+			
 			// Pārbauda, vai mainīgā vārds atkārtojas klasē starp metodēm
 			foreach (var m in _class._methods)
 			{
 				if (m.Name == context.GetText())
 				{
-					Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists! Check line " + m.Line + "!");
-					_variable.Name = " ";
+					Errors.Add(message + m.Line + "!");
 					return false;
 				}
 			}
 
-			// Pārbauda, vai mainīgā vārds atkārtojas klasē starp citiem mainīgajiem
-			foreach (var v in _class._variables)
-			{
-				if (v.Name == context.GetText())
-				{
-					Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists! Check line " + v.Line + "!");
-					_variable.Name = " ";
-					return false;
-				}
-			}
 			// Pārbauda, vai mainīgā vārds atkārtojas klasē starp asociācijām
 			foreach (var ae in _class._associationEnds)
 			{
 				if (ae.RoleName == context.GetText())
 				{
-					Errors.Add("At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class! Check line " + Associations[(int)ae.ID].Line + "!");
-					_variable.Name = " ";
+					Errors.Add(message + Associations[(int)ae.ID].Line + "!");
 					return false;
+				}
+			}
+
+			if (isSuperClass == false)
+			{
+				// Pārbauda, vai mainīgā vārds atkārtojas klasē starp citiem mainīgajiem
+				foreach (var v in _class._variables)
+				{
+					if (v.Name == context.GetText())
+					{
+						Errors.Add(message + v.Line + "!");
+						return false;
+					}
+				}
+			}
+			else 
+			{
+				// Pārbauda, vai mainīgā vārds atkārtojas klasē starp citiem mainīgajiem
+				foreach (var v in _class._variables)
+				{
+					if (v.Name == context.GetText())
+					{
+						if (v.primitiveType == _variable.primitiveType)
+						{
+							Errors.Add("At line " + context.Start.Line + ": Variable " + _variable.Name + ", that exists in superclass " + _class.ClassName + " does not have the same datatype!");
+							return false;
+						}
+						return true;
+					}
 				}
 			}
 

@@ -111,13 +111,14 @@ namespace AntlrCSharp
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 
+			_argument.Name = context.GetText();
+
 			// Pārbauda, vai argumenta vārds sakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved) 
 			{
-				if (r == context.GetText()) 
+				if (r == _argument.Name) 
 				{
 					Errors.Add("At line " + context.Start.Line + ": Argument cannot be named '" + r + "'!");
-					_argument.Name = " ";
 					return null;
 				}
 			}
@@ -125,15 +126,12 @@ namespace AntlrCSharp
 			// Pārbauda, vai arguments ar doto vārdu jau ir definēts starp citiem argumentiem
 			foreach (var arg in _method._arguments)
 			{
-				if (arg.Name == context.GetText())
+				if (arg.Name == _argument.Name)
 				{
 					Errors.Add("At line " + context.Start.Line + ": Argument with name '" + context.GetText() + "' already exists! Check line " + arg.Line + "!");
-					_argument.Name = " ";
 					return null;
 				}
 			}
-			
-			_argument.Name = context.GetText();
 
 			return null;
 		}

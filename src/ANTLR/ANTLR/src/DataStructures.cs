@@ -141,7 +141,7 @@ namespace AntlrCSharp
                     case "Void":
                         return "void";
                     default:
-                        return _type;
+                        return null;
                 }
             }
             set { _type = value; }

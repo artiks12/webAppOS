@@ -42,6 +42,7 @@ namespace AntlrCSharp
             // Pārbauda, vai ir aizverošā kvadrātiekava
             if (context.SQUARECLOSE() == null) { Errors.Add("At line " + line + ": Syntax error! Missing ']'!"); }
 
+            if (_isUrl == false) { _method._annotations.Add(_annotation); }
             return null;
         }
 
@@ -129,7 +130,8 @@ namespace AntlrCSharp
                     if (context.urlAttributes() == null) { Errors.Add("At line " + context.Start.Line + ": URL attributes for method '" + _method.Name + "' are not given!"); }
                     else
                     {
-                        VisitChildren(context);
+                        VisitUrlAttributes(context.urlAttributes());
+                        _method.URL.MethodPath = context.annotationAttributes().GetText();
                         _urlFound = true;
                     }
                 }
@@ -165,13 +167,18 @@ namespace AntlrCSharp
                 // Sagatavojam anotāciju, kas nav URL
                 _annotation = new();
                 _annotation.Line = _annotationLine;
+
+                bool found = false;
                 foreach (var a in AnnotationTypes) 
                 {
                     if (context.GetText() == a) 
                     {
                         _annotation.Type = a;
+                        found = true;
+                        break;
                     }
                 }
+                if (found == false) { Errors.Add("At line " + context.Start.Line + ": annotation type " + context.GetText() +" is not supported!"); }
             }
             return null;
         }
@@ -187,6 +194,8 @@ namespace AntlrCSharp
             if (context.protocol() == null) { Errors.Add("At line " + line + ": URL protocol not given!"); }
             else 
             {
+                _method.URL.Protocol = context.protocol().GetText();
+                
                 bool found = false;
                 // Pārbaudam, vai ir dots pareizs protokols
                 foreach (var p in URLProtocols) 
@@ -194,7 +203,6 @@ namespace AntlrCSharp
                     if (p == context.protocol().GetText()) 
                     {
                         found = true;
-                        _method.URL.Protocol = p;
                         break;
                     }
                 }
@@ -206,6 +214,8 @@ namespace AntlrCSharp
             if (context.location() == null) { Errors.Add("At line " + line + ": URL location not given!"); }
             else
             {
+                _method.URL.Location = context.location().GetText();
+
                 bool found = false;
                 // Pārbaudam, vai ir dots pareiza lokācija
                 foreach (var l in URLlocations)
@@ -213,23 +223,12 @@ namespace AntlrCSharp
                     if (l == context.location().GetText())
                     {
                         found = true;
-                        _method.URL.Location = l;
                         break;
                     }
                 }
                 if (found == false) { Errors.Add("At line " + context.location().Start.Line + ": unsupported URL location was given!"); }
             }
 
-            return null;
-        }
-
-        /// <summary>
-        /// Apstaigā anotācijas attribūtus
-        /// </summary>
-        public override object VisitAnnotationAttributes([NotNull] AnnotationAttributesContext context)
-        {
-            _method.URL.MethodPath = context.GetText();
-            
             return null;
         }
     }

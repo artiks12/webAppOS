@@ -78,13 +78,14 @@ namespace AntlrCSharp
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 
+			_class.ClassName = context.GetText();
+
 			// Klases vārds nedrīkst būt rezervētais vārds
 			foreach (var r in Reserved) 
 			{
-				if (context.GetText() == r) 
+				if (_class.ClassName == r) 
 				{ 
 					Errors.Add("At line " + context.Start.Line + ": A class cannot be named '" + r + "'!");
-					_class.ClassName = " ";
 					return null;
 				}
 			}
@@ -92,15 +93,12 @@ namespace AntlrCSharp
 			// Pārbaudam, vai eksistē klase ar doto vārdu
 			foreach (var c in Classes)
 			{
-				if (context.GetText() == c.ClassName)
+				if (_class.ClassName == c.ClassName)
 				{
 					Errors.Add("At line " + context.Start.Line + ": A class '" + context.GetText() + "' already exists! Check line " + c.Line + "!");
-					_class.ClassName = " ";
 					return null;
 				}
 			}
-			
-			_class.ClassName = context.GetText();
 
 			return null;
 		}
@@ -125,7 +123,6 @@ namespace AntlrCSharp
 					if (context.GetText() == r)
 					{
 						Errors.Add("At line " + context.Start.Line + ": A class cannot be named '" + r + "'!");
-						_class.ClassName = " ";
 						return null;
 					}
 				}
