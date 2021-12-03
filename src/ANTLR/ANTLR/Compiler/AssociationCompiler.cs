@@ -352,8 +352,6 @@ namespace AntlrCSharp
 				}
 			}
 
-			
-
 			return null;
 		}
 	}

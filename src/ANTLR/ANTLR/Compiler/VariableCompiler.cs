@@ -174,9 +174,7 @@ namespace AntlrCSharp
 					}
 				}
 			}
-
 			return true;
 		}
 	}
-	
 }
