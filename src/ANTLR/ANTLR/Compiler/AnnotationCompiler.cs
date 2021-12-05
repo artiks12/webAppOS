@@ -51,7 +51,12 @@ namespace AntlrCSharp
             uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
             // Parbauda, vai ir anotācijas tips
-            if (context.annotationType() == null) { Errors.Add("At line " + line + ": Missing annotation type!"); }
+            if (context.annotationType() == null) 
+            { 
+                Errors.Add("At line " + line + ": Missing annotation type!");
+                _annotation = new();
+                _annotation.Line = _annotationLine;
+            }
             else
             {
                 VisitAnnotationType(context.annotationType());
