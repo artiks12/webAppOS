@@ -41,9 +41,13 @@ namespace AntlrCSharp
 			_source.IsSource = true;
 			_target.IsSource = false;
 
+			// Pievienojam asociāciju galapunktus asociācijai
+			_association.Source = _source;
+			_association.Target = _target;
+
 			// Pievienojam asociāciju galapunktus klasēm
-			Classes[_sourceClass]._associationEnds.Add(_source);
-			Classes[_targetClass]._associationEnds.Add(_target);
+			Classes[_sourceClass]._associationEnds.Add(_target);
+			Classes[_targetClass]._associationEnds.Add(_source);
 
 			Associations.Add(_association); // Pievienojam asociāciju sarakstam
 
@@ -178,14 +182,12 @@ namespace AntlrCSharp
 				{
 					if (isSource == true)
 					{
-						_association.SourceClass = Classes[x];
-						_target.Class = Classes[x];
+						_source.Class = Classes[x];
 						_sourceClass = x;
 					}
 					else 
 					{
-						_association.TargetClass = Classes[x];
-						_source.Class = Classes[x];
+						_target.Class = Classes[x];
 						_targetClass = x;
 					}
 					found = true;
@@ -291,11 +293,10 @@ namespace AntlrCSharp
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n"); 
 
-			_association.SourceName = context.GetText();
-			_target.RoleName = context.GetText();
+			_source.RoleName = context.GetText();
 
 			// Pārbauda, vai lomas vārds nesakrīt ar pretējās klases vārdu
-			if (context.GetText() == _association.TargetClass.ClassName)
+			if (_source.RoleName == _target.Class.ClassName)
 			{
 				Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + context.GetText() + "'!");
 				return null;
@@ -303,19 +304,19 @@ namespace AntlrCSharp
 			// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved)
 			{
-				if (r == context.GetText())
+				if (r == _source.RoleName)
 				{
 					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + r + "'!");
 					return null;
 				}
 			}
 
-			if (checkRoleName(_association.SourceName, _association.TargetClass, (uint)context.Start.Line, false) == true)
+			if (checkRoleName(_source.RoleName, _target.Class, (uint)context.Start.Line, false) == true)
 			{
 				// Pārbauda, vai klasei ir virsklase
-				if (_association.TargetClass.SuperClass != null)
+				if (_target.Class.SuperClass != null)
 				{
-					checkRoleName(_association.SourceName, _association.TargetClass.SuperClass, (uint)context.Start.Line, true);
+					checkRoleName(_source.RoleName, _target.Class.SuperClass, (uint)context.Start.Line, true);
 				}
 			}
 
@@ -329,11 +330,10 @@ namespace AntlrCSharp
         {
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n"); 
 
-			_association.TargetName = context.GetText();
-			_source.RoleName = context.GetText();
+			_target.RoleName = context.GetText();
 
 			// Pārbauda, vai lomas vārds nesakrīt ar pretējās klases vārdu
-			if (context.GetText() == _association.SourceClass.ClassName)
+			if (_target.RoleName == _source.Class.ClassName)
 			{
 				Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + context.GetText() + "'!");
 				return null;
@@ -341,19 +341,19 @@ namespace AntlrCSharp
 			// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved)
 			{
-				if (r == context.GetText())
+				if (r == _target.RoleName)
 				{
 					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + r + "'!");
 					return null;
 				}
 			}
 
-			if (checkRoleName(_association.TargetName, _association.SourceClass, (uint)context.Start.Line, false) == true)
+			if (checkRoleName(_target.RoleName, _source.Class, (uint)context.Start.Line, false) == true)
 			{
 				// Pārbauda, vai klasei ir virsklase
-				if (_association.TargetClass.SuperClass != null)
+				if (_source.Class.SuperClass != null)
 				{
-					checkRoleName(_association.TargetName, _association.SourceClass, (uint)context.Start.Line, true);
+					checkRoleName(_target.RoleName, _source.Class.SuperClass, (uint)context.Start.Line, true);
 				}
 			}
 

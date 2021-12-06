@@ -1,5 +1,6 @@
 using WebAppOS;
 using System.Collections.Generic;
+using System;
 
 namespace Test
 {
@@ -7,20 +8,18 @@ namespace Test
     {
         protected static IWebMemory _wm;
         protected static IRemoteWebCalls _wc;
-        protected WebObject _object;
+        public WebObject _object;
 
         public BaseObject ( IWebMemory wm , IRemoteWebCalls wc )
         {
             _wm = wm;
             _wc = wc;
-            _object = null;
         }
 
         public BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )
         {
             _wm = wm;
             _wc = wc;
-            _object = new( rObject, wm );
         }
 
         protected void checkClass( List<string> attributes , string className )
@@ -35,29 +34,34 @@ namespace Test
                 var a = c.FindAttribute( attributes[x] );
                 if (a == null)
                 {
-                    a = c.CreateAttribute( attributes[x] , attributes[x+1] );
+                    c.CreateAttribute( attributes[x] , attributes[x+1] );
                 }
             }
         }
 
-        protected WebAssociationEnd checkAssociation( string associationNameSource, string associationNameTarget, string sourceClass, string targetClass, bool IsComposition )
+        protected void checkAssociation( List<string> associations )
         {
-            var cSource = _wm.FindClassByName( sourceClass );
-            if (cSource == null)
+            for (int x = 0; x < associations.Count; x += 5)
             {
-                cSource = _wm.CreateClass( sourceClass );
+                var cSource = _wm.FindClassByName( associations[x + 2] );
+                if (cSource == null)
+                {
+                    cSource = _wm.CreateClass( associations[x + 2] );
+                }
+                var cTarget = _wm.FindClassByName( associations[x + 3] );
+                if (cTarget == null)
+                {
+                    cTarget = _wm.CreateClass( associations[x + 3] );
+                }
+                var a = cSource.FindAssociationEnd( associations[x + 1] );
+                if (a == null)
+                {
+                    bool isComposition;
+                    if (associations[x + 4] == "true") { isComposition = true; }
+                    else { isComposition = false; }
+                    cSource.CreateAssociationEnd(cSource, cTarget, associations[x], associations[x + 1], isComposition);
+                }
             }
-            var cTarget = _wm.FindClassByName( targetClass );
-            if (cTarget == null)
-            {
-                cTarget = _wm.CreateClass( targetClass );
-            }
-            var a = cSource.FindAssociationEnd( associationNameTarget );
-            if (a == null)
-            {
-                a = cSource.CreateAssociationEnd( cSource , cTarget , associationNameSource , associationNameTarget , IsComposition );
-            }
-            return a;
         }
     }
 }

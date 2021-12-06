@@ -134,7 +134,6 @@ namespace AntlrCSharp
 					if (context.GetText() == c.ClassName)
 					{
 						_class.SuperClass = c;
-						c.isSuperClass = true;
 						found = true;
 						break;
 					}

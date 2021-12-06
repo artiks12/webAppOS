@@ -151,8 +151,12 @@ namespace WebAppOS
 
             var r = _k.findAssociationEnd(_r, targetRoleName);
 
-            if (dIngoingEnd[r] != null) { return dIngoingEnd[r]; }
-            else { return dOutgoingEnd[r]; }
+            if (r == 0) { return null; }
+            else 
+            {
+                if (dIngoingEnd.ContainsKey(r) != false) { return dIngoingEnd[r]; }
+                else { return dOutgoingEnd[r]; }
+            }
         }
 
         /// <summary>

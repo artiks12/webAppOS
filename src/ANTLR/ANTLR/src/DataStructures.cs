@@ -87,22 +87,12 @@ namespace AntlrCSharp
         /// <summary>
         /// Asociācijas avota vārds
         /// </summary>
-        public string SourceName { get; set; }
+        public AssociationEnd Source { get; set; }
 
         /// <summary>
         /// Asociācijas avota klase
         /// </summary>
-        public Class SourceClass { get; set; }
-
-        /// <summary>
-        /// Asociācijas mērķa vārds
-        /// </summary>
-        public string TargetName { get; set; }
-
-        /// <summary>
-        /// Asociācijas mērķa klase
-        /// </summary>
-        public Class TargetClass { get; set; }
+        public AssociationEnd Target { get; set; }
 
         /// <summary>
         /// Vai asociācija ir kompozīcija
@@ -179,7 +169,7 @@ namespace AntlrCSharp
                 switch (_type)
                 {
                     case "Integer":
-                        return "return Convert.ToInt32( _object[\"" + Name + "\"] )";
+                        return "return Convert.ToInt64( _object[\"" + Name + "\"] )";
                     case "String":
                         return "return _object[\"" + Name + "\"]";
                     case "Boolean":
@@ -274,11 +264,6 @@ namespace AntlrCSharp
         /// Rinda, kurā klase tiek definēts failā
         /// </summary>
         public uint Line { get; set; }
-
-        /// <summary>
-        /// Vai šī klase ir virsklase
-        /// </summary>
-        public bool isSuperClass { get; set; }
         
         public Class()
         {

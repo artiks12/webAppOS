@@ -10,138 +10,45 @@ namespace Test
 
         public Artis ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
         {
-            List<string> attributes = new() { "Vecums" , "Integer" , "Vards" , "String" , "IrStudents" , "Boolean" , "Nauda" , "Real" };
+            List<string> attributes = new() {  };
             checkClass( attributes , "Artis" );
+            List<string> associations = new() { "source1" , "target1" , "Artis" , "Raivis" , "false" };
+            checkAssociation( associations );
+            _object = _wm.FindClassByName( "Artis" ).CreateObject();
         }
 
         public Artis ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )
         {
-            List<string> attributes = new() { "Vecums" , "Integer" , "Vards" , "String" , "IrStudents" , "Boolean" , "Nauda" , "Real" };
+            List<string> attributes = new() {  };
             checkClass( attributes , "Artis" );
+            List<string> associations = new() { "source1" , "target1" , "Artis" , "Raivis" , "false" };
+            checkAssociation( associations );
+            _object = new( rObject, wm );
         }
 
 
-        public int Vecums 
+        public List<Raivis> target1
         {
             get
             {
-                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
-                return Convert.ToInt32( _object["Vecums"] );
+                var c = _wm.FindClassByName( "Artis" );
+                var a = c.FindAssociationEnd( "Raivis" );
+                var list = _object.LinkedObjects(a);
+                List<Raivis> result = new();
+                foreach (var l in list)
+                {
+                    result.Add( new Raivis( _wm , _wc , l.GetReference() ));
+                }
+                return result;
             }
             set
             {
-                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
-                _object["Vecums"] = Convert.ToString( value );
-            }
-        }
-
-        public string Vards 
-        {
-            get
-            {
-                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
-                return _object["Vards"];
-            }
-            set
-            {
-                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
-                _object["Vards"] = Convert.ToString( value );
-            }
-        }
-
-        public bool IrStudents 
-        {
-            get
-            {
-                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
-                return Convert.ToBoolean( _object["IrStudents"] );
-            }
-            set
-            {
-                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
-                _object["IrStudents"] = Convert.ToString( value );
-            }
-        }
-
-        public double Nauda 
-        {
-            get
-            {
-                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
-                return Convert.ToDouble( _object["Nauda"] );
-            }
-            set
-            {
-                if (_object == null) { _object = _wm.FindClassByName( "Artis" ).CreateObject(); }
-                _object["Nauda"] = Convert.ToString( value );
-            }
-        }
-
-        public int sum1 ( int a , int b )
-        {
-            string arguments = JsonSerializer.Serialize( new { a , b } );
-            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference() , "sum1" , arguments );
-            var json = JsonDocument.Parse(result);
-            JsonElement errorMessage;
-            if (json.RootElement.TryGetProperty("error", out errorMessage) == true)
-            {
-                throw new Exception(errorMessage.GetString());
-            }
-            else
-            {
-                var r = json.RootElement.GetProperty("result");
-                return r.GetInt32();
-            }
-        }
-
-        public string sum2 ( int a , int b )
-        {
-            string arguments = JsonSerializer.Serialize( new { a , b } );
-            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference() , "sum2" , arguments );
-            var json = JsonDocument.Parse(result);
-            JsonElement errorMessage;
-            if (json.RootElement.TryGetProperty("error", out errorMessage) == true)
-            {
-                throw new Exception(errorMessage.GetString());
-            }
-            else
-            {
-                var r = json.RootElement.GetProperty("result");
-                return r.GetString();
-            }
-        }
-
-        public bool sum3 ( int a , int b )
-        {
-            string arguments = JsonSerializer.Serialize( new { a , b } );
-            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference() , "sum3" , arguments );
-            var json = JsonDocument.Parse(result);
-            JsonElement errorMessage;
-            if (json.RootElement.TryGetProperty("error", out errorMessage) == true)
-            {
-                throw new Exception(errorMessage.GetString());
-            }
-            else
-            {
-                var r = json.RootElement.GetProperty("result");
-                return r.GetBoolean();
-            }
-        }
-
-        public double sum4 ( int a , int b )
-        {
-            string arguments = JsonSerializer.Serialize( new { a , b } );
-            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference() , "sum4" , arguments );
-            var json = JsonDocument.Parse(result);
-            JsonElement errorMessage;
-            if (json.RootElement.TryGetProperty("error", out errorMessage) == true)
-            {
-                throw new Exception(errorMessage.GetString());
-            }
-            else
-            {
-                var r = json.RootElement.GetProperty("result");
-                return r.GetDouble();
+                var list = value;
+                List<WebObject> result = new();
+                foreach (var l in list)
+                {
+                    result.Add( l._object );
+                }
             }
         }
     }

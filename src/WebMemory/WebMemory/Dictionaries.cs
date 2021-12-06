@@ -117,7 +117,7 @@ namespace WebAppOS
         public static Dictionary<long, WebAssociationEnd> D_GetClassOutgoingAssociationEnds(long rClass, TDAKernel _k, IWebMemory _m)
         {
             Dictionary<long, WebAssociationEnd> d = new();
-            var it = _k.getIteratorForAllIngoingAssociationEnds(rClass);
+            var it = _k.getIteratorForAllOutgoingAssociationEnds(rClass);
             var r = _k.resolveIteratorFirst(it);
             while (r != 0)
             {

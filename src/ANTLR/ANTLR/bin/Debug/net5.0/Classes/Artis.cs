@@ -10,16 +10,20 @@ namespace Test
 
         public Artis ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
         {
-            _object = _wm.FindClassByName( Artis ).CreateObject();
             List<string> attributes = new() {  };
             checkClass( attributes , "Artis" );
+            List<string> associations = new() { "source1" , "target1" , "Artis" , "Raivis" , "false" };
+            checkAssociation( associations );
+            _object = _wm.FindClassByName( "Artis" ).CreateObject();
         }
 
         public Artis ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )
         {
-            _object = new( rObject, wm );
             List<string> attributes = new() {  };
             checkClass( attributes , "Artis" );
+            List<string> associations = new() { "source1" , "target1" , "Artis" , "Raivis" , "false" };
+            checkAssociation( associations );
+            _object = new( rObject, wm );
         }
 
 
@@ -27,7 +31,8 @@ namespace Test
         {
             get
             {
-                var a = checkAssociation( "source1" , "target1" , "Artis" , "Raivis" , false);
+                var c = _wm.FindClassByName( "Artis" );
+                var a = c.FindAssociationEnd( "Raivis" );
                 var list = _object.LinkedObjects(a);
                 List<Raivis> result = new();
                 foreach (var l in list)
@@ -38,8 +43,8 @@ namespace Test
             }
             set
             {
-                var a = checkAssociation( "source1" , "target1" , "Artis" , "Raivis" , false);
                 var list = value;
+                List<WebObject> result = new();
                 foreach (var l in list)
                 {
                     result.Add( l._object );
