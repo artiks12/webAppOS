@@ -67,12 +67,12 @@ endQuote:					QUOTE;
 
 
 /// Lauka definīcijas shēma
-fieldDefinition:			(variableDefinition methodDefinition? | variableDefinition? methodDefinition);
+fieldDefinition:			(attributeDefinition methodDefinition? | attributeDefinition? methodDefinition);
 
-variableDefinition:			(fieldProtection? variable | fieldProtection variable?);
+attributeDefinition:		(fieldProtection? attribute | fieldProtection attribute?);
 methodDefinition:			BRACKETOPEN arguments BRACKETCLOSE;
 
-variable:					(fieldDataType? fieldName | fieldDataType fieldName?);
+attribute:					(fieldDataType? fieldName | fieldDataType fieldName?);
 arguments:					(coma | argument)*;
 
 argument:					(argumentDataType? argumentName | argumentDataType argumentName?);

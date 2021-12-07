@@ -420,7 +420,7 @@ public partial class LanguageParserBaseVisitor<Result> : AbstractParseTreeVisito
 	public virtual Result VisitFieldDefinition([NotNull] LanguageParser.FieldDefinitionContext context) { return VisitChildren(context); }
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.variableDefinition"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.attributeDefinition"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -428,7 +428,7 @@ public partial class LanguageParserBaseVisitor<Result> : AbstractParseTreeVisito
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitVariableDefinition([NotNull] LanguageParser.VariableDefinitionContext context) { return VisitChildren(context); }
+	public virtual Result VisitAttributeDefinition([NotNull] LanguageParser.AttributeDefinitionContext context) { return VisitChildren(context); }
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.methodDefinition"/>.
@@ -442,7 +442,7 @@ public partial class LanguageParserBaseVisitor<Result> : AbstractParseTreeVisito
 	public virtual Result VisitMethodDefinition([NotNull] LanguageParser.MethodDefinitionContext context) { return VisitChildren(context); }
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.variable"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.attribute"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -450,7 +450,7 @@ public partial class LanguageParserBaseVisitor<Result> : AbstractParseTreeVisito
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitVariable([NotNull] LanguageParser.VariableContext context) { return VisitChildren(context); }
+	public virtual Result VisitAttribute([NotNull] LanguageParser.AttributeContext context) { return VisitChildren(context); }
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.arguments"/>.

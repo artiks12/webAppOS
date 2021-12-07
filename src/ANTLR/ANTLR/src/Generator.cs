@@ -65,7 +65,7 @@ namespace AntlrCSharp
             else { IsMade = true; }
 
             string argumentList = "";
-            foreach (var v in _class._variables) 
+            foreach (var v in _class._attributes) 
             {
                 if (argumentList == "") { argumentList += "\"" + v.Name + "\" , \"" + v.primitiveType + "\""; }
                 else { argumentList += " , \"" + v.Name + "\" , \"" + v.primitiveType + "\""; }
@@ -197,7 +197,7 @@ namespace AntlrCSharp
         /// <summary>
         /// Metode, kas ģenerē īpašībām "get" funkciju
         /// </summary>
-        public static void generatePropertyGet(StreamWriter sw, Variable _variable, Class _class) 
+        public static void generatePropertyGet(StreamWriter sw, Attribute _variable, Class _class) 
         {
             sw.WriteLine("            get { " + _variable.GetValue + "; }");
         }
@@ -205,7 +205,7 @@ namespace AntlrCSharp
         /// <summary>
         /// Metode, kas ģenerē īpašībām "set" funkciju
         /// </summary>
-        public static void generatePropertySet(StreamWriter sw, Variable _variable, Class _class)
+        public static void generatePropertySet(StreamWriter sw, Attribute _variable, Class _class)
         {
             sw.WriteLine("            set { _object[\"" + _variable.Name + "\"] = Convert.ToString( value ); }");
         }
@@ -215,9 +215,9 @@ namespace AntlrCSharp
         /// </summary>
         public static void generateProperties(StreamWriter sw, Class _class, ref bool IsMade) 
         {
-            if (_class._variables.Count != 0)
+            if (_class._attributes.Count != 0)
             {
-                foreach (var f in _class._variables)
+                foreach (var f in _class._attributes)
                 {
                     if (IsMade == true) { sw.WriteLine(""); }
                     else { IsMade = true; }
@@ -314,7 +314,7 @@ namespace AntlrCSharp
             }
         }
 
-        public static string argumentList(List<Variable> _arguments) 
+        public static string argumentList(List<Attribute> _arguments) 
         {
             string result = "";
             for (int x=0; x<_arguments.Count; x++) 

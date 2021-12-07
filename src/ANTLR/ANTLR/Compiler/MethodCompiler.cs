@@ -25,7 +25,7 @@ namespace AntlrCSharp
 			_method.Line = (uint)context.fieldDefinition().Start.Line;
 			_urlFound = false;
 
-			var methodBody = context.fieldDefinition().variableDefinition();
+			var methodBody = context.fieldDefinition().attributeDefinition();
 			var argumentBody = context.fieldDefinition().methodDefinition();
 
 			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
@@ -40,20 +40,20 @@ namespace AntlrCSharp
 				}
 
 				// Pārbauda, vai mainīgajam ir datu tips un/vai vārds
-				if (methodBody.variable() != null)
+				if (methodBody.attribute() != null)
 				{
 					// Pārbauda, vai mainīgajam ir datu tips
-					if (methodBody.variable().fieldDataType() != null)
+					if (methodBody.attribute().fieldDataType() != null)
 					{
-						line = (uint)methodBody.variable().fieldDataType().Stop.Line;
-						VisitMethodDataType(methodBody.variable().fieldDataType());
+						line = (uint)methodBody.attribute().fieldDataType().Stop.Line;
+						VisitMethodDataType(methodBody.attribute().fieldDataType());
 					}
 					else { Errors.Add("At line " + line + ": Missing datatype for method!"); }
 
 					// Pārbauda, vai mainīgajam ir vārds
-					if (methodBody.variable().fieldName() != null)
+					if (methodBody.attribute().fieldName() != null)
 					{
-						VisitMethodName(methodBody.variable().fieldName());
+						VisitMethodName(methodBody.attribute().fieldName());
 					}
 					else { Errors.Add("At line " + line + ": Missing name for method!"); }
 				}
@@ -153,7 +153,7 @@ namespace AntlrCSharp
 			else { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass " + _class.ClassName + "! Check line "; }
 
 			// Pārbauda, vai metodes vārds atkārtojas klasē starp mainīgajiem
-			foreach (var v in _class._variables)
+			foreach (var v in _class._attributes)
 			{
 				if (v.Name == context.GetText())
 				{
@@ -192,7 +192,7 @@ namespace AntlrCSharp
 					// Pārbauda, vai metožu vārdi sakrīt
 					if (m.Name == _method.Name)
 					{
-						if (m.primitiveType == _method.primitiveType) { Errors.Add("At line " + context.Start.Line + ": Method " + _variable.Name + ", that exists in superclass " + _class.ClassName + " does not have the same datatype!"); }
+						if (m.primitiveType == _method.primitiveType) { Errors.Add("At line " + context.Start.Line + ": Method " + _attribute.Name + ", that exists in superclass " + _class.ClassName + " does not have the same datatype!"); }
 						
 						// Pārbauda, vai metožu argumentu skaits sakrīt
 						if (m._arguments.Count == _method._arguments.Count)

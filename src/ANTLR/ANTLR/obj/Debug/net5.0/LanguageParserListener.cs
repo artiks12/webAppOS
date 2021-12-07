@@ -417,15 +417,15 @@ public interface ILanguageParserListener : IParseTreeListener {
 	void ExitFieldDefinition([NotNull] LanguageParser.FieldDefinitionContext context);
 
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="LanguageParser.variableDefinition"/>.
+	/// Enter a parse tree produced by <see cref="LanguageParser.attributeDefinition"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterVariableDefinition([NotNull] LanguageParser.VariableDefinitionContext context);
+	void EnterAttributeDefinition([NotNull] LanguageParser.AttributeDefinitionContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="LanguageParser.variableDefinition"/>.
+	/// Exit a parse tree produced by <see cref="LanguageParser.attributeDefinition"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitVariableDefinition([NotNull] LanguageParser.VariableDefinitionContext context);
+	void ExitAttributeDefinition([NotNull] LanguageParser.AttributeDefinitionContext context);
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="LanguageParser.methodDefinition"/>.
@@ -439,15 +439,15 @@ public interface ILanguageParserListener : IParseTreeListener {
 	void ExitMethodDefinition([NotNull] LanguageParser.MethodDefinitionContext context);
 
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="LanguageParser.variable"/>.
+	/// Enter a parse tree produced by <see cref="LanguageParser.attribute"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterVariable([NotNull] LanguageParser.VariableContext context);
+	void EnterAttribute([NotNull] LanguageParser.AttributeContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="LanguageParser.variable"/>.
+	/// Exit a parse tree produced by <see cref="LanguageParser.attribute"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitVariable([NotNull] LanguageParser.VariableContext context);
+	void ExitAttribute([NotNull] LanguageParser.AttributeContext context);
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="LanguageParser.arguments"/>.

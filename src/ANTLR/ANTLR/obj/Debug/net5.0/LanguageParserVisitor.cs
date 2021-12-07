@@ -278,11 +278,11 @@ public interface ILanguageParserVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitFieldDefinition([NotNull] LanguageParser.FieldDefinitionContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.variableDefinition"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.attributeDefinition"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariableDefinition([NotNull] LanguageParser.VariableDefinitionContext context);
+	Result VisitAttributeDefinition([NotNull] LanguageParser.AttributeDefinitionContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.methodDefinition"/>.
@@ -292,11 +292,11 @@ public interface ILanguageParserVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitMethodDefinition([NotNull] LanguageParser.MethodDefinitionContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="LanguageParser.variable"/>.
+	/// Visit a parse tree produced by <see cref="LanguageParser.attribute"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariable([NotNull] LanguageParser.VariableContext context);
+	Result VisitAttribute([NotNull] LanguageParser.AttributeContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.arguments"/>.

@@ -11,7 +11,7 @@ namespace AntlrCSharp
 {
 	public partial class Compiler : LanguageParserBaseVisitor<object>
 	{
-		Variable _argument; // Pagaidu arguments
+		Attribute _argument; // Pagaidu arguments
 
 		/// <summary>
 		/// Apstaigājam argumentus

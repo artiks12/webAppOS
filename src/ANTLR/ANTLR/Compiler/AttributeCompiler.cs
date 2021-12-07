@@ -11,16 +11,16 @@ namespace AntlrCSharp
 {
 	public partial class Compiler : LanguageParserBaseVisitor<object>
 	{
-		Variable _variable; // Pagaidu mainīgais
+		Attribute _attribute; // Pagaidu mainīgais
 
 		/// <summary>
 		/// Apstaigājam mainīgo
 		/// </summary>
-		public object VisitVariable([NotNull] VariableDefinitionContext context) 
+		public object VisitAttribute([NotNull] AttributeDefinitionContext context) 
 		{
 			// Sagatavojam īpašību
-			_variable = new();
-			_variable.Line = (uint)context.Start.Line;
+			_attribute = new();
+			_attribute.Line = (uint)context.Start.Line;
 
 			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
@@ -28,30 +28,30 @@ namespace AntlrCSharp
 			if (context.fieldProtection() != null) 
 			{
 				line = (uint)context.fieldProtection().Stop.Line;
-				VisitVariableProtection(context.fieldProtection()); 
+				VisitattributeProtection(context.fieldProtection()); 
 			}
 
 			// Pārbauda, vai mainīgajam ir datu tips un/vai vārds
-			if (context.variable() != null) 
+			if (context.attribute() != null) 
 			{
 				// Pārbauda, vai mainīgajam ir datu tips
-				if (context.variable().fieldDataType() != null) 
+				if (context.attribute().fieldDataType() != null) 
 				{
-					line = (uint)context.variable().fieldDataType().Stop.Line;
-					VisitVariableDataType(context.variable().fieldDataType()); 
+					line = (uint)context.attribute().fieldDataType().Stop.Line;
+					VisitattributeDataType(context.attribute().fieldDataType()); 
 				}
 				else { Errors.Add("At line " + line + ": Missing datatype for property!"); }
 
 				// Pārbauda, vai mainīgajam ir vārds
-				if (context.variable().fieldName() != null) 
+				if (context.attribute().fieldName() != null) 
 				{
-					VisitVariableName(context.variable().fieldName()); 
+					VisitattributeName(context.attribute().fieldName()); 
 				}
 				else { Errors.Add("At line " + line + ": Missing name for property!"); }
 			}
 			else { Errors.Add("At line " + line + ": Missing datatype and name for property!"); }
 
-			_class._variables.Add(_variable); // Pievienojam mainīgo klasē mainīgo sarakstā
+			_class._attributes.Add(_attribute); // Pievienojam mainīgo klasē mainīgo sarakstā
 			
 			return null;
 		}
@@ -59,11 +59,11 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Apstaigājam mainīgā aizsardzību
 		/// </summary>
-		public object VisitVariableProtection([NotNull] FieldProtectionContext context)
+		public object VisitattributeProtection([NotNull] FieldProtectionContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 			
-			_variable.Protection = context.GetText();
+			_attribute.Protection = context.GetText();
 			
 			return null;
 		}
@@ -71,13 +71,13 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Apstaigājam mainīgā datu tipu
 		/// </summary>
-		public object VisitVariableDataType([NotNull] FieldDataTypeContext context)
+		public object VisitattributeDataType([NotNull] FieldDataTypeContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 
-			_variable.Type = context.GetText();
+			_attribute.Type = context.GetText();
 
-			if (_variable.Type == null || _variable.Type == "void") { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a valid data type for variable!"); }
+			if (_attribute.Type == null || _attribute.Type == "void") { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a valid data type for attribute!"); }
 
 			return null;
 		}
@@ -85,41 +85,41 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Apstaigājam mainīgā vārdu
 		/// </summary>
-		public object VisitVariableName([NotNull] FieldNameContext context)
+		public object VisitattributeName([NotNull] FieldNameContext context)
 		{
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 
-			_variable.Name = context.GetText();
+			_attribute.Name = context.GetText();
 
 			// Pārbauda, vai mainīgā vārds sakrīt ar klases vārdu
-			if (_variable.Name == _class.ClassName)
+			if (_attribute.Name == _class.ClassName)
 			{
-				Errors.Add("At line " + context.Start.Line + ": A variable cannot be named after class name!");
+				Errors.Add("At line " + context.Start.Line + ": A attribute cannot be named after class name!");
 				return null;
 			}
 			// Pārbauda, vai mainīgā vārds sakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved)
 			{
-				if (_variable.Name == r)
+				if (_attribute.Name == r)
 				{
-					Errors.Add("At line " + context.Start.Line + ": A variable cannot be named '" + r + "'!");
+					Errors.Add("At line " + context.Start.Line + ": A attribute cannot be named '" + r + "'!");
 					return null;
 				}
 			}
 
-			if (checkVariableName(context,_class,false) == true) 
+			if (checkattributeName(context,_class,false) == true) 
 			{
 				// Pārbauda, vai klasei ir virsklase
 				if (_class.SuperClass != null)
 				{
-					checkVariableName(context, _class.SuperClass, true);
+					checkattributeName(context, _class.SuperClass, true);
 				}
 			}
 			
 			return null;
 		}
 
-		public bool checkVariableName([NotNull] FieldNameContext context, Class _class, bool isSuperClass)
+		public bool checkattributeName([NotNull] FieldNameContext context, Class _class, bool isSuperClass)
 		{
 			string message;
 
@@ -149,7 +149,7 @@ namespace AntlrCSharp
 			if (isSuperClass == false)
 			{
 				// Pārbauda, vai mainīgā vārds atkārtojas klasē starp citiem mainīgajiem
-				foreach (var v in _class._variables)
+				foreach (var v in _class._attributes)
 				{
 					if (v.Name == context.GetText())
 					{
@@ -161,13 +161,13 @@ namespace AntlrCSharp
 			else 
 			{
 				// Pārbauda, vai mainīgā vārds atkārtojas klasē starp citiem mainīgajiem
-				foreach (var v in _class._variables)
+				foreach (var v in _class._attributes)
 				{
 					if (v.Name == context.GetText())
 					{
-						if (v.primitiveType == _variable.primitiveType)
+						if (v.primitiveType == _attribute.primitiveType)
 						{
-							Errors.Add("At line " + context.Start.Line + ": Variable " + _variable.Name + ", that exists in superclass " + _class.ClassName + " does not have the same datatype!");
+							Errors.Add("At line " + context.Start.Line + ": attribute " + _attribute.Name + ", that exists in superclass " + _class.ClassName + " does not have the same datatype!");
 							return false;
 						}
 						return true;

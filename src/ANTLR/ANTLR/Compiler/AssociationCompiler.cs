@@ -239,7 +239,7 @@ namespace AntlrCSharp
 			else { message = "At line " + line + ": a field with name '" + rolename + "' already exists in superclass " + _class.ClassName + "! Check line "; }
 
 			// Pārbauda, vai klasē ir īpasība, kura vārds sakrīit ar lomas vārdu
-			foreach (var v in _class._variables)
+			foreach (var v in _class._attributes)
 			{
 				if (v.Name == rolename)
 				{

@@ -45,8 +45,8 @@ public partial class LanguageParser : Parser {
 		RULE_annotationValue = 24, RULE_urlAttributes = 25, RULE_annotationAttributes = 26, 
 		RULE_annotationData = 27, RULE_annotationType = 28, RULE_annotationSeperator = 29, 
 		RULE_protocol = 30, RULE_location = 31, RULE_startQuote = 32, RULE_endQuote = 33, 
-		RULE_fieldDefinition = 34, RULE_variableDefinition = 35, RULE_methodDefinition = 36, 
-		RULE_variable = 37, RULE_arguments = 38, RULE_argument = 39, RULE_fieldProtection = 40, 
+		RULE_fieldDefinition = 34, RULE_attributeDefinition = 35, RULE_methodDefinition = 36, 
+		RULE_attribute = 37, RULE_arguments = 38, RULE_argument = 39, RULE_fieldProtection = 40, 
 		RULE_fieldDataType = 41, RULE_fieldName = 42, RULE_argumentDataType = 43, 
 		RULE_argumentName = 44, RULE_coma = 45;
 	public static readonly string[] ruleNames = {
@@ -57,8 +57,8 @@ public partial class LanguageParser : Parser {
 		"superClassName", "annotation", "annotationContent", "annotationBody", 
 		"annotationDefinition", "annotationValue", "urlAttributes", "annotationAttributes", 
 		"annotationData", "annotationType", "annotationSeperator", "protocol", 
-		"location", "startQuote", "endQuote", "fieldDefinition", "variableDefinition", 
-		"methodDefinition", "variable", "arguments", "argument", "fieldProtection", 
+		"location", "startQuote", "endQuote", "fieldDefinition", "attributeDefinition", 
+		"methodDefinition", "attribute", "arguments", "argument", "fieldProtection", 
 		"fieldDataType", "fieldName", "argumentDataType", "argumentName", "coma"
 	};
 
@@ -2292,8 +2292,8 @@ public partial class LanguageParser : Parser {
 	}
 
 	public partial class FieldDefinitionContext : ParserRuleContext {
-		public VariableDefinitionContext variableDefinition() {
-			return GetRuleContext<VariableDefinitionContext>(0);
+		public AttributeDefinitionContext attributeDefinition() {
+			return GetRuleContext<AttributeDefinitionContext>(0);
 		}
 		public MethodDefinitionContext methodDefinition() {
 			return GetRuleContext<MethodDefinitionContext>(0);
@@ -2331,7 +2331,7 @@ public partial class LanguageParser : Parser {
 			switch ( Interpreter.AdaptivePredict(_input,41,_ctx) ) {
 			case 1:
 				{
-				State = 277; variableDefinition();
+				State = 277; attributeDefinition();
 				State = 279;
 				_errHandler.Sync(this);
 				switch ( Interpreter.AdaptivePredict(_input,39,_ctx) ) {
@@ -2351,7 +2351,7 @@ public partial class LanguageParser : Parser {
 				_la = _input.La(1);
 				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) {
 					{
-					State = 281; variableDefinition();
+					State = 281; attributeDefinition();
 					}
 				}
 
@@ -2372,37 +2372,37 @@ public partial class LanguageParser : Parser {
 		return _localctx;
 	}
 
-	public partial class VariableDefinitionContext : ParserRuleContext {
-		public VariableContext variable() {
-			return GetRuleContext<VariableContext>(0);
+	public partial class AttributeDefinitionContext : ParserRuleContext {
+		public AttributeContext attribute() {
+			return GetRuleContext<AttributeContext>(0);
 		}
 		public FieldProtectionContext fieldProtection() {
 			return GetRuleContext<FieldProtectionContext>(0);
 		}
-		public VariableDefinitionContext(ParserRuleContext parent, int invokingState)
+		public AttributeDefinitionContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_variableDefinition; } }
+		public override int RuleIndex { get { return RULE_attributeDefinition; } }
 		public override void EnterRule(IParseTreeListener listener) {
 			ILanguageParserListener typedListener = listener as ILanguageParserListener;
-			if (typedListener != null) typedListener.EnterVariableDefinition(this);
+			if (typedListener != null) typedListener.EnterAttributeDefinition(this);
 		}
 		public override void ExitRule(IParseTreeListener listener) {
 			ILanguageParserListener typedListener = listener as ILanguageParserListener;
-			if (typedListener != null) typedListener.ExitVariableDefinition(this);
+			if (typedListener != null) typedListener.ExitAttributeDefinition(this);
 		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			ILanguageParserVisitor<TResult> typedVisitor = visitor as ILanguageParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariableDefinition(this);
+			if (typedVisitor != null) return typedVisitor.VisitAttributeDefinition(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public VariableDefinitionContext variableDefinition() {
-		VariableDefinitionContext _localctx = new VariableDefinitionContext(_ctx, State);
-		EnterRule(_localctx, 70, RULE_variableDefinition);
+	public AttributeDefinitionContext attributeDefinition() {
+		AttributeDefinitionContext _localctx = new AttributeDefinitionContext(_ctx, State);
+		EnterRule(_localctx, 70, RULE_attributeDefinition);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
@@ -2421,7 +2421,7 @@ public partial class LanguageParser : Parser {
 					}
 				}
 
-				State = 290; variable();
+				State = 290; attribute();
 				}
 				break;
 
@@ -2433,7 +2433,7 @@ public partial class LanguageParser : Parser {
 				switch ( Interpreter.AdaptivePredict(_input,43,_ctx) ) {
 				case 1:
 					{
-					State = 292; variable();
+					State = 292; attribute();
 					}
 					break;
 				}
@@ -2502,37 +2502,37 @@ public partial class LanguageParser : Parser {
 		return _localctx;
 	}
 
-	public partial class VariableContext : ParserRuleContext {
+	public partial class AttributeContext : ParserRuleContext {
 		public FieldNameContext fieldName() {
 			return GetRuleContext<FieldNameContext>(0);
 		}
 		public FieldDataTypeContext fieldDataType() {
 			return GetRuleContext<FieldDataTypeContext>(0);
 		}
-		public VariableContext(ParserRuleContext parent, int invokingState)
+		public AttributeContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_variable; } }
+		public override int RuleIndex { get { return RULE_attribute; } }
 		public override void EnterRule(IParseTreeListener listener) {
 			ILanguageParserListener typedListener = listener as ILanguageParserListener;
-			if (typedListener != null) typedListener.EnterVariable(this);
+			if (typedListener != null) typedListener.EnterAttribute(this);
 		}
 		public override void ExitRule(IParseTreeListener listener) {
 			ILanguageParserListener typedListener = listener as ILanguageParserListener;
-			if (typedListener != null) typedListener.ExitVariable(this);
+			if (typedListener != null) typedListener.ExitAttribute(this);
 		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			ILanguageParserVisitor<TResult> typedVisitor = visitor as ILanguageParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariable(this);
+			if (typedVisitor != null) return typedVisitor.VisitAttribute(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public VariableContext variable() {
-		VariableContext _localctx = new VariableContext(_ctx, State);
-		EnterRule(_localctx, 74, RULE_variable);
+	public AttributeContext attribute() {
+		AttributeContext _localctx = new AttributeContext(_ctx, State);
+		EnterRule(_localctx, 74, RULE_attribute);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);

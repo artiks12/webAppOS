@@ -62,7 +62,7 @@ namespace AntlrCSharp
 			///		Console.WriteLine(context.GetType() + "\n" + context.GetText() + "\n\n");
 
 			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
-			object type;
+			string type;
 			string body;
 
 			// Pārbauda, vai blokam ir "galva" jeb tips.

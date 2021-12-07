@@ -157,7 +157,7 @@ namespace AntlrCSharp
     /// <summary>
     /// Klase, kas glabā informāciju par mainīgajiem
     /// </summary>
-    public class Variable : Field
+    public class Attribute : Field
     {
         /// <summary>
         /// Mainīgā atgriežamā vērtība
@@ -190,7 +190,7 @@ namespace AntlrCSharp
         /// <summary>
         /// Saraksts ar metodes argumentiem
         /// </summary>
-        public List<Variable> _arguments;
+        public List<Attribute> _arguments;
 
         /// <summary>
         /// Saraksts ar anotācijām
@@ -243,7 +243,7 @@ namespace AntlrCSharp
         /// <summary>
         /// Saraksts ar mainīgajiem
         /// </summary>
-        public List<Variable> _variables;
+        public List<Attribute> _attributes;
 
         /// <summary>
         /// Saraksts ar metodēm
@@ -267,7 +267,7 @@ namespace AntlrCSharp
         
         public Class()
         {
-            _variables = new();
+            _attributes = new();
             _methods = new();
             _associationEnds = new();
         }
