@@ -1,6 +1,5 @@
 using WebAppOS;
 using System.Collections.Generic;
-using System;
 
 namespace Test
 {
@@ -39,25 +38,25 @@ namespace Test
             }
         }
 
-        protected void checkAssociation( List<string> associations )
+        protected void checkAssociations( List<string> associations , string className )
         {
-            for (int x = 0; x < associations.Count; x += 5)
+            for (int x = 0; x < associations.Count; x += 4)
             {
-                var cSource = _wm.FindClassByName( associations[x + 2] );
+                var cSource = _wm.FindClassByName( className );
                 if (cSource == null)
                 {
-                    cSource = _wm.CreateClass( associations[x + 2] );
+                    cSource = _wm.CreateClass( className );
                 }
-                var cTarget = _wm.FindClassByName( associations[x + 3] );
+                var cTarget = _wm.FindClassByName( associations[x+2] );
                 if (cTarget == null)
                 {
-                    cTarget = _wm.CreateClass( associations[x + 3] );
+                    cTarget = _wm.CreateClass( associations[x+2] );
                 }
-                var a = cSource.FindAssociationEnd( associations[x + 1] );
+                var a = cSource.FindAssociationEnd( associations[x+1] );
                 if (a == null)
                 {
                     bool isComposition;
-                    if (associations[x + 4] == "true") { isComposition = true; }
+                    if (associations[x+3] == "true") { isComposition = true; }
                     else { isComposition = false; }
                     cSource.CreateAssociationEnd(cSource, cTarget, associations[x], associations[x + 1], isComposition);
                 }

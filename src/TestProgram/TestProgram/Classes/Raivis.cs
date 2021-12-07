@@ -12,8 +12,8 @@ namespace Test
         {
             List<string> attributes = new() {  };
             checkClass( attributes , "Raivis" );
-            List<string> associations = new() { "target1" , "source1" , "Raivis" , "Artis" , "false" };
-            checkAssociation( associations );
+            List<string> associations = new() { "target1" , "source1" , "Artis" , "false" , "Raivis" };
+            checkAssociations( associations , "Raivis" );
             _object = _wm.FindClassByName( "Raivis" ).CreateObject();
         }
 
@@ -21,8 +21,8 @@ namespace Test
         {
             List<string> attributes = new() {  };
             checkClass( attributes , "Raivis" );
-            List<string> associations = new() { "target1" , "source1" , "Raivis" , "Artis" , "false" };
-            checkAssociation( associations );
+            List<string> associations = new() { "target1" , "source1" , "Artis" , "false" , "Raivis" };
+            checkAssociations( associations , "Raivis" );
             _object = new( rObject, wm );
         }
 

@@ -78,7 +78,6 @@ namespace AntlrCSharp
 
                 string sourceName;
                 string targetName;
-                string sourceClass;
                 string targetClass;
                 string IsComposition;
 
@@ -86,30 +85,28 @@ namespace AntlrCSharp
                 {
                     sourceName = association.Target.RoleName;
                     targetName = association.Source.RoleName;
-                    sourceClass = association.Target.Class.ClassName;
                     targetClass = association.Source.Class.ClassName;
                 }
                 else
                 {
                     sourceName = association.Source.RoleName;
                     targetName = association.Target.RoleName;
-                    sourceClass = association.Source.Class.ClassName;
                     targetClass = association.Target.Class.ClassName;
                 }
 
                 if (association.IsComposition == true) { IsComposition = "true"; }
                 else { IsComposition = "false"; }
 
-                if (associationList == "") { associationList += "\"" + sourceName + "\" , \"" + targetName + "\" , \"" + sourceClass + "\" , \"" + targetClass + "\" , \"" + IsComposition + "\""; }
-                else { associationList += " , \"" + sourceName + "\" , \"" + targetName + "\" , \"" + sourceClass + "\" , \"" + targetClass + "\" , \"" + IsComposition + "\""; }
+                if (associationList == "") { associationList += "\"" + sourceName + "\" , \"" + targetName + "\" , \"" + targetClass + "\" , \"" + IsComposition + "\""; }
+                else { associationList += " , \"" + sourceName + "\" , \"" + targetName + "\" , \"" + targetClass + "\" , \"" + IsComposition + "\""; }
             }
 
             sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )");
             sw.WriteLine("        {");
             sw.WriteLine("            List<string> attributes = new() { " + argumentList + " };");
             sw.WriteLine("            checkClass( attributes , \"" + _class.ClassName + "\" );");
-            sw.WriteLine("            List<string> associations = new() { " + associationList + " };");
-            sw.WriteLine("            checkAssociation( associations );");
+            sw.WriteLine("            List<string> associations = new() { " + associationList + " , \"" + _class.ClassName + "\" };");
+            sw.WriteLine("            checkAssociations( associations , \"" + _class.ClassName + "\" );");
             sw.WriteLine("            _object = _wm.FindClassByName( \"" + _class.ClassName + "\" ).CreateObject();");
             sw.WriteLine("        }\n");
 
@@ -117,8 +114,8 @@ namespace AntlrCSharp
             sw.WriteLine("        {");
             sw.WriteLine("            List<string> attributes = new() { " + argumentList + " };");
             sw.WriteLine("            checkClass( attributes , \"" + _class.ClassName + "\" );");
-            sw.WriteLine("            List<string> associations = new() { " + associationList + " };");
-            sw.WriteLine("            checkAssociation( associations );");
+            sw.WriteLine("            List<string> associations = new() { " + associationList + " , \"" + _class.ClassName + "\" };");
+            sw.WriteLine("            checkAssociations( associations , \"" + _class.ClassName + "\" );");
             sw.WriteLine("            _object = new( rObject, wm );");
             sw.WriteLine("        }\n");
         }
@@ -152,25 +149,25 @@ namespace AntlrCSharp
         public static void generateCheckAssociation(StreamWriter sw)
         {
             sw.WriteLine("");
-            sw.WriteLine("        protected void checkAssociation( List<string> associations )");
+            sw.WriteLine("        protected void checkAssociations( List<string> associations , string className )");
             sw.WriteLine("        {");
-            sw.WriteLine("            for (int x = 0; x < associations.Count; x += 5)");
+            sw.WriteLine("            for (int x = 0; x < associations.Count; x += 4)");
             sw.WriteLine("            {");
-            sw.WriteLine("                var cSource = _wm.FindClassByName( associations[x + 2] );");
+            sw.WriteLine("                var cSource = _wm.FindClassByName( className );");
             sw.WriteLine("                if (cSource == null)");
             sw.WriteLine("                {");
-            sw.WriteLine("                    cSource = _wm.CreateClass( associations[x + 2] );");
+            sw.WriteLine("                    cSource = _wm.CreateClass( className );");
             sw.WriteLine("                }");
-            sw.WriteLine("                var cTarget = _wm.FindClassByName( associations[x + 3] );");
+            sw.WriteLine("                var cTarget = _wm.FindClassByName( associations[x+2] );");
             sw.WriteLine("                if (cTarget == null)");
             sw.WriteLine("                {");
-            sw.WriteLine("                    cTarget = _wm.CreateClass( associations[x + 3] );");
+            sw.WriteLine("                    cTarget = _wm.CreateClass( associations[x+2] );");
             sw.WriteLine("                }");
-            sw.WriteLine("                var a = cSource.FindAssociationEnd( associations[x + 1] );");
+            sw.WriteLine("                var a = cSource.FindAssociationEnd( associations[x+1] );");
             sw.WriteLine("                if (a == null)");
             sw.WriteLine("                {");
             sw.WriteLine("                    bool isComposition;");
-            sw.WriteLine("                    if (associations[x + 4] == \"true\") { isComposition = true; }");
+            sw.WriteLine("                    if (associations[x+3] == \"true\") { isComposition = true; }");
             sw.WriteLine("                    else { isComposition = false; }");
             sw.WriteLine("                    cSource.CreateAssociationEnd(cSource, cTarget, associations[x], associations[x + 1], isComposition);");
             sw.WriteLine("                }");
