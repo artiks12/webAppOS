@@ -20,12 +20,11 @@
         }
 
         /// <summary>
-        /// Atgriež atribūta atsauci.
+        /// Atgriež objekta atsauci
         /// </summary>
-        public long AttributeReference 
-        {
-            get { return _r; }
-        }
+        /// <returns></returns>
+        public long GetReference { get { return _r; } }
+
         /// <summary>
         /// Atgriež atribūta vārdu.
         /// </summary>

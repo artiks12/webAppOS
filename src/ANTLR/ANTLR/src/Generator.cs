@@ -154,10 +154,6 @@ namespace AntlrCSharp
             sw.WriteLine("            for (int x = 0; x < associations.Count; x += 4)");
             sw.WriteLine("            {");
             sw.WriteLine("                var cSource = _wm.FindClassByName( className );");
-            sw.WriteLine("                if (cSource == null)");
-            sw.WriteLine("                {");
-            sw.WriteLine("                    cSource = _wm.CreateClass( className );");
-            sw.WriteLine("                }");
             sw.WriteLine("                var cTarget = _wm.FindClassByName( associations[x+2] );");
             sw.WriteLine("                if (cTarget == null)");
             sw.WriteLine("                {");
@@ -169,7 +165,7 @@ namespace AntlrCSharp
             sw.WriteLine("                    bool isComposition;");
             sw.WriteLine("                    if (associations[x+3] == \"true\") { isComposition = true; }");
             sw.WriteLine("                    else { isComposition = false; }");
-            sw.WriteLine("                    cSource.CreateAssociationEnd(cSource, cTarget, associations[x], associations[x + 1], isComposition);");
+            sw.WriteLine("                    cSource.CreateAssociation(cSource, cTarget, associations[x], associations[x + 1], isComposition);");
             sw.WriteLine("                }");
             sw.WriteLine("            }");
             sw.WriteLine("        }");
@@ -194,7 +190,7 @@ namespace AntlrCSharp
         /// <summary>
         /// Metode, kas ģenerē īpašībām "get" funkciju
         /// </summary>
-        public static void generatePropertyGet(StreamWriter sw, Attribute _variable, Class _class) 
+        public static void generatePropertyGet(StreamWriter sw, Attribute _variable) 
         {
             sw.WriteLine("            get { " + _variable.GetValue + "; }");
         }
@@ -202,7 +198,7 @@ namespace AntlrCSharp
         /// <summary>
         /// Metode, kas ģenerē īpašībām "set" funkciju
         /// </summary>
-        public static void generatePropertySet(StreamWriter sw, Attribute _variable, Class _class)
+        public static void generatePropertySet(StreamWriter sw, Attribute _variable)
         {
             sw.WriteLine("            set { _object[\"" + _variable.Name + "\"] = Convert.ToString( value ); }");
         }
@@ -214,21 +210,21 @@ namespace AntlrCSharp
         {
             if (_class._attributes.Count != 0)
             {
-                foreach (var f in _class._attributes)
+                foreach (var a in _class._attributes)
                 {
                     if (IsMade == true) { sw.WriteLine(""); }
                     else { IsMade = true; }
 
                     // Ģenerē īpašības "galvu"
-                    if (f.Protection != null) { sw.Write("\n        " + f.Protection); }
+                    if (a.Protection != null) { sw.Write("\n        " + a.Protection); }
                     else { sw.Write("        public"); }
 
-                    sw.Write(" " + f.Type + " " + f.Name + " \n");
+                    sw.Write(" " + a.Type + " " + a.Name + " \n");
 
                     // Ģenerē īpašības "ķermeni"
                     sw.WriteLine("        {");
-                    generatePropertyGet(sw,f,_class); // funkcijas "get" ģenerēšana
-                    generatePropertySet(sw,f,_class); // funkcijas "set" ģenerēšana
+                    generatePropertyGet(sw,a); // funkcijas "get" ģenerēšana
+                    generatePropertySet(sw,a); // funkcijas "set" ģenerēšana
                     sw.Write("        }\n");
                 }
             }
@@ -264,7 +260,7 @@ namespace AntlrCSharp
             sw.WriteLine("                List<" + targetClass + "> result = new();");
             sw.WriteLine("                foreach (var l in list)");
             sw.WriteLine("                {");
-            sw.WriteLine("                    result.Add( new " + targetClass + "( _wm , _wc , l.GetReference() ));");
+            sw.WriteLine("                    result.Add( new " + targetClass + "( _wm , _wc , l.GetReference ));");
             sw.WriteLine("                }");
             sw.WriteLine("                return result;");
             sw.WriteLine("            }");
@@ -275,14 +271,31 @@ namespace AntlrCSharp
         /// </summary>
         public static void generateAssociationSet(StreamWriter sw, Association _association, AssociationEnd a)
         {
+            string sourceClass;
+            string targetName;
+
+            if (a.IsSource == true)
+            {
+                sourceClass = _association.Target.Class.ClassName;
+                targetName = _association.Source.Class.ClassName;
+            }
+            else
+            {
+                sourceClass = _association.Source.Class.ClassName;
+                targetName = _association.Target.Class.ClassName;
+            }
+
             sw.WriteLine("            set");
             sw.WriteLine("            {");
+            sw.WriteLine("                var c = _wm.FindClassByName( \"" + sourceClass + "\" );");
+            sw.WriteLine("                var a = c.FindAssociationEnd( \"" + targetName + "\" );");
             sw.WriteLine("                var list = value;");
             sw.WriteLine("                List<WebObject> result = new();");
             sw.WriteLine("                foreach (var l in list)");
             sw.WriteLine("                {");
             sw.WriteLine("                    result.Add( l._object );");
             sw.WriteLine("                }");
+            sw.WriteLine("                _object.LinkObjects(a,result);");
             sw.WriteLine("            }");
         }
 
@@ -346,7 +359,7 @@ namespace AntlrCSharp
                     // Ģenerē metodes "ķermeni"
                     sw.WriteLine("        {");
                     sw.WriteLine("            string arguments = JsonSerializer.Serialize( new { " + argumentList(m._arguments) + " } );");
-                    sw.WriteLine("            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference() , \"" + m.Name + "\" , arguments );");
+                    sw.WriteLine("            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference , \"" + m.Name + "\" , arguments );");
                     sw.WriteLine("            var json = JsonDocument.Parse(result);");
                     sw.WriteLine("            JsonElement errorMessage;");
                     sw.WriteLine("            if (json.RootElement.TryGetProperty(\"error\", out errorMessage) == true)");
@@ -390,7 +403,6 @@ namespace AntlrCSharp
             generateAssociations(sw, _class, ref IsMade); // Asociāciju ģenerēsana
             generateMethods(sw, _class,ref IsMade); // Metožu ģenerēšana
 
-            if (IsMade == false) { sw.WriteLine("        "); }
             sw.WriteLine("    }");
         }
 

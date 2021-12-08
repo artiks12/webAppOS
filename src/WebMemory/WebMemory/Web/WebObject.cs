@@ -38,7 +38,7 @@ namespace WebAppOS
                 foreach (var c in classes) 
                 {
                     var result = c.FindAttribute(name);
-                    if (result != null) { return _k.getAttributeValue(_r,result.AttributeReference); }
+                    if (result != null) { return _k.getAttributeValue(_r,result.GetReference); }
                 }
                 return null;
             }
@@ -48,7 +48,7 @@ namespace WebAppOS
                 foreach (var c in classes)
                 {
                     var result = c.FindAttribute(name);
-                    if (result != null) { _k.setAttributeValue(_r,result.AttributeReference,value); return; }
+                    if (result != null) { _k.setAttributeValue(_r,result.GetReference, value); return; }
                 }
             }
         }
@@ -76,7 +76,7 @@ namespace WebAppOS
         {
             List<WebObject> links = LinkedObjects(a).ToList();
             
-            foreach (var o in links) { _k.deleteLink(this._r, o.GetReference(), a.GetReference()); }
+            foreach (var o in links) { _k.deleteLink(this._r, o.GetReference, a.GetReference); }
             
             foreach (var o in oList) { LinkObject(a, o); }
         }
@@ -117,6 +117,6 @@ namespace WebAppOS
         /// Atgriež objekta atsauci
         /// </summary>
         /// <returns></returns>
-        public long GetReference() { return _r; }
+        public long GetReference { get { return _r; } }
     }
 }

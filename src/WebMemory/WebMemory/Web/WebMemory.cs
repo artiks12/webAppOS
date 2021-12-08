@@ -85,8 +85,8 @@ namespace WebAppOS
         {
             var d = Dictionaries.D_GetClasses(_k, this);
             long r = _k.findClass(name);
-            if (r == 0) { return null; }
-            return d[r];
+            if (d.ContainsKey(r)) { return d[r]; }
+            else { return null; }
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace WebAppOS
         public void DeleteClass(string name)
         {
             var c = _k.findClass(name);
-            _k.deleteClass(c);
+            if(c != 0) { _k.deleteClass(c); }
         }
     }
 
@@ -187,7 +187,7 @@ namespace WebAppOS
         public void DeleteClass(string name)
         {
             var c = _k.findClass(name);
-            _k.deleteClass(c);
+            if (c != 0) { _k.deleteClass(c); }
         }
     }
 }

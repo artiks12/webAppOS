@@ -66,6 +66,6 @@
         /// <summary>
         /// Atgriež asociācijas atsauci
         /// </summary>
-        public long GetReference() { return _r; }
+        public long GetReference { get { return _r; } }
     }
 }

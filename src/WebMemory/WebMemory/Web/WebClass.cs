@@ -29,7 +29,7 @@ namespace WebAppOS
         /// Atgriež klases atsauci
         /// </summary>
         /// <returns></returns>
-        public long GetReference() { return _r; }
+        public long GetReference { get { return _r; } }
 
         /// <summary>
         /// Klases vārds
@@ -65,7 +65,7 @@ namespace WebAppOS
         /// <summary>
         ///  Saraksts ar virsklasēm
         /// </summary>
-        public IEnumerable<WebClass> Supe_res()
+        public IEnumerable<WebClass> SuperClasses()
         {
             var d = Dictionaries.D_GetSuperClasses(_r,_k,_m);
             IEnumerable<WebClass> query = from i in d select i.Value;
@@ -168,9 +168,9 @@ namespace WebAppOS
         /// <param name="targetRoleName">Mērķa lomas vards</param>
         /// <param name="IsComposition">Vai asociācija ir kompozīcija</param>
         /// <returns></returns>
-        public WebAssociationEnd CreateAssociationEnd(WebClass sourceClass, WebClass targetClass, string sourceRoleName, string targetRoleName, bool IsComposition) 
+        public WebAssociationEnd CreateAssociation(WebClass sourceClass, WebClass targetClass, string sourceRoleName, string targetRoleName, bool IsComposition) 
         {
-            var r = _k.createAssociation(sourceClass.GetReference(),targetClass.GetReference(),sourceRoleName,targetRoleName,IsComposition);
+            var r = _k.createAssociation(sourceClass.GetReference,targetClass.GetReference,sourceRoleName,targetRoleName,IsComposition);
             WebAssociationEnd a = new(r, _m);
             return a;
         }
