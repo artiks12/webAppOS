@@ -38,6 +38,7 @@ namespace AntlrCSharp
 					line = (uint)methodBody.fieldProtection().Stop.Line;
 					VisitMethodProtection(methodBody.fieldProtection()); 
 				}
+				else { _attribute.Protection = "public"; }
 
 				// Pārbauda, vai mainīgajam ir datu tips un/vai vārds
 				if (methodBody.attribute() != null)

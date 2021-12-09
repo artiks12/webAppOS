@@ -25,11 +25,12 @@ namespace AntlrCSharp
 			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
 			// Pārbauda, vai mainīgajam ir aizsardzība
-			if (context.fieldProtection() != null) 
+			if (context.fieldProtection() != null)
 			{
 				line = (uint)context.fieldProtection().Stop.Line;
-				VisitattributeProtection(context.fieldProtection()); 
+				VisitattributeProtection(context.fieldProtection());
 			}
+			else { _attribute.Protection = "public"; }
 
 			// Pārbauda, vai mainīgajam ir datu tips un/vai vārds
 			if (context.attribute() != null) 

@@ -165,7 +165,7 @@ namespace AntlrCSharp
             sw.WriteLine("                    bool isComposition;");
             sw.WriteLine("                    if (associations[x+3] == \"true\") { isComposition = true; }");
             sw.WriteLine("                    else { isComposition = false; }");
-            sw.WriteLine("                    cSource.CreateAssociation(cSource, cTarget, associations[x], associations[x + 1], isComposition);");
+            sw.WriteLine("                    cSource.CreateAssociation( cTarget, associations[x], associations[x + 1], isComposition);");
             sw.WriteLine("                }");
             sw.WriteLine("            }");
             sw.WriteLine("        }");
@@ -216,13 +216,10 @@ namespace AntlrCSharp
                     else { IsMade = true; }
 
                     // Ģenerē īpašības "galvu"
-                    if (a.Protection != null) { sw.Write("\n        " + a.Protection); }
-                    else { sw.Write("        public"); }
-
-                    sw.Write(" " + a.Type + " " + a.Name + " \n");
+                    sw.Write("\n        " + a.Protection + " " + a.Type + " " + a.Name + " \n");
 
                     // Ģenerē īpašības "ķermeni"
-                    sw.WriteLine("        {");
+                    sw.Write("        {\n");
                     generatePropertyGet(sw,a); // funkcijas "get" ģenerēšana
                     generatePropertySet(sw,a); // funkcijas "set" ģenerēšana
                     sw.Write("        }\n");
@@ -349,10 +346,7 @@ namespace AntlrCSharp
                     else { IsMade = true; }
 
                     // Ģenerē metodes "galvu"
-                    if (m.Protection != null) { sw.Write("\n        " + m.Protection); }
-                    else { sw.Write("        public"); }
-
-                    sw.Write(" " + m.Type + " " + m.Name + " ");
+                    sw.Write("\n        " + m.Protection + " " + m.Type + " " + m.Name + " ");
 
                     generateArguments(sw,m); // Argumentu ģenerēšana
 
@@ -387,12 +381,11 @@ namespace AntlrCSharp
         /// </summary>
         public static void generateClass(StreamWriter sw, Class _class) 
         {
-            // Ģenerē klases "galvu"
-            sw.Write("    class " + _class.ClassName);
+            // Ja klasei ir virsklase, tad tā tiek izmantota kā virsklase, citādāk virsklase ir "BaseObject"
+            string superClass = _class.SuperClass != null ? _class.SuperClass.ClassName : "BaseObject"; 
 
-            if (_class.SuperClass != null) { sw.Write(" : " + _class.SuperClass.ClassName); }
-            else { sw.Write(" : BaseObject"); }
-            sw.WriteLine("");
+            // Ģenerē klases "galvu"
+            sw.Write("    class " + _class.ClassName + " : " + superClass + "\n");
 
             // Ģenerē klases "ķermeni"
             sw.WriteLine("    {");
