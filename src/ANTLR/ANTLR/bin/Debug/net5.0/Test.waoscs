@@ -1,0 +1,10 @@
+class Artis
+{
+}
+
+class Raivis
+{
+
+}
+
+association(source1:Artis<->target1:Raivis)

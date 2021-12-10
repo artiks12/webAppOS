@@ -25,7 +25,7 @@ namespace AntlrCSharp
                 Console.Write("Specify namespace: ");
                 string _namespace = Console.ReadLine();
 
-                if (filename == "") { filename = "Test.idl"; }
+                if (filename == "") { filename = "Test.waoscs"; }
                 if (_namespace == "") { _namespace = "Test"; }
                 
                 // Iegūstam koda saturu no faila
