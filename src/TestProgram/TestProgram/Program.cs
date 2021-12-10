@@ -49,7 +49,7 @@ namespace TestProgram
                 Console.WriteLine(oa.Name);
             }
 
-            artis.FindAssociationEnd("target1");
+            //artis.FindAssociationEnd("target1");
             
         }
     }

@@ -30,7 +30,7 @@ namespace Test
             }
             for(int x=0; x<attributes.Count; x+=2)
             {
-                var a = c.FindAttribute( attributes[x] );
+                var a = c.FindAttributeByName( attributes[x] );
                 if (a == null)
                 {
                     c.CreateAttribute( attributes[x] , attributes[x+1] );
@@ -43,22 +43,18 @@ namespace Test
             for (int x = 0; x < associations.Count; x += 4)
             {
                 var cSource = _wm.FindClassByName( className );
-                if (cSource == null)
-                {
-                    cSource = _wm.CreateClass( className );
-                }
                 var cTarget = _wm.FindClassByName( associations[x+2] );
                 if (cTarget == null)
                 {
                     cTarget = _wm.CreateClass( associations[x+2] );
                 }
-                var a = cSource.FindAssociationEnd( associations[x+1] );
+                var a = cSource.FindAssociationEndByName( associations[x+1] );
                 if (a == null)
                 {
                     bool isComposition;
                     if (associations[x+3] == "true") { isComposition = true; }
                     else { isComposition = false; }
-                    cSource.CreateAssociationEnd(cSource, cTarget, associations[x], associations[x + 1], isComposition);
+                    cSource.CreateAssociation( cTarget, associations[x], associations[x + 1], isComposition);
                 }
             }
         }

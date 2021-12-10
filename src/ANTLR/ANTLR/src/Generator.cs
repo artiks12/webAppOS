@@ -105,7 +105,7 @@ namespace AntlrCSharp
             sw.WriteLine("        {");
             sw.WriteLine("            List<string> attributes = new() { " + argumentList + " };");
             sw.WriteLine("            checkClass( attributes , \"" + _class.ClassName + "\" );");
-            sw.WriteLine("            List<string> associations = new() { " + associationList + " , \"" + _class.ClassName + "\" };");
+            sw.WriteLine("            List<string> associations = new() { " + associationList + " };");
             sw.WriteLine("            checkAssociations( associations , \"" + _class.ClassName + "\" );");
             sw.WriteLine("            _object = _wm.FindClassByName( \"" + _class.ClassName + "\" ).CreateObject();");
             sw.WriteLine("        }\n");
@@ -114,7 +114,7 @@ namespace AntlrCSharp
             sw.WriteLine("        {");
             sw.WriteLine("            List<string> attributes = new() { " + argumentList + " };");
             sw.WriteLine("            checkClass( attributes , \"" + _class.ClassName + "\" );");
-            sw.WriteLine("            List<string> associations = new() { " + associationList + " , \"" + _class.ClassName + "\" };");
+            sw.WriteLine("            List<string> associations = new() { " + associationList + " };");
             sw.WriteLine("            checkAssociations( associations , \"" + _class.ClassName + "\" );");
             sw.WriteLine("            _object = new( rObject, wm );");
             sw.WriteLine("        }\n");
@@ -134,7 +134,7 @@ namespace AntlrCSharp
             sw.WriteLine("            }");
             sw.WriteLine("            for(int x=0; x<attributes.Count; x+=2)");
             sw.WriteLine("            {");
-            sw.WriteLine("                var a = c.FindAttribute( attributes[x] );");
+            sw.WriteLine("                var a = c.FindAttributeByName( attributes[x] );");
             sw.WriteLine("                if (a == null)");
             sw.WriteLine("                {");
             sw.WriteLine("                    c.CreateAttribute( attributes[x] , attributes[x+1] );");
@@ -159,7 +159,7 @@ namespace AntlrCSharp
             sw.WriteLine("                {");
             sw.WriteLine("                    cTarget = _wm.CreateClass( associations[x+2] );");
             sw.WriteLine("                }");
-            sw.WriteLine("                var a = cSource.FindAssociationEnd( associations[x+1] );");
+            sw.WriteLine("                var a = cSource.FindAssociationEndByName( associations[x+1] );");
             sw.WriteLine("                if (a == null)");
             sw.WriteLine("                {");
             sw.WriteLine("                    bool isComposition;");
@@ -252,7 +252,7 @@ namespace AntlrCSharp
             sw.WriteLine("            get");
             sw.WriteLine("            {");
             sw.WriteLine("                var c = _wm.FindClassByName( \"" + sourceClass + "\" );");
-            sw.WriteLine("                var a = c.FindAssociationEnd( \"" + targetName + "\" );");
+            sw.WriteLine("                var a = c.FindAssociationEndByName( \"" + targetName + "\" );");
             sw.WriteLine("                var list = _object.LinkedObjects(a);");
             sw.WriteLine("                List<" + targetClass + "> result = new();");
             sw.WriteLine("                foreach (var l in list)");
@@ -285,7 +285,7 @@ namespace AntlrCSharp
             sw.WriteLine("            set");
             sw.WriteLine("            {");
             sw.WriteLine("                var c = _wm.FindClassByName( \"" + sourceClass + "\" );");
-            sw.WriteLine("                var a = c.FindAssociationEnd( \"" + targetName + "\" );");
+            sw.WriteLine("                var a = c.FindAssociationEndByName( \"" + targetName + "\" );");
             sw.WriteLine("                var list = value;");
             sw.WriteLine("                List<WebObject> result = new();");
             sw.WriteLine("                foreach (var l in list)");

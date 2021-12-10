@@ -12,7 +12,7 @@ namespace Test
         {
             List<string> attributes = new() {  };
             checkClass( attributes , "Artis" );
-            List<string> associations = new() { "source1" , "target1" , "Raivis" , "false" , "Artis" };
+            List<string> associations = new() { "source1" , "target1" , "Raivis" , "false" , "source2" , "target2" , "Raivis" , "false" , "target3" , "source3" , "Raivis" , "false" };
             checkAssociations( associations , "Artis" );
             _object = _wm.FindClassByName( "Artis" ).CreateObject();
         }
@@ -21,7 +21,7 @@ namespace Test
         {
             List<string> attributes = new() {  };
             checkClass( attributes , "Artis" );
-            List<string> associations = new() { "source1" , "target1" , "Raivis" , "false" , "Artis" };
+            List<string> associations = new() { "source1" , "target1" , "Raivis" , "false" , "source2" , "target2" , "Raivis" , "false" , "target3" , "source3" , "Raivis" , "false" };
             checkAssociations( associations , "Artis" );
             _object = new( rObject, wm );
         }
@@ -32,23 +32,82 @@ namespace Test
             get
             {
                 var c = _wm.FindClassByName( "Artis" );
-                var a = c.FindAssociationEnd( "Raivis" );
+                var a = c.FindAssociationEndByName( "Raivis" );
                 var list = _object.LinkedObjects(a);
                 List<Raivis> result = new();
                 foreach (var l in list)
                 {
-                    result.Add( new Raivis( _wm , _wc , l.GetReference() ));
+                    result.Add( new Raivis( _wm , _wc , l.GetReference ));
                 }
                 return result;
             }
             set
             {
+                var c = _wm.FindClassByName( "Artis" );
+                var a = c.FindAssociationEndByName( "Raivis" );
                 var list = value;
                 List<WebObject> result = new();
                 foreach (var l in list)
                 {
                     result.Add( l._object );
                 }
+                _object.LinkObjects(a,result);
+            }
+        }
+
+        public List<Raivis> target2
+        {
+            get
+            {
+                var c = _wm.FindClassByName( "Artis" );
+                var a = c.FindAssociationEndByName( "Raivis" );
+                var list = _object.LinkedObjects(a);
+                List<Raivis> result = new();
+                foreach (var l in list)
+                {
+                    result.Add( new Raivis( _wm , _wc , l.GetReference ));
+                }
+                return result;
+            }
+            set
+            {
+                var c = _wm.FindClassByName( "Artis" );
+                var a = c.FindAssociationEndByName( "Raivis" );
+                var list = value;
+                List<WebObject> result = new();
+                foreach (var l in list)
+                {
+                    result.Add( l._object );
+                }
+                _object.LinkObjects(a,result);
+            }
+        }
+
+        public List<Raivis> source3
+        {
+            get
+            {
+                var c = _wm.FindClassByName( "Artis" );
+                var a = c.FindAssociationEndByName( "Raivis" );
+                var list = _object.LinkedObjects(a);
+                List<Raivis> result = new();
+                foreach (var l in list)
+                {
+                    result.Add( new Raivis( _wm , _wc , l.GetReference ));
+                }
+                return result;
+            }
+            set
+            {
+                var c = _wm.FindClassByName( "Artis" );
+                var a = c.FindAssociationEndByName( "Raivis" );
+                var list = value;
+                List<WebObject> result = new();
+                foreach (var l in list)
+                {
+                    result.Add( l._object );
+                }
+                _object.LinkObjects(a,result);
             }
         }
     }

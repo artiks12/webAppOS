@@ -37,7 +37,7 @@ namespace WebAppOS
                 var classes = Classes();
                 foreach (var c in classes) 
                 {
-                    var result = c.FindAttribute(name);
+                    var result = c.FindAttributeByName(name);
                     if (result != null) { return _k.getAttributeValue(_r,result.GetReference); }
                 }
                 return null;
@@ -47,7 +47,7 @@ namespace WebAppOS
                 var classes = Classes();
                 foreach (var c in classes)
                 {
-                    var result = c.FindAttribute(name);
+                    var result = c.FindAttributeByName(name);
                     if (result != null) { _k.setAttributeValue(_r,result.GetReference, value); return; }
                 }
             }

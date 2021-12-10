@@ -8,3 +8,5 @@ class Raivis
 }
 
 association(source1:Artis<->target1:Raivis)
+association(source2:Artis<->target2:Raivis)
+association(source3:Raivis<->target3:Artis)
