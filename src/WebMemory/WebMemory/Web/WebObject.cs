@@ -26,7 +26,7 @@ namespace WebAppOS
         }
 
         /// <summary>
-        /// Atgriež atribūta vērtību.
+        /// Iegūst, uzstāda atribūta vērtību.
         /// </summary>
         /// <param name="name">atribūta vārds</param>
         /// <returns></returns>

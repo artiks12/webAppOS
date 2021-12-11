@@ -168,7 +168,7 @@ namespace AntlrCSharp
 					{
 						if (v.primitiveType == _attribute.primitiveType)
 						{
-							Errors.Add("At line " + context.Start.Line + ": attribute " + _attribute.Name + ", that exists in superclass " + _class.ClassName + " does not have the same datatype!");
+							Errors.Add("At line " + context.Start.Line + ": attribute " + _attribute.Name + ", that exists in superclass " + _class.ClassName + " does not have the same datatype! Check line " + v.Line + "!");
 							return false;
 						}
 						return true;

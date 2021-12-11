@@ -159,7 +159,7 @@ namespace AntlrCSharp
             sw.WriteLine("                {");
             sw.WriteLine("                    cTarget = _wm.CreateClass( associations[x+2] );");
             sw.WriteLine("                }");
-            sw.WriteLine("                var a = cSource.FindAssociationEndByName( associations[x+1] );");
+            sw.WriteLine("                var a = cSource.FindTargetAssociationEndByName( associations[x+1] );");
             sw.WriteLine("                if (a == null)");
             sw.WriteLine("                {");
             sw.WriteLine("                    bool isComposition;");
@@ -252,7 +252,7 @@ namespace AntlrCSharp
             sw.WriteLine("            get");
             sw.WriteLine("            {");
             sw.WriteLine("                var c = _wm.FindClassByName( \"" + sourceClass + "\" );");
-            sw.WriteLine("                var a = c.FindAssociationEndByName( \"" + targetName + "\" );");
+            sw.WriteLine("                var a = c.FindTargetAssociationEndByName( \"" + targetName + "\" );");
             sw.WriteLine("                var list = _object.LinkedObjects(a);");
             sw.WriteLine("                List<" + targetClass + "> result = new();");
             sw.WriteLine("                foreach (var l in list)");
@@ -285,7 +285,7 @@ namespace AntlrCSharp
             sw.WriteLine("            set");
             sw.WriteLine("            {");
             sw.WriteLine("                var c = _wm.FindClassByName( \"" + sourceClass + "\" );");
-            sw.WriteLine("                var a = c.FindAssociationEndByName( \"" + targetName + "\" );");
+            sw.WriteLine("                var a = c.FindTargetAssociationEndByName( \"" + targetName + "\" );");
             sw.WriteLine("                var list = value;");
             sw.WriteLine("                List<WebObject> result = new();");
             sw.WriteLine("                foreach (var l in list)");

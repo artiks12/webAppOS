@@ -32,7 +32,7 @@ namespace Test
             get
             {
                 var c = _wm.FindClassByName( "Artis" );
-                var a = c.FindAssociationEndByName( "Raivis" );
+                var a = c.FindTargetAssociationEndByName( "Raivis" );
                 var list = _object.LinkedObjects(a);
                 List<Raivis> result = new();
                 foreach (var l in list)
@@ -44,7 +44,7 @@ namespace Test
             set
             {
                 var c = _wm.FindClassByName( "Artis" );
-                var a = c.FindAssociationEndByName( "Raivis" );
+                var a = c.FindTargetAssociationEndByName( "Raivis" );
                 var list = value;
                 List<WebObject> result = new();
                 foreach (var l in list)
@@ -60,7 +60,7 @@ namespace Test
             get
             {
                 var c = _wm.FindClassByName( "Artis" );
-                var a = c.FindAssociationEndByName( "Raivis" );
+                var a = c.FindTargetAssociationEndByName( "Raivis" );
                 var list = _object.LinkedObjects(a);
                 List<Raivis> result = new();
                 foreach (var l in list)
@@ -72,7 +72,7 @@ namespace Test
             set
             {
                 var c = _wm.FindClassByName( "Artis" );
-                var a = c.FindAssociationEndByName( "Raivis" );
+                var a = c.FindTargetAssociationEndByName( "Raivis" );
                 var list = value;
                 List<WebObject> result = new();
                 foreach (var l in list)
@@ -88,7 +88,7 @@ namespace Test
             get
             {
                 var c = _wm.FindClassByName( "Artis" );
-                var a = c.FindAssociationEndByName( "Raivis" );
+                var a = c.FindTargetAssociationEndByName( "Raivis" );
                 var list = _object.LinkedObjects(a);
                 List<Raivis> result = new();
                 foreach (var l in list)
@@ -100,7 +100,7 @@ namespace Test
             set
             {
                 var c = _wm.FindClassByName( "Artis" );
-                var a = c.FindAssociationEndByName( "Raivis" );
+                var a = c.FindTargetAssociationEndByName( "Raivis" );
                 var list = value;
                 List<WebObject> result = new();
                 foreach (var l in list)

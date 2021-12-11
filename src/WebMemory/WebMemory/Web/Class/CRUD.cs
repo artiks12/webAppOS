@@ -72,9 +72,9 @@
         /// </summary>
         /// <param name="targetRoleName">Associācijas galapunkta lomas vārds</param>
         /// <returns></returns>
-        public WebAssociationEnd FindAssociationEndByName(string targetRoleName)
+        public WebAssociationEnd FindTargetAssociationEndByName(string targetRoleName)
         {
-            return FindAssociationEndByReference(_k.findAssociationEnd(_r, targetRoleName));
+            return FindTargetAssociationEndByReference(_k.findAssociationEnd(_r, targetRoleName));
         }
 
         /// <summary>
@@ -82,13 +82,10 @@
         /// </summary>
         /// <param name="r">Associācijas galapunkta atsauce</param>
         /// <returns></returns>
-        public WebAssociationEnd FindAssociationEndByReference(long r) 
+        public WebAssociationEnd FindTargetAssociationEndByReference(long r) 
         {
-            var dIngoingEnd = Dictionaries.D_GetClassIngoingAssociationEnds(_r, _k, _m);
-            var dOutgoingEnd = Dictionaries.D_GetClassOutgoingAssociationEnds(_r, _k, _m);
-
-            if (dIngoingEnd.ContainsKey(r) != false) { return dIngoingEnd[r]; }
-            else if (dOutgoingEnd.ContainsKey(r) != false) { return dOutgoingEnd[r]; }
+            var d = Dictionaries.D_GetClassOutgoingAssociationEnds(_r, _k, _m);
+            if (d.ContainsKey(r) != false) { return d[r]; }
             else { return null; }
         }
 
@@ -109,7 +106,7 @@
 
         public void DeleteAssociation(string targetRoleName)
         {
-            var a = FindAssociationEndByName(targetRoleName);
+            var a = FindTargetAssociationEndByName(targetRoleName);
             if (a != null) { _k.deleteAssociation(a.GetReference); }
         }
     }

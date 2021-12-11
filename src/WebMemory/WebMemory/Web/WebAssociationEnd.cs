@@ -58,7 +58,7 @@
         {
             get
             {
-                var tClass = _k.getSourceClass(_r);
+                var tClass = _k.getTargetClass(_r);
                 return _m.FindClassByReference(tClass);
             }
         }

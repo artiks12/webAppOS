@@ -48,7 +48,7 @@ namespace Test
                 {
                     cTarget = _wm.CreateClass( associations[x+2] );
                 }
-                var a = cSource.FindAssociationEndByName( associations[x+1] );
+                var a = cSource.FindTargetAssociationEndByName( associations[x+1] );
                 if (a == null)
                 {
                     bool isComposition;

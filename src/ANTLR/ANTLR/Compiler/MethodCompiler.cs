@@ -193,7 +193,7 @@ namespace AntlrCSharp
 					// Pārbauda, vai metožu vārdi sakrīt
 					if (m.Name == _method.Name)
 					{
-						if (m.primitiveType == _method.primitiveType) { Errors.Add("At line " + context.Start.Line + ": Method " + _attribute.Name + ", that exists in superclass " + _class.ClassName + " does not have the same datatype!"); }
+						if (m.primitiveType == _method.primitiveType) { Errors.Add("At line " + context.Start.Line + ": Method " + _attribute.Name + ", that exists in superclass " + _class.ClassName + " does not have the same datatype! Check line " + m.Line + "!"); }
 						
 						// Pārbauda, vai metožu argumentu skaits sakrīt
 						if (m._arguments.Count == _method._arguments.Count)
@@ -211,7 +211,7 @@ namespace AntlrCSharp
 								}
 							}
 						}
-						else { Errors.Add("At line " + context.Start.Line + ": Method " + _method.Name + ", that exists in superclass " + _class.ClassName + " does not have equal amount of arguments!"); }
+						else { Errors.Add("At line " + context.Start.Line + ": Method " + _method.Name + ", that exists in superclass " + _class.ClassName + " does not have equal amount of arguments! Check line " + m.Line + "!"); }
 						return true;
 					}
 				}

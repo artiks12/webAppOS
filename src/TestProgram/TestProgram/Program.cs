@@ -31,22 +31,22 @@ namespace TestProgram
             Console.WriteLine("Ingoing in Artis");
             foreach (var ia in artis.IngoingAssociationEnds()) 
             {
-                Console.WriteLine(ia.Name);
+                Console.WriteLine(ia.Name + " " + ia.SourceClass.Name + " " + ia.TargetClass.Name);
             }
             Console.WriteLine("Outgoing from Artis");
             foreach (var oa in artis.OutgoingAssociationEnds()) 
             {
-                Console.WriteLine(oa.Name);
+                Console.WriteLine(oa.Name + " " + oa.SourceClass.Name + " " + oa.TargetClass.Name);
             }
             Console.WriteLine("Ingoing in Raivis");
             foreach (var ia in raivis.IngoingAssociationEnds())
             {
-                Console.WriteLine(ia.Name);
+                Console.WriteLine(ia.Name + " " + ia.SourceClass.Name + " " + ia.TargetClass.Name);
             }
             Console.WriteLine("Outgoing from Raivis");
             foreach (var oa in raivis.OutgoingAssociationEnds())
             {
-                Console.WriteLine(oa.Name);
+                Console.WriteLine(oa.Name + " " + oa.SourceClass.Name + " " + oa.TargetClass.Name);
             }
 
             //artis.FindAssociationEnd("target1");
