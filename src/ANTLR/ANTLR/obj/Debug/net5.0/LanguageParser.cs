@@ -33,7 +33,8 @@ public partial class LanguageParser : Parser {
 	public const int
 		CURLYOPEN=1, CURLYCLOSE=2, BRACKETOPEN=3, BRACKETCLOSE=4, SQUAREOPEN=5, 
 		SQUARECLOSE=6, SEMICOLON=7, COLON=8, QUOTE=9, DOT=10, COMA=11, HASH=12, 
-		ARROWS=13, PROTECTION=14, BLOCKTYPE=15, DATATYPE=16, NAME=17, WS=18, ANYTHING=19;
+		ARROWS=13, PROTECTION=14, BLOCKTYPE=15, DATATYPE=16, IDENTIFIER=17, WS=18, 
+		ANYTHING=19;
 	public const int
 		RULE_code = 0, RULE_blocks = 1, RULE_blockBody = 2, RULE_blockType = 3, 
 		RULE_association = 4, RULE_associationDefinition = 5, RULE_associationSource = 6, 
@@ -69,7 +70,7 @@ public partial class LanguageParser : Parser {
 	private static readonly string[] _SymbolicNames = {
 		null, "CURLYOPEN", "CURLYCLOSE", "BRACKETOPEN", "BRACKETCLOSE", "SQUAREOPEN", 
 		"SQUARECLOSE", "SEMICOLON", "COLON", "QUOTE", "DOT", "COMA", "HASH", "ARROWS", 
-		"PROTECTION", "BLOCKTYPE", "DATATYPE", "NAME", "WS", "ANYTHING"
+		"PROTECTION", "BLOCKTYPE", "DATATYPE", "IDENTIFIER", "WS", "ANYTHING"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -159,7 +160,7 @@ public partial class LanguageParser : Parser {
 			State = 95;
 			_errHandler.Sync(this);
 			_la = _input.La(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << CURLYOPEN) | (1L << BRACKETOPEN) | (1L << COLON) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << CURLYOPEN) | (1L << BRACKETOPEN) | (1L << COLON) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) {
 				{
 				{
 				State = 92; blocks();
@@ -300,7 +301,7 @@ public partial class LanguageParser : Parser {
 			switch (_input.La(1)) {
 			case CURLYOPEN:
 			case COLON:
-			case NAME:
+			case IDENTIFIER:
 				EnterOuterAlt(_localctx, 1);
 				{
 				State = 108; webMemoryClass();
@@ -625,7 +626,7 @@ public partial class LanguageParser : Parser {
 			State = 140;
 			_errHandler.Sync(this);
 			_la = _input.La(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) {
 				{
 				State = 139; associationTargetClass();
 				}
@@ -645,7 +646,7 @@ public partial class LanguageParser : Parser {
 	}
 
 	public partial class AssociationSourceNameContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(LanguageParser.NAME, 0); }
+		public ITerminalNode IDENTIFIER() { return GetToken(LanguageParser.IDENTIFIER, 0); }
 		public ITerminalNode PROTECTION() { return GetToken(LanguageParser.PROTECTION, 0); }
 		public ITerminalNode DATATYPE() { return GetToken(LanguageParser.DATATYPE, 0); }
 		public ITerminalNode BLOCKTYPE() { return GetToken(LanguageParser.BLOCKTYPE, 0); }
@@ -679,7 +680,7 @@ public partial class LanguageParser : Parser {
 			{
 			State = 142;
 			_la = _input.La(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) ) {
 			_errHandler.RecoverInline(this);
 			} else {
 				if (_input.La(1) == TokenConstants.Eof) {
@@ -703,7 +704,7 @@ public partial class LanguageParser : Parser {
 	}
 
 	public partial class AssociationTargetNameContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(LanguageParser.NAME, 0); }
+		public ITerminalNode IDENTIFIER() { return GetToken(LanguageParser.IDENTIFIER, 0); }
 		public ITerminalNode PROTECTION() { return GetToken(LanguageParser.PROTECTION, 0); }
 		public ITerminalNode DATATYPE() { return GetToken(LanguageParser.DATATYPE, 0); }
 		public ITerminalNode BLOCKTYPE() { return GetToken(LanguageParser.BLOCKTYPE, 0); }
@@ -737,7 +738,7 @@ public partial class LanguageParser : Parser {
 			{
 			State = 144;
 			_la = _input.La(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) ) {
 			_errHandler.RecoverInline(this);
 			} else {
 				if (_input.La(1) == TokenConstants.Eof) {
@@ -761,7 +762,7 @@ public partial class LanguageParser : Parser {
 	}
 
 	public partial class AssociationSourceClassContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(LanguageParser.NAME, 0); }
+		public ITerminalNode IDENTIFIER() { return GetToken(LanguageParser.IDENTIFIER, 0); }
 		public ITerminalNode PROTECTION() { return GetToken(LanguageParser.PROTECTION, 0); }
 		public ITerminalNode DATATYPE() { return GetToken(LanguageParser.DATATYPE, 0); }
 		public ITerminalNode BLOCKTYPE() { return GetToken(LanguageParser.BLOCKTYPE, 0); }
@@ -795,7 +796,7 @@ public partial class LanguageParser : Parser {
 			{
 			State = 146;
 			_la = _input.La(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) ) {
 			_errHandler.RecoverInline(this);
 			} else {
 				if (_input.La(1) == TokenConstants.Eof) {
@@ -819,7 +820,7 @@ public partial class LanguageParser : Parser {
 	}
 
 	public partial class AssociationTargetClassContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(LanguageParser.NAME, 0); }
+		public ITerminalNode IDENTIFIER() { return GetToken(LanguageParser.IDENTIFIER, 0); }
 		public ITerminalNode PROTECTION() { return GetToken(LanguageParser.PROTECTION, 0); }
 		public ITerminalNode DATATYPE() { return GetToken(LanguageParser.DATATYPE, 0); }
 		public ITerminalNode BLOCKTYPE() { return GetToken(LanguageParser.BLOCKTYPE, 0); }
@@ -853,7 +854,7 @@ public partial class LanguageParser : Parser {
 			{
 			State = 148;
 			_la = _input.La(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) ) {
 			_errHandler.RecoverInline(this);
 			} else {
 				if (_input.La(1) == TokenConstants.Eof) {
@@ -934,7 +935,7 @@ public partial class LanguageParser : Parser {
 				State = 155;
 				_errHandler.Sync(this);
 				_la = _input.La(1);
-				if (_la==COLON || _la==NAME) {
+				if (_la==COLON || _la==IDENTIFIER) {
 					{
 					State = 154; classHead();
 					}
@@ -1015,7 +1016,7 @@ public partial class LanguageParser : Parser {
 				State = 165;
 				_errHandler.Sync(this);
 				_la = _input.La(1);
-				if (_la==NAME) {
+				if (_la==IDENTIFIER) {
 					{
 					State = 164; className();
 					}
@@ -1079,7 +1080,7 @@ public partial class LanguageParser : Parser {
 			State = 174;
 			_errHandler.Sync(this);
 			_la = _input.La(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BRACKETOPEN) | (1L << SQUAREOPEN) | (1L << SEMICOLON) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BRACKETOPEN) | (1L << SQUAREOPEN) | (1L << SEMICOLON) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) {
 				{
 				{
 				State = 171; fields();
@@ -1199,7 +1200,7 @@ public partial class LanguageParser : Parser {
 				State = 184;
 				_errHandler.Sync(this);
 				_la = _input.La(1);
-				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BRACKETOPEN) | (1L << SQUAREOPEN) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) {
+				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BRACKETOPEN) | (1L << SQUAREOPEN) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) {
 					{
 					State = 183; field();
 					}
@@ -1345,7 +1346,7 @@ public partial class LanguageParser : Parser {
 	}
 
 	public partial class ClassNameContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(LanguageParser.NAME, 0); }
+		public ITerminalNode IDENTIFIER() { return GetToken(LanguageParser.IDENTIFIER, 0); }
 		public ClassNameContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -1373,7 +1374,7 @@ public partial class LanguageParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 210; Match(NAME);
+			State = 210; Match(IDENTIFIER);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1388,7 +1389,7 @@ public partial class LanguageParser : Parser {
 	}
 
 	public partial class SuperClassNameContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(LanguageParser.NAME, 0); }
+		public ITerminalNode IDENTIFIER() { return GetToken(LanguageParser.IDENTIFIER, 0); }
 		public SuperClassNameContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -1416,7 +1417,7 @@ public partial class LanguageParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 212; Match(NAME);
+			State = 212; Match(IDENTIFIER);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1468,7 +1469,7 @@ public partial class LanguageParser : Parser {
 			State = 216;
 			_errHandler.Sync(this);
 			_la = _input.La(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BRACKETOPEN) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BRACKETOPEN) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) {
 				{
 				State = 215; annotationContent();
 				}
@@ -1531,7 +1532,7 @@ public partial class LanguageParser : Parser {
 				State = 221;
 				_errHandler.Sync(this);
 				_la = _input.La(1);
-				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) {
+				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) {
 					{
 					State = 220; annotationType();
 					}
@@ -1668,7 +1669,7 @@ public partial class LanguageParser : Parser {
 			State = 238;
 			_errHandler.Sync(this);
 			_la = _input.La(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << SEMICOLON) | (1L << COLON) | (1L << DOT) | (1L << COMA) | (1L << HASH) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME) | (1L << ANYTHING))) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << SEMICOLON) | (1L << COLON) | (1L << DOT) | (1L << COMA) | (1L << HASH) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER) | (1L << ANYTHING))) != 0)) {
 				{
 				State = 237; annotationValue();
 				}
@@ -1795,7 +1796,7 @@ public partial class LanguageParser : Parser {
 			State = 249;
 			_errHandler.Sync(this);
 			_la = _input.La(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) {
 				{
 				State = 248; protocol();
 				}
@@ -1805,7 +1806,7 @@ public partial class LanguageParser : Parser {
 			State = 253;
 			_errHandler.Sync(this);
 			_la = _input.La(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) {
 				{
 				State = 252; location();
 				}
@@ -1877,7 +1878,7 @@ public partial class LanguageParser : Parser {
 				case PROTECTION:
 				case BLOCKTYPE:
 				case DATATYPE:
-				case NAME:
+				case IDENTIFIER:
 				case ANYTHING:
 					{
 					State = 257; annotationData();
@@ -1899,7 +1900,7 @@ public partial class LanguageParser : Parser {
 				State = 261;
 				_errHandler.Sync(this);
 				_la = _input.La(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << SEMICOLON) | (1L << COLON) | (1L << DOT) | (1L << COMA) | (1L << HASH) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME) | (1L << ANYTHING))) != 0) );
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << SEMICOLON) | (1L << COLON) | (1L << DOT) | (1L << COMA) | (1L << HASH) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER) | (1L << ANYTHING))) != 0) );
 			}
 		}
 		catch (RecognitionException re) {
@@ -1915,7 +1916,7 @@ public partial class LanguageParser : Parser {
 
 	public partial class AnnotationDataContext : ParserRuleContext {
 		public ITerminalNode ANYTHING() { return GetToken(LanguageParser.ANYTHING, 0); }
-		public ITerminalNode NAME() { return GetToken(LanguageParser.NAME, 0); }
+		public ITerminalNode IDENTIFIER() { return GetToken(LanguageParser.IDENTIFIER, 0); }
 		public ITerminalNode PROTECTION() { return GetToken(LanguageParser.PROTECTION, 0); }
 		public ITerminalNode BLOCKTYPE() { return GetToken(LanguageParser.BLOCKTYPE, 0); }
 		public ITerminalNode DATATYPE() { return GetToken(LanguageParser.DATATYPE, 0); }
@@ -1949,7 +1950,7 @@ public partial class LanguageParser : Parser {
 			{
 			State = 263;
 			_la = _input.La(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME) | (1L << ANYTHING))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER) | (1L << ANYTHING))) != 0)) ) {
 			_errHandler.RecoverInline(this);
 			} else {
 				if (_input.La(1) == TokenConstants.Eof) {
@@ -1973,7 +1974,7 @@ public partial class LanguageParser : Parser {
 	}
 
 	public partial class AnnotationTypeContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(LanguageParser.NAME, 0); }
+		public ITerminalNode IDENTIFIER() { return GetToken(LanguageParser.IDENTIFIER, 0); }
 		public ITerminalNode PROTECTION() { return GetToken(LanguageParser.PROTECTION, 0); }
 		public ITerminalNode BLOCKTYPE() { return GetToken(LanguageParser.BLOCKTYPE, 0); }
 		public ITerminalNode DATATYPE() { return GetToken(LanguageParser.DATATYPE, 0); }
@@ -2007,7 +2008,7 @@ public partial class LanguageParser : Parser {
 			{
 			State = 265;
 			_la = _input.La(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) ) {
 			_errHandler.RecoverInline(this);
 			} else {
 				if (_input.La(1) == TokenConstants.Eof) {
@@ -2090,7 +2091,7 @@ public partial class LanguageParser : Parser {
 	}
 
 	public partial class ProtocolContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(LanguageParser.NAME, 0); }
+		public ITerminalNode IDENTIFIER() { return GetToken(LanguageParser.IDENTIFIER, 0); }
 		public ITerminalNode PROTECTION() { return GetToken(LanguageParser.PROTECTION, 0); }
 		public ITerminalNode BLOCKTYPE() { return GetToken(LanguageParser.BLOCKTYPE, 0); }
 		public ITerminalNode DATATYPE() { return GetToken(LanguageParser.DATATYPE, 0); }
@@ -2124,7 +2125,7 @@ public partial class LanguageParser : Parser {
 			{
 			State = 269;
 			_la = _input.La(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) ) {
 			_errHandler.RecoverInline(this);
 			} else {
 				if (_input.La(1) == TokenConstants.Eof) {
@@ -2148,7 +2149,7 @@ public partial class LanguageParser : Parser {
 	}
 
 	public partial class LocationContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(LanguageParser.NAME, 0); }
+		public ITerminalNode IDENTIFIER() { return GetToken(LanguageParser.IDENTIFIER, 0); }
 		public ITerminalNode PROTECTION() { return GetToken(LanguageParser.PROTECTION, 0); }
 		public ITerminalNode BLOCKTYPE() { return GetToken(LanguageParser.BLOCKTYPE, 0); }
 		public ITerminalNode DATATYPE() { return GetToken(LanguageParser.DATATYPE, 0); }
@@ -2182,7 +2183,7 @@ public partial class LanguageParser : Parser {
 			{
 			State = 271;
 			_la = _input.La(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) ) {
 			_errHandler.RecoverInline(this);
 			} else {
 				if (_input.La(1) == TokenConstants.Eof) {
@@ -2349,7 +2350,7 @@ public partial class LanguageParser : Parser {
 				State = 282;
 				_errHandler.Sync(this);
 				_la = _input.La(1);
-				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) {
+				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) {
 					{
 					State = 281; attributeDefinition();
 					}
@@ -2627,7 +2628,7 @@ public partial class LanguageParser : Parser {
 			State = 315;
 			_errHandler.Sync(this);
 			_la = _input.La(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << COMA) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << NAME))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << COMA) | (1L << PROTECTION) | (1L << BLOCKTYPE) | (1L << DATATYPE) | (1L << IDENTIFIER))) != 0)) {
 				{
 				State = 313;
 				_errHandler.Sync(this);
@@ -2640,7 +2641,7 @@ public partial class LanguageParser : Parser {
 				case PROTECTION:
 				case BLOCKTYPE:
 				case DATATYPE:
-				case NAME:
+				case IDENTIFIER:
 					{
 					State = 312; argument();
 					}
@@ -2847,7 +2848,7 @@ public partial class LanguageParser : Parser {
 	}
 
 	public partial class FieldNameContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(LanguageParser.NAME, 0); }
+		public ITerminalNode IDENTIFIER() { return GetToken(LanguageParser.IDENTIFIER, 0); }
 		public FieldNameContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -2875,7 +2876,7 @@ public partial class LanguageParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 332; Match(NAME);
+			State = 332; Match(IDENTIFIER);
 			}
 		}
 		catch (RecognitionException re) {
@@ -2947,7 +2948,7 @@ public partial class LanguageParser : Parser {
 	}
 
 	public partial class ArgumentNameContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(LanguageParser.NAME, 0); }
+		public ITerminalNode IDENTIFIER() { return GetToken(LanguageParser.IDENTIFIER, 0); }
 		public ArgumentNameContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -2975,7 +2976,7 @@ public partial class LanguageParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 336; Match(NAME);
+			State = 336; Match(IDENTIFIER);
 			}
 		}
 		catch (RecognitionException re) {

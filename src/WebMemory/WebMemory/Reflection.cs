@@ -1,10 +1,20 @@
 ﻿using System;
 using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
+
 
 namespace WebAppOS
 {
     public class Reflection : ILocalWebCalls
     {
+        public List<string> GetMethodInfo(string methodURL) 
+        {
+            string[]seperator = { ":", "#" };
+            List<string> list = new(methodURL.Split(seperator, StringSplitOptions.RemoveEmptyEntries));
+            return list;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -15,9 +25,11 @@ namespace WebAppOS
         /// <returns></returns>
         public string WebCall(TDAKernel _k, long wmObjRef, string methodURL, string arguments, IRemoteWebCalls wc)
         {
-            Type t = Type.GetType("Namespace.ClassName");
+            var l = GetMethodInfo(methodURL);
+            
+            Type t = Type.GetType(l[2]);
 
-            var mInfo = t.GetMethod("MethodName");
+            var mInfo = t.GetMethod(l[3]);
 
             if (mInfo != null) 
             {

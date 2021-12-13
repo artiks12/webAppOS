@@ -31,7 +31,8 @@ public partial class LanguageLexer : Lexer {
 	public const int
 		CURLYOPEN=1, CURLYCLOSE=2, BRACKETOPEN=3, BRACKETCLOSE=4, SQUAREOPEN=5, 
 		SQUARECLOSE=6, SEMICOLON=7, COLON=8, QUOTE=9, DOT=10, COMA=11, HASH=12, 
-		ARROWS=13, PROTECTION=14, BLOCKTYPE=15, DATATYPE=16, NAME=17, WS=18, ANYTHING=19;
+		ARROWS=13, PROTECTION=14, BLOCKTYPE=15, DATATYPE=16, IDENTIFIER=17, WS=18, 
+		ANYTHING=19;
 	public static string[] modeNames = {
 		"DEFAULT_MODE"
 	};
@@ -39,7 +40,7 @@ public partial class LanguageLexer : Lexer {
 	public static readonly string[] ruleNames = {
 		"CURLYOPEN", "CURLYCLOSE", "BRACKETOPEN", "BRACKETCLOSE", "SQUAREOPEN", 
 		"SQUARECLOSE", "SEMICOLON", "COLON", "QUOTE", "DOT", "COMA", "HASH", "ARROWS", 
-		"PROTECTION", "BLOCKTYPE", "DATATYPE", "NAME", "WS", "ANYTHING"
+		"PROTECTION", "BLOCKTYPE", "DATATYPE", "IDENTIFIER", "WS", "ANYTHING"
 	};
 
 
@@ -56,7 +57,7 @@ public partial class LanguageLexer : Lexer {
 	private static readonly string[] _SymbolicNames = {
 		null, "CURLYOPEN", "CURLYCLOSE", "BRACKETOPEN", "BRACKETCLOSE", "SQUAREOPEN", 
 		"SQUARECLOSE", "SEMICOLON", "COLON", "QUOTE", "DOT", "COMA", "HASH", "ARROWS", 
-		"PROTECTION", "BLOCKTYPE", "DATATYPE", "NAME", "WS", "ANYTHING"
+		"PROTECTION", "BLOCKTYPE", "DATATYPE", "IDENTIFIER", "WS", "ANYTHING"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 

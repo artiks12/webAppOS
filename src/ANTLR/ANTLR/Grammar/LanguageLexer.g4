@@ -23,6 +23,6 @@ BLOCKTYPE:				'class' | 'association';
 DATATYPE:				'Integer' | 'String' | 'Boolean' | 'Real' | 'Void';
 
 /// Dažādi
-NAME:					[_a-zA-Z]+[_a-zA-Z0-9]*; /// Identifikatori
+IDENTIFIER:				[_a-zA-Z]+[_a-zA-Z0-9]*; /// Identifikatori
 WS:						[ \t\f\r\n] -> channel(HIDDEN); /// Tukšumi
 ANYTHING:				~[ \t\f\r\n"EOF;:.#{}()',[\]<->]+; /// Anotāciju datiem veidota patvaļīga simbolu virkne

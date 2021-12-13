@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WebAppOS
+﻿namespace WebAppOS
 {
     public interface IRemoteWebCalls 
     {
@@ -16,10 +14,12 @@ namespace WebAppOS
     {
         public string WebCall(TDAKernel _k, long wmObjRef, string methodName, string arguments) 
         {
-            Console.WriteLine(wmObjRef + " " + methodName + " " + arguments);
-
-            return "{ \"result\": 5 }";
-            //return "{ \"error\": \"not implemented\" }";
+            /*
+                string r = _k.enqueueInnerWebCall(wmObjRef,methodName,arguments,"{}"); // Funkcijas izsaukšana caur TDAKernel. Atgriež JSON
+                return r;
+            */
+            
+            return "{}";
         }
     }
 }

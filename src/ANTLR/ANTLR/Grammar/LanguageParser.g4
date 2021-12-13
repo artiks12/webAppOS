@@ -22,10 +22,10 @@ associationDefinition:		associationSource ARROWS? associationTarget;
 associationSource:			associationSourceName? COLON? associationSourceClass?; 
 associationTarget:			associationTargetName? COLON? associationTargetClass?;
 
-associationSourceName:		NAME | PROTECTION | DATATYPE | BLOCKTYPE;
-associationTargetName:		NAME | PROTECTION | DATATYPE | BLOCKTYPE;
-associationSourceClass:		NAME | PROTECTION | DATATYPE | BLOCKTYPE;
-associationTargetClass:		NAME | PROTECTION | DATATYPE | BLOCKTYPE;
+associationSourceName:		IDENTIFIER | PROTECTION | DATATYPE | BLOCKTYPE;
+associationTargetName:		IDENTIFIER | PROTECTION | DATATYPE | BLOCKTYPE;
+associationSourceClass:		IDENTIFIER | PROTECTION | DATATYPE | BLOCKTYPE;
+associationTargetClass:		IDENTIFIER | PROTECTION | DATATYPE | BLOCKTYPE;
 
 
 /// webMemoryClass shēma
@@ -39,8 +39,8 @@ fields:						(field? SEMICOLON | field SEMICOLON?);
 
 field:						(annotation* fieldDefinition | annotation+ fieldDefinition?);
 
-className:					NAME;
-superClassName:				NAME;
+className:					IDENTIFIER;
+superClassName:				IDENTIFIER;
 
 
 /// Anotacijas shēma
@@ -57,11 +57,11 @@ annotationValue:			urlAttributes? annotationAttributes;
 urlAttributes:				protocol? COLON location? COLON;
 annotationAttributes:		(annotationData | annotationSeperator)+;
 
-annotationData:				ANYTHING | NAME | PROTECTION | BLOCKTYPE | DATATYPE;
-annotationType:				NAME | PROTECTION | BLOCKTYPE | DATATYPE;
+annotationData:				ANYTHING | IDENTIFIER | PROTECTION | BLOCKTYPE | DATATYPE;
+annotationType:				IDENTIFIER | PROTECTION | BLOCKTYPE | DATATYPE;
 annotationSeperator:		COLON | SEMICOLON | COMA | DOT | HASH;
-protocol:					NAME | PROTECTION | BLOCKTYPE | DATATYPE;
-location:					NAME | PROTECTION | BLOCKTYPE | DATATYPE;
+protocol:					IDENTIFIER | PROTECTION | BLOCKTYPE | DATATYPE;
+location:					IDENTIFIER | PROTECTION | BLOCKTYPE | DATATYPE;
 startQuote:					QUOTE;
 endQuote:					QUOTE;
 
@@ -79,7 +79,7 @@ argument:					(argumentDataType? argumentName | argumentDataType argumentName?);
 
 fieldProtection:			PROTECTION;
 fieldDataType:				DATATYPE | BLOCKTYPE;
-fieldName:					NAME;
+fieldName:					IDENTIFIER;
 argumentDataType:			DATATYPE | BLOCKTYPE | PROTECTION;
-argumentName:				NAME;
+argumentName:				IDENTIFIER;
 coma:						COMA;
