@@ -1,0 +1,11 @@
+(sourceName:sourceClass<->targetName:targetClass)
+className : superClass {}
+class
+association
+Integer
+class (sourceName:sourceClass<->targetName:targetClass)
+association (sourceName:sourceClass<->targetName:targetClass)
+Integer (sourceName:sourceClass<->targetName:targetClass)
+class className : superClass {}
+association className : superClass {}
+Integer className : superClass {}

@@ -1,0 +1,7 @@
+{} 
+: superClass 
+: superClass {} 
+baseClass 
+baseClass {} 
+baseClass : superClass 
+baseClass : superClass {} 

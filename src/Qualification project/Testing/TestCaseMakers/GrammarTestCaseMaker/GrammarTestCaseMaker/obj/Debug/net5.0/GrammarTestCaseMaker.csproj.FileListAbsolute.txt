@@ -1,0 +1,16 @@
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\bin\Debug\net5.0\GrammarTestCaseMaker.exe
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\bin\Debug\net5.0\GrammarTestCaseMaker.deps.json
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\bin\Debug\net5.0\GrammarTestCaseMaker.runtimeconfig.json
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\bin\Debug\net5.0\GrammarTestCaseMaker.runtimeconfig.dev.json
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\bin\Debug\net5.0\GrammarTestCaseMaker.dll
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\bin\Debug\net5.0\ref\GrammarTestCaseMaker.dll
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\bin\Debug\net5.0\GrammarTestCaseMaker.pdb
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\obj\Debug\net5.0\GrammarTestCaseMaker.csproj.AssemblyReference.cache
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\obj\Debug\net5.0\GrammarTestCaseMaker.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\obj\Debug\net5.0\GrammarTestCaseMaker.AssemblyInfoInputs.cache
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\obj\Debug\net5.0\GrammarTestCaseMaker.AssemblyInfo.cs
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\obj\Debug\net5.0\GrammarTestCaseMaker.csproj.CoreCompileInputs.cache
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\obj\Debug\net5.0\GrammarTestCaseMaker.dll
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\obj\Debug\net5.0\ref\GrammarTestCaseMaker.dll
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\obj\Debug\net5.0\GrammarTestCaseMaker.pdb
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Testing\TestCaseMakers\GrammarTestCaseMaker\GrammarTestCaseMaker\obj\Debug\net5.0\GrammarTestCaseMaker.genruntimeconfig.cache
