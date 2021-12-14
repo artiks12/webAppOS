@@ -31,10 +31,10 @@ namespace AntlrCSharp
 				for (int x = 0; x < c.Count; x++) 
 				{
 					// Ir divi gadījumi - ir argumenta definīcija vai komats
-					switch (c[x].GetType().ToString())
+					switch (c[x].GetType().Name)
 					{
 						// Komats
-						case "ANTLR.Grammar.LanguageParser+ComaContext":
+						case "ComaContext":
 							line = (uint)((ComaContext)c[x]).Start.Line;
 							if (x + 1 == c.Count) { Errors.Add("At line " + (uint)((ComaContext)c[x]).Stop.Line + ": argument expected!"); }
 
@@ -43,7 +43,7 @@ namespace AntlrCSharp
 						break;
 
 						// Argumenta definīcija
-						case "ANTLR.Grammar.LanguageParser+ArgumentContext":
+						case "ArgumentContext":
 							line = (uint)((ArgumentContext)c[x]).Start.Line;
 							
 							if (needComa == false) { needComa = true; }
