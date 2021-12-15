@@ -29,8 +29,9 @@ namespace AntlrCSharp
 			_target = new();
 			_association.Line = (uint)context.Start.Line;
 
-			VisitAssociationDefinition(context.associationDefinition()); // Apstaigājam asociācijas definīciju
-
+			if (context.associationDefinition().GetText() == "") { Errors.Add("At line " + context.Start.Line + ": missing association definition!");  }
+			else { VisitAssociationDefinition(context.associationDefinition()); } // Apstaigājam asociācijas definīciju
+			
 			// Saglabājam asociācijas galapunktiem asociācijas ID
 			_source.ID = (uint)Associations.Count;
 			_target.ID = (uint)Associations.Count;
@@ -57,19 +58,21 @@ namespace AntlrCSharp
 		/// </summary>
 		public override object VisitAssociationDefinition([NotNull] AssociationDefinitionContext context)
         {
-			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+			var test = (AssociationContext)context.Parent;
+			uint line = (uint)test.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
 			// Pārbauda, vai asociācijai ir avote definīcija
-			if (context.associationSource() == null) { Errors.Add("At line " + line + ": missing source definition!"); }
+			if (context.associationSource().GetText() == "") { Errors.Add("At line " + line + ": missing source definition!"); }
 			else 
 			{
-				// Mainam rindu
-				if (context.associationSource().associationSourceName() != null) { line = (uint)context.associationSource().associationSourceName().Stop.Line; }
-				else if (context.associationSource().associationSourceClass() != null) { line = (uint)context.associationSource().associationSourceClass().Start.Line; }
-
 				// Pārbauda, vai ir ielikts kols
-				if (context.associationSource().COLON() == null) { Errors.Add("At line " + line + ": Syntax error! Missing ':'!"); }
-				line = (uint)context.associationSource().Stop.Line; 
+				if (context.associationSource().COLON() == null) 
+				{
+					line = (uint)context.associationSource().associationSourceName().Stop.Line; // Ja kola nav, tad noteikti ir lomas vārds
+					Errors.Add("At line " + line + ": Syntax error! Missing ':'!"); 
+				}
+
+				line = (uint)context.associationSource().Stop.Line;
 			}
 
 			// Pārbauda, vai asociācijai ir bultas, kas nosaka kompozīciju
@@ -82,21 +85,19 @@ namespace AntlrCSharp
 			}
 
 			// Pārbauda, vai asociācijai ir definēts mērķis
-			if (context.associationTarget() == null) { Errors.Add("At line " + line + ": missing target definition!"); }
+			if (context.associationTarget().GetText() == "") { Errors.Add("At line " + line + ": missing target definition!"); }
 			else 
 			{
-				// Mainam rindu
-				if (context.associationTarget().associationTargetName() != null) { line = (uint)context.associationTarget().associationTargetName().Stop.Line; }
-				else if (context.associationTarget().associationTargetClass() != null) { line = (uint)context.associationTarget().associationTargetClass().Start.Line; }
-
 				// Pārbauda, vai ir ielikts kols
-				if (context.associationTarget().COLON() == null) { Errors.Add("At line " + line + ": Syntax error! Missing ':'!"); }
+				if (context.associationTarget().COLON() == null) 
+				{
+					line = (uint)context.associationTarget().associationTargetName().Stop.Line; // Ja kola nav, tad noteikti ir lomas vārds
+					Errors.Add("At line " + line + ": Syntax error! Missing ':'!"); 
+				}
 			}
 
-			if (VisitAssociationClasses(context) == 2) 
-			{
-				VisitAssociationRoleNames(context);
-			}
+			VisitAssociationClasses(context);
+			VisitAssociationRoleNames(context);
 
 			return null;
         }
@@ -104,41 +105,40 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Apstaigājam asociācijas klases
 		/// </summary>
-		public int VisitAssociationClasses([NotNull] AssociationDefinitionContext context) 
+		public object VisitAssociationClasses([NotNull] AssociationDefinitionContext context) 
 		{
-			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
-			int result = 0;
+			var test = (AssociationContext)context.Parent;
+			uint line = (uint)test.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
-			if (context.associationSource() != null) 
+			if (context.associationSource().GetText() != "") 
 			{
-				// Mainam rindu
+				// Mainam rindu, ja nav kola, tad noteikti ir lomas vārds
 				if (context.associationSource().COLON() != null) { line = (uint)context.associationSource().COLON().Symbol.Line; }
-				else if (context.associationSource().associationSourceName() != null) { line = (uint)context.associationSource().associationSourceName().Stop.Line; }
+				else { line = (uint)context.associationSource().associationSourceName().Stop.Line; }
 
 				// Parbauda, vai avotam ir definēta klase
 				if (context.associationSource().associationSourceClass() == null) { Errors.Add("At line " + line + ": Missing source class!"); }
 				else 
-				{ 
-					var s = VisitAssociationSourceClass(context.associationSource().associationSourceClass());
-					if (s != null) { result++; }
+				{  
+					VisitAssociationSourceClass(context.associationSource().associationSourceClass());
+					line = (uint)context.associationSource().associationSourceClass().Stop.Line;
 				}
 			}
-			if (context.associationTarget() != null)
+			if (context.associationTarget().GetText() != "")
 			{
-				// Mainam rindu
+				// Mainam rindu, ja nav kola, tad noteikti ir lomas vārds
 				if (context.associationTarget().COLON() != null) { line = (uint)context.associationTarget().COLON().Symbol.Line; }
-				else if (context.associationTarget().associationTargetName() != null) { line = (uint)context.associationTarget().associationTargetName().Stop.Line; }
+				else { line = (uint)context.associationTarget().associationTargetName().Stop.Line; }
 
 				// Parbauda, vai avotam ir definēta klase
 				if (context.associationTarget().associationTargetClass() == null) { Errors.Add("At line " + line + ": Missing target class!"); }
 				else 
 				{ 
-					var t = VisitAssociationTargetClass(context.associationTarget().associationTargetClass());
-					if (t != null) { result++; }
+					VisitAssociationTargetClass(context.associationTarget().associationTargetClass());
 				}
 			}
 
-			return result;
+			return null;
 		}
 
 		/// <summary>
@@ -146,16 +146,20 @@ namespace AntlrCSharp
 		/// </summary>
 		public object VisitAssociationRoleNames([NotNull] AssociationDefinitionContext context)
 		{
-			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+			var test = (AssociationContext)context.Parent;
+			uint line = (uint)test.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
-			if (context.associationSource() != null)
+			if (context.associationSource().GetText() != "")
 			{
 				// Parbauda, vai avotam ir definēta klase
 				if (context.associationSource().associationSourceName() == null) { Errors.Add("At line " + line + ": Missing source name!"); }
 				else { VisitAssociationSourceName(context.associationSource().associationSourceName()); }
 			}
-			if (context.associationTarget() != null)
+			if (context.associationTarget().GetText() != "")
 			{
+				if (context.ARROWS() != null) { line = (uint)context.ARROWS().Symbol.Line; }
+				else if (context.associationSource().GetText() != "") { line = (uint)context.associationSource().Stop.Line; }
+
 				// Parbauda, vai avotam ir definēta klase
 				if (context.associationTarget().associationTargetName() == null) { Errors.Add("At line " + line + ": Missing target name!"); }
 				else { VisitAssociationTargetName(context.associationTarget().associationTargetName()); }
@@ -207,9 +211,9 @@ namespace AntlrCSharp
 			if (isSource == true) { message = "At line " + line + ": there is no class '" + className + "' to use as source class!"; }
             else { message = "At line " + line + ": there is no class '" + className + "' to use as target class!"; }
 
-			if (found == false) { Errors.Add(message); return null; }
+			if (found == false) { Errors.Add(message); }
 
-			return new();
+			return null;
 		}
 
 		/// <summary>
@@ -217,9 +221,8 @@ namespace AntlrCSharp
 		/// </summary>
 		public override object VisitAssociationSourceClass([NotNull] AssociationSourceClassContext context)
 		{
-			var s = VisitAssociationClass(context.GetText(),context.Start.Line,true);
-			if (s == null) { return null; }
-			return new();
+			VisitAssociationClass(context.GetText(),context.Start.Line,true);
+			return null;
 		}
 
 		/// <summary>
@@ -227,9 +230,8 @@ namespace AntlrCSharp
 		/// </summary>
 		public override object VisitAssociationTargetClass([NotNull] AssociationTargetClassContext context)
 		{
-			var t = VisitAssociationClass(context.GetText(), context.Start.Line, false);
-			if (t == null) { return null; }
-			return new();
+			VisitAssociationClass(context.GetText(), context.Start.Line, false);
+			return null;
 		}
 
 		/// <summary>
@@ -297,28 +299,31 @@ namespace AntlrCSharp
 		{
 			_source.RoleName = context.GetText();
 
-			// Pārbauda, vai lomas vārds nesakrīt ar pretējās klases vārdu
-			if (_source.RoleName == _target.Class.ClassName)
+			if (_target.Class != null) 
 			{
-				Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + context.GetText() + "'!");
-				return null;
-			}
-			// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
-			foreach (var r in Reserved)
-			{
-				if (r == _source.RoleName)
+				// Pārbauda, vai lomas vārds nesakrīt ar pretējās klases vārdu
+				if (_source.RoleName == _target.Class.ClassName)
 				{
-					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + r + "'!");
+					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + context.GetText() + "'!");
 					return null;
 				}
-			}
-
-			if (checkRoleName(_source.RoleName, _target.Class, (uint)context.Start.Line, false) == true)
-			{
-				// Pārbauda, vai klasei ir virsklase
-				if (_target.Class.SuperClass != null)
+				// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
+				foreach (var r in Reserved)
 				{
-					checkRoleName(_source.RoleName, _target.Class.SuperClass, (uint)context.Start.Line, true);
+					if (r == _source.RoleName)
+					{
+						Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + r + "'!");
+						return null;
+					}
+				}
+
+				if (checkRoleName(_source.RoleName, _target.Class, (uint)context.Start.Line, false) == true)
+				{
+					// Pārbauda, vai klasei ir virsklase
+					if (_target.Class.SuperClass != null)
+					{
+						checkRoleName(_source.RoleName, _target.Class.SuperClass, (uint)context.Start.Line, true);
+					}
 				}
 			}
 
@@ -332,28 +337,31 @@ namespace AntlrCSharp
         {
 			_target.RoleName = context.GetText();
 
-			// Pārbauda, vai lomas vārds nesakrīt ar pretējās klases vārdu
-			if (_target.RoleName == _source.Class.ClassName)
+			if (_source.Class != null) 
 			{
-				Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + context.GetText() + "'!");
-				return null;
-			}
-			// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
-			foreach (var r in Reserved)
-			{
-				if (r == _target.RoleName)
+				// Pārbauda, vai lomas vārds nesakrīt ar pretējās klases vārdu
+				if (_target.RoleName == _source.Class.ClassName)
 				{
-					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + r + "'!");
+					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + context.GetText() + "'!");
 					return null;
 				}
-			}
-
-			if (checkRoleName(_target.RoleName, _source.Class, (uint)context.Start.Line, false) == true)
-			{
-				// Pārbauda, vai klasei ir virsklase
-				if (_source.Class.SuperClass != null)
+				// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
+				foreach (var r in Reserved)
 				{
-					checkRoleName(_target.RoleName, _source.Class.SuperClass, (uint)context.Start.Line, true);
+					if (r == _target.RoleName)
+					{
+						Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + r + "'!");
+						return null;
+					}
+				}
+
+				if (checkRoleName(_target.RoleName, _source.Class, (uint)context.Start.Line, false) == true)
+				{
+					// Pārbauda, vai klasei ir virsklase
+					if (_source.Class.SuperClass != null)
+					{
+						checkRoleName(_target.RoleName, _source.Class.SuperClass, (uint)context.Start.Line, true);
+					}
 				}
 			}
 

@@ -25,8 +25,10 @@ namespace AntlrCSharp
 
 			var methodBody = context.fieldDefinition().attributeDefinition();
 			var argumentBody = context.fieldDefinition().methodDefinition();
-
+			
 			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+			if (context.annotation().Length != 0) { line = (uint)context.annotation()[context.annotation().Length - 1].Start.Line; }
+			
 
 			if (methodBody != null)
 			{
@@ -36,7 +38,7 @@ namespace AntlrCSharp
 					line = (uint)methodBody.fieldProtection().Stop.Line;
 					VisitMethodProtection(methodBody.fieldProtection()); 
 				}
-				else { _attribute.Protection = "public"; }
+				else { _method.Protection = "public"; }
 
 				// Pārbauda, vai metodei ir datu tips un/vai vārds
 				if (methodBody.attribute() != null)

@@ -52,6 +52,7 @@ namespace AntlrCSharp
         }
         */
 
+        
         /// <summary>
         /// Testēšanai
         /// </summary>
@@ -68,15 +69,16 @@ namespace AntlrCSharp
 
             string _namespace = "Test";
 
-            for (int count = 1; count < 7; count++) 
+            for (int count = 1; count < 10; count++) 
             {
-                string path = "TestCases/" + filename + "/" + filename + ".i" + count;
+                string inFile = "TestCases/" + filename + "/Input/" + filename + ".i" + count;
+                string outFile = "TestCases/" + filename + "/Output/" + filename + ".o" + count;
 
-                Console.WriteLine("testing: " + path);
+                Console.WriteLine("testing: " + inFile);
 
                 // Iegūstam koda saturu no faila
                 string text = "";
-                using (StreamReader sr = new StreamReader(path))
+                using (StreamReader sr = new StreamReader(inFile))
                 {
                     text = sr.ReadToEnd();
                 }
@@ -91,7 +93,7 @@ namespace AntlrCSharp
                 CodeContext codeContext = parser.code();
                 compiler = new Compiler();
 
-                compiler.Compile(codeContext, _namespace); // Kompilējam kodu
+                compiler.Compile(codeContext, _namespace, outFile); // Kompilējam kodu
 
                 Console.WriteLine("\n");
             }

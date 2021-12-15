@@ -1,0 +1,9 @@
+class sourceClass {}
+class targetClass {}
+
+association
+(
+sourceName 
+<-> 
+targetName
+)

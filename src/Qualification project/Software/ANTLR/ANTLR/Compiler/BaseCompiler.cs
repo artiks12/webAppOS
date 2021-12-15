@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using ANTLR.Grammar;
 using static ANTLR.Grammar.LanguageParser;
 using Antlr4.Runtime.Tree;
+using System.IO;
 
 namespace AntlrCSharp
 {
@@ -16,9 +17,9 @@ namespace AntlrCSharp
 		public List<string> Errors; // Saraksts ar kļūdām.
 		public List<string> Reserved = new() { "class", "association", "Void" , "Integer", "String", "Boolean", "Real", "URL", "private", "public", "BaseObject" }; // Saraksts ar rezervētajiem vārdiem.
 
-		private List<string> AnnotationTypes = new() { }; // Saraksts ar anotāciju tipiem
-		private List<string> URLProtocols = new() { "java", "dotnet" }; // Saraksts ar URL Valodu protokoliem
-		private List<string> URLlocations = new() { "local", "remote"}; // Saraksts ar URL lokāciju vērtībām
+		private List<string> AnnotationTypes = new() { "path" }; // Saraksts ar anotāciju tipiem
+		private List<string> URLProtocols = new() { "staticJava", "dotnet" , "python3" }; // Saraksts ar URL Valodu protokoliem
+		private List<string> URLlocations = new() { "local", "http" , "ftp" }; // Saraksts ar URL lokāciju vērtībām
 
 		/// <summary>
 		/// Metode, kas pārbauda, vai vārdtelpa ir sintaktiski pareiza
@@ -68,9 +69,19 @@ namespace AntlrCSharp
 			}
 			else 
 			{
-                line = (uint)context.blockType().Stop.Line;
-				if (VisitBlockType(context.blockType()) == null) { type = ""; }
-				else { type = context.blockType().GetText(); } 
+                if (VisitBlockType(context.blockType()) == null) 
+				{ 
+					type = "";
+					if (context.blockBody() == null) { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a block type! Use 'class' or 'association' instead!"); }
+					else 
+					{
+						if (context.blockBody().webMemoryClass() != null) { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a block type! Use 'class' instead!"); }
+						else { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a block type! Use 'association' instead!"); }
+					}	
+				}
+				else { type = context.blockType().GetText(); }
+				
+				line = (uint)context.blockType().Stop.Line;
 			}
 
 			// Pārbauda, vai blokam ir ķermenis
@@ -80,18 +91,18 @@ namespace AntlrCSharp
 			}
 			else 
 			{
-				if (context.blockBody().webMemoryClass() != null) { body = "class"; }
-				else { body = "association"; }
-				
 				if (type != "") 
 				{
-					if (type.ToString() != body) 
+					if (context.blockBody().webMemoryClass() != null) { body = "class"; }
+					else { body = "association"; }
+
+					if (type.ToString() != body)
 					{
 						Errors.Add("At line " + line + ": " + type + " definition is given as " + body + " definition!");
 					}
 				}
 
-				//VisitBlockBody(context.blockBody());
+				VisitBlockBody(context.blockBody());
 			}
 
 			return null;
@@ -102,15 +113,13 @@ namespace AntlrCSharp
 		/// </summary>
         public override object VisitBlockType([NotNull] BlockTypeContext context)
         {
-			if (context.BLOCKTYPE() == null) { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a block type! Use 'class' or 'association' instead!"); }
-            
 			return context.BLOCKTYPE();
         }
 
 		/// <summary>
 		/// Kompilēšanas pamtfunkcija
 		/// </summary>
-		public void Compile(LanguageParser.CodeContext context, string _namespace) 
+		public void Compile(LanguageParser.CodeContext context, string _namespace, string errorFile = "Errors.out") 
 		{
 			// Sākam kompilēšanu ar sarakstu iestatīsanu
 			Classes = new();
@@ -130,10 +139,24 @@ namespace AntlrCSharp
 			if (Errors.Count != 0)
 			{
 				Console.WriteLine("");
-				Console.WriteLine("Compilation unsuccessful! Errors encountered:");
-				foreach (var error in Errors)
+				Console.WriteLine("Compilation unsuccessful! See errors in file " + errorFile + "!");
+				if (errorFile == "Errors.out")
 				{
-					Console.WriteLine(error);
+					foreach (var error in Errors)
+					{
+						Console.WriteLine(error);
+					}
+				}
+				else 
+				{
+					using (StreamWriter sw = new StreamWriter(errorFile))
+					{
+						foreach (var error in Errors)
+						{
+							sw.WriteLine(error);
+						}
+					}
+					
 				}
 			}
 			else 
