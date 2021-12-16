@@ -22,7 +22,9 @@ namespace AntlrCSharp
 			if (context.children != null) 
 			{
 				bool needComa = false; // Vai ir vajadzīgs komats
-				uint line = (uint)context.Start.Line;  // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+				var start = (MethodDefinitionContext)context.Parent;
+				uint line = (uint)start.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+				Console.WriteLine(line);
 
 				var c = context.children;
 				// Pārbaudam visu, kas ir ierakstīts iekavās
@@ -33,20 +35,20 @@ namespace AntlrCSharp
 					{
 						// Komats
 						case "ComaContext":
-							line = (uint)((ComaContext)c[x]).Start.Line;
-							if (x + 1 == c.Count) { Errors.Add("At line " + (uint)((ComaContext)c[x]).Stop.Line + ": argument expected!"); }
-
 							if (needComa == false) { Errors.Add("At line " + line + ": argument expected!"); }
 							else { needComa = false; }
+
+							if (x + 1 == c.Count) { Errors.Add("At line " + (uint)((ComaContext)c[x]).Stop.Line + ": argument expected!"); }
+
+							line = (uint)((ComaContext)c[x]).Stop.Line;
 						break;
 
 						// Argumenta definīcija
 						case "ArgumentContext":
-							line = (uint)((ArgumentContext)c[x]).Start.Line;
-							
 							if (needComa == false) { needComa = true; }
 							else { Errors.Add("At line " + line + ": Syntax error! Missing ','!"); }
 							VisitArgument((ArgumentContext)c[x]);
+							line = (uint)((ArgumentContext)c[x]).Stop.Line;
 						break;
 					}
 				}
@@ -61,7 +63,6 @@ namespace AntlrCSharp
 		{
 			// Sagatavojam argumentu
 			_argument = new();
-			_argument.Line = (uint)context.Start.Line;
 
 			uint line = (uint)context.Start.Line;  // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 												  
@@ -73,12 +74,14 @@ namespace AntlrCSharp
 			}
 			else { Errors.Add("At line " + line + ": Missing datatype for argument!"); }
 
-
 			// Pārbauda, vai mainīgajam ir vārds
 			if (context.argumentName() != null) { VisitArgumentName(context.argumentName()); }
 			else { Errors.Add("At line " + line + ": Missing name for argument!"); }
 
+			if (_argument.Name != null) { _argument.Line = (uint)context.argumentName().Start.Line; }
+			else { _argument.Line = (uint)context.Start.Line; }
 			_method._arguments.Add(_argument);
+
 			return null;
 		}
 
@@ -103,12 +106,10 @@ namespace AntlrCSharp
 		/// <returns></returns>
         public override object VisitArgumentName([NotNull] ArgumentNameContext context)
 		{
-			_argument.Name = context.GetText();
-
 			// Pārbauda, vai argumenta vārds sakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved) 
 			{
-				if (r == _argument.Name) 
+				if (r == context.GetText()) 
 				{
 					Errors.Add("At line " + context.Start.Line + ": Argument cannot be named '" + r + "'!");
 					return null;
@@ -118,12 +119,14 @@ namespace AntlrCSharp
 			// Pārbauda, vai arguments ar doto vārdu jau ir definēts starp citiem argumentiem
 			foreach (var arg in _method._arguments)
 			{
-				if (arg.Name == _argument.Name)
+				if (arg.Name == context.GetText())
 				{
 					Errors.Add("At line " + context.Start.Line + ": Argument with name '" + context.GetText() + "' already exists! Check line " + arg.Line + "!");
 					return null;
 				}
 			}
+
+			_argument.Name = context.GetText();
 
 			return null;
 		}

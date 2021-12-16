@@ -205,6 +205,7 @@ namespace AntlrCSharp
         public Method()
         {
             _arguments = new();
+            _annotations = new();
         }
 
         /// <summary>

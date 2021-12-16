@@ -1,0 +1,6 @@
+class superClass{}
+class 
+className
+:
+superClass 
+{}

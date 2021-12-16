@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "T4RQkCP9hpsAUkwO/NHf3CP0PtLcpivjhbUPw+oxXr6iXInccOuZDUS2jZppIO0VJoqTz2Ys5YAnbf5lTqqHUA==",
+  "dgSpecHash": "GJCp6yjzqVoY8hRr23N5tT0Uv1ml0ZSI0ULb1EnTq+JthhnZRT3ycptr81gLLaBZjK3YpWBkqp8KkHI2K2lW1Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\GrammarTester\\GrammarTester\\GrammarTester.csproj",
+  "projectFilePath": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\Qualification project\\Testing\\Testers\\GrammarTester\\GrammarTester\\GrammarTester.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Artis\\.nuget\\packages\\antlr4\\4.6.6\\antlr4.4.6.6.nupkg.sha512",
     "C:\\Users\\Artis\\.nuget\\packages\\antlr4.codegenerator\\4.6.6\\antlr4.codegenerator.4.6.6.nupkg.sha512",

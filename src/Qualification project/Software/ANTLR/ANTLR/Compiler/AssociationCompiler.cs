@@ -31,24 +31,25 @@ namespace AntlrCSharp
 
 			if (context.associationDefinition().GetText() == "") { Errors.Add("At line " + context.Start.Line + ": missing association definition!");  }
 			else { VisitAssociationDefinition(context.associationDefinition()); } // Apstaigājam asociācijas definīciju
-			
-			// Saglabājam asociācijas galapunktiem asociācijas ID
-			_source.ID = (uint)Associations.Count;
-			_target.ID = (uint)Associations.Count;
 
-			// Saglabājam asociācijas galapunktiem faktu, vai tas ir avots
-			_source.IsSource = true;
-			_target.IsSource = false;
-
-			// Pievienojam asociāciju galapunktus asociācijai
-			_association.Source = _source;
-			_association.Target = _target;
-
-			// Pievienojam asociāciju galapunktus klasēm
-			if (_sourceClass != -1) { Classes[_sourceClass]._associationEnds.Add(_target); }
-			if (_targetClass != -1) { Classes[_targetClass]._associationEnds.Add(_source); }
-
-			Associations.Add(_association); // Pievienojam asociāciju sarakstam
+			if (_source.RoleName != null || _target.RoleName != null)
+			{
+				if (_source.RoleName != null) 
+				{
+					_source.ID = (uint)Associations.Count;
+					_source.IsSource = true;
+					_association.Source = _source;
+					if (_targetClass != -1) { Classes[_targetClass]._associationEnds.Add(_source); }
+				}
+				if (_target.RoleName != null) 
+				{
+					_target.ID = (uint)Associations.Count;
+					_target.IsSource = false;
+					_association.Target = _target;
+					if (_sourceClass != -1) { Classes[_sourceClass]._associationEnds.Add(_target); }
+				}
+				Associations.Add(_association); // Pievienojam asociāciju sarakstam
+			}
 
 			return null;
 		}
@@ -58,8 +59,8 @@ namespace AntlrCSharp
 		/// </summary>
 		public override object VisitAssociationDefinition([NotNull] AssociationDefinitionContext context)
         {
-			var test = (AssociationContext)context.Parent;
-			uint line = (uint)test.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+			var start = (AssociationContext)context.Parent;
+			uint line = (uint)start.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
 			// Pārbauda, vai asociācijai ir avote definīcija
 			if (context.associationSource().GetText() == "") { Errors.Add("At line " + line + ": missing source definition!"); }
@@ -107,8 +108,7 @@ namespace AntlrCSharp
 		/// </summary>
 		public object VisitAssociationClasses([NotNull] AssociationDefinitionContext context) 
 		{
-			var test = (AssociationContext)context.Parent;
-			uint line = (uint)test.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+			uint line = (uint)context.Start.Line;
 
 			if (context.associationSource().GetText() != "") 
 			{
@@ -146,8 +146,8 @@ namespace AntlrCSharp
 		/// </summary>
 		public object VisitAssociationRoleNames([NotNull] AssociationDefinitionContext context)
 		{
-			var test = (AssociationContext)context.Parent;
-			uint line = (uint)test.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+			var start = (AssociationContext)context.Parent;
+			uint line = (uint)start.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
 			if (context.associationSource().GetText() != "")
 			{
@@ -297,33 +297,34 @@ namespace AntlrCSharp
 		/// </summary>
 		public override object VisitAssociationSourceName([NotNull] AssociationSourceNameContext context)
 		{
-			_source.RoleName = context.GetText();
+			// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
+			foreach (var r in Reserved)
+			{
+				if (r == context.GetText())
+				{
+					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + r + "'!");
+					return null;
+				}
+			}
 
-			if (_target.Class != null) 
+			if (_target.Class != null)
 			{
 				// Pārbauda, vai lomas vārds nesakrīt ar pretējās klases vārdu
-				if (_source.RoleName == _target.Class.ClassName)
+				if (context.GetText() == _target.Class.ClassName)
 				{
 					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + context.GetText() + "'!");
 					return null;
-				}
-				// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
-				foreach (var r in Reserved)
-				{
-					if (r == _source.RoleName)
-					{
-						Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + r + "'!");
-						return null;
-					}
 				}
 
 				if (checkRoleName(_source.RoleName, _target.Class, (uint)context.Start.Line, false) == true)
 				{
 					// Pārbauda, vai klasei ir virsklase
-					if (_target.Class.SuperClass != null)
+					if (_source.Class.SuperClass != null)
 					{
-						checkRoleName(_source.RoleName, _target.Class.SuperClass, (uint)context.Start.Line, true);
+						if (checkRoleName(_source.RoleName, _target.Class.SuperClass, (uint)context.Start.Line, true) == true) { _source.RoleName = context.GetText(); }
+						return null;
 					}
+					_source.RoleName = context.GetText();
 				}
 			}
 
@@ -335,7 +336,15 @@ namespace AntlrCSharp
 		/// </summary>
 		public override object VisitAssociationTargetName([NotNull] AssociationTargetNameContext context)
         {
-			_target.RoleName = context.GetText();
+			// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
+			foreach (var r in Reserved)
+			{
+				if (r == _target.RoleName)
+				{
+					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + r + "'!");
+					return null;
+				}
+			}
 
 			if (_source.Class != null) 
 			{
@@ -345,23 +354,16 @@ namespace AntlrCSharp
 					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + context.GetText() + "'!");
 					return null;
 				}
-				// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
-				foreach (var r in Reserved)
-				{
-					if (r == _target.RoleName)
-					{
-						Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + r + "'!");
-						return null;
-					}
-				}
 
 				if (checkRoleName(_target.RoleName, _source.Class, (uint)context.Start.Line, false) == true)
 				{
 					// Pārbauda, vai klasei ir virsklase
 					if (_source.Class.SuperClass != null)
 					{
-						checkRoleName(_target.RoleName, _source.Class.SuperClass, (uint)context.Start.Line, true);
+						if (checkRoleName(_target.RoleName, _source.Class.SuperClass, (uint)context.Start.Line, true) == true) { _target.RoleName = context.GetText(); }
+						return null;
 					}
+					_target.RoleName = context.GetText();
 				}
 			}
 

@@ -20,7 +20,6 @@ namespace AntlrCSharp
 		{
 			// Sagatavojam īpašību
 			_attribute = new();
-			_attribute.Line = (uint)context.Start.Line;
 
 			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
@@ -41,18 +40,22 @@ namespace AntlrCSharp
 					line = (uint)context.attribute().fieldDataType().Stop.Line;
 					VisitattributeDataType(context.attribute().fieldDataType()); 
 				}
-				else { Errors.Add("At line " + line + ": Missing datatype for property!"); }
+				else { Errors.Add("At line " + line + ": Missing datatype for attribute!"); }
 
 				// Pārbauda, vai atribūtam ir vārds
 				if (context.attribute().fieldName() != null) 
 				{
 					VisitattributeName(context.attribute().fieldName()); 
 				}
-				else { Errors.Add("At line " + line + ": Missing name for property!"); }
+				else { Errors.Add("At line " + line + ": Missing name for attribute!"); }
 			}
-			else { Errors.Add("At line " + line + ": Missing datatype and name for property!"); }
+			else { Errors.Add("At line " + line + ": Missing datatype and name for attribute!"); }
 
-			_class._attributes.Add(_attribute); // Pievienojam atribūtu klasē mainīgo sarakstā
+			if (_attribute.Name != null) 
+			{
+				_attribute.Line = (uint)context.attribute().fieldName().Start.Line;
+				_class._attributes.Add(_attribute); // Pievienojam atribūtu klasē mainīgo sarakstā
+			}
 			
 			return null;
 		}
@@ -84,10 +87,8 @@ namespace AntlrCSharp
 		/// </summary>
 		public object VisitattributeName([NotNull] FieldNameContext context)
 		{
-			_attribute.Name = context.GetText();
-
 			// Pārbauda, vai atribūta vārds sakrīt ar klases vārdu
-			if (_attribute.Name == _class.ClassName)
+			if (context.GetText() == _class.ClassName)
 			{
 				Errors.Add("At line " + context.Start.Line + ": A attribute cannot be named after class name!");
 				return null;
@@ -95,22 +96,24 @@ namespace AntlrCSharp
 			// Pārbauda, vai atribūta vārds sakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved)
 			{
-				if (_attribute.Name == r)
+				if (context.GetText() == r)
 				{
 					Errors.Add("At line " + context.Start.Line + ": A attribute cannot be named '" + r + "'!");
 					return null;
 				}
 			}
 
-			if (checkattributeName(context,_class,false) == true) 
+			if (checkattributeName(context, _class, false) == true)
 			{
 				// Pārbauda, vai klasei ir virsklase
 				if (_class.SuperClass != null)
 				{
-					checkattributeName(context, _class.SuperClass, true);
+					if (checkattributeName(context, _class.SuperClass, true) == true) { _attribute.Name = context.GetText(); }
+					return null;
 				}
+				_attribute.Name = context.GetText();
 			}
-			
+
 			return null;
 		}
 

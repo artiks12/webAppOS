@@ -58,21 +58,29 @@ namespace AntlrCSharp
         /// </summary>
         public static void Main(string[] args)
         {
-            // Iegūstam faila nosaukumu
+            Console.Write("Specify test type: ");
+            string type = Console.ReadLine();
+            while (type != "Syntax" && type != "Functionality")
+            {
+                type = Console.ReadLine();
+            }
+
             Console.Write("Specify test group: ");
             string filename = Console.ReadLine();
-
             while (filename == "") 
             {
                 filename = Console.ReadLine();
             }
 
-            string _namespace = "Test";
+            string path = "TestCases/" + type + "/" + filename;
 
-            for (int count = 1; count < 10; count++) 
+            string _namespace = "Test";
+            int length = Directory.GetFiles(path+"/Input/").Length;
+
+            for (int count = 1; count <= length; count++) 
             {
-                string inFile = "TestCases/" + filename + "/Input/" + filename + ".i" + count;
-                string outFile = "TestCases/" + filename + "/Output/" + filename + ".o" + count;
+                string inFile = path + "/Input/" + filename + ".i" + count;
+                string outFile = path + "/Output/" + filename + ".o" + count;
 
                 Console.WriteLine("testing: " + inFile);
 

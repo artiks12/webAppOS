@@ -48,9 +48,9 @@ annotation:					SQUAREOPEN annotationContent? SQUARECLOSE;
 
 annotationContent:			(annotationType? annotationBody | annotationType annotationBody? );
 
-annotationBody:				BRACKETOPEN annotationDefinition BRACKETCLOSE;			
+annotationBody:				BRACKETOPEN annotationDefinition? BRACKETCLOSE;			
 
-annotationDefinition:		startQuote annotationValue? endQuote;
+annotationDefinition:		(startQuote annotationValue? endQuote | startQuote? annotationValue endQuote? );
 
 annotationValue:			urlAttributes? annotationAttributes;
 

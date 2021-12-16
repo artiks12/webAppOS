@@ -1,0 +1,4 @@
+class sourceClass {}
+class targetClass {}
+
+class (sourceName:sourceClass<->targetName:targetClass)

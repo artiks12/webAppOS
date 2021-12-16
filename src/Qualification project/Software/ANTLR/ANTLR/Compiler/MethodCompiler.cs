@@ -20,7 +20,6 @@ namespace AntlrCSharp
 		{
 			// Sagatavojam metodi
 			_method = new();
-			_method.Line = (uint)context.fieldDefinition().Start.Line;
 			_urlFound = false;
 
 			var methodBody = context.fieldDefinition().attributeDefinition();
@@ -54,6 +53,7 @@ namespace AntlrCSharp
 					// Pārbauda, vai metodei ir vārds
 					if (methodBody.attribute().fieldName() != null)
 					{
+						line = (uint)methodBody.attribute().fieldName().Stop.Line;
 						VisitMethodName(methodBody.attribute().fieldName());
 					}
 					else { Errors.Add("At line " + line + ": Missing name for method!"); }
@@ -77,7 +77,11 @@ namespace AntlrCSharp
 			}
 			else { Errors.Add("At line " + context.Start.Line + ": Missing method URL!"); }
 
-			_class._methods.Add(_method);
+			if (_method.Name != null) 
+			{
+				_method.Line = (uint)context.fieldDefinition().attributeDefinition().attribute().fieldName().Start.Line;
+				_class._methods.Add(_method);
+			}
 
 			return null;
 		}
@@ -109,10 +113,8 @@ namespace AntlrCSharp
 		/// </summary>
 		public object VisitMethodName([NotNull] FieldNameContext context)
 		{
-			_method.Name = context.GetText();
-
 			// Pārbauda, vai metodes vārds sakrīt ar klases vārdu
-			if (_method.Name == _class.ClassName)
+			if (context.GetText() == _class.ClassName)
 			{
 				Errors.Add("At line " + context.Start.Line + ": A method cannot be named after class name!");
 				return null;
@@ -121,7 +123,7 @@ namespace AntlrCSharp
 			// Pārbauda, vai metodes vārds sakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved)
 			{
-				if (_method.Name == r)
+				if (context.GetText() == r)
 				{
 					Errors.Add("At line " + context.Start.Line + ": A method cannot be named '" + r + "'!");
 					return null;
@@ -133,8 +135,10 @@ namespace AntlrCSharp
 				// Pārbauda, vai klasei ir virsklase
 				if (_class.SuperClass != null)
 				{
-					checkMethodName(context, _class.SuperClass, true);
+					if(checkMethodName(context, _class.SuperClass, true) == true) { _method.Name = context.GetText(); }
+					return null;
 				}
+				_method.Name = context.GetText();
 			}
 
 			return null;
@@ -198,13 +202,12 @@ namespace AntlrCSharp
 							// Pārbauda, vai metožu argumentu datu tipi un vārdi sakrīt
 							for (int x = 0; x < m._arguments.Count; x++)
 							{
-								if (m._arguments[x].Name != _method._arguments[x].Name)
+								if (m._arguments[x].Type != null && _method._arguments[x].Type != null)
 								{
-									Errors.Add("At line " + _method.Line + ": Argument No. " + (x + 1) + ", does not have the same name as in " + _class.ClassName + "! Check line " + m.Line + "!");
-								}
-								if (m._arguments[x].Type != _method._arguments[x].Type)
-								{
-									Errors.Add("At line " + _method.Line + ": Argument No. " + (x + 1) + ", does not have the same datatype as in " + _class.ClassName + "! Check line " + m.Line + "!");
+									if (m._arguments[x].Type != _method._arguments[x].Type) 
+									{
+										Errors.Add("At line " + _method.Line + ": Argument No. " + (x + 1) + ", does not have the same datatype as in " + _class.ClassName + "! Check line " + m.Line + "!");
+									}
 								}
 							}
 						}

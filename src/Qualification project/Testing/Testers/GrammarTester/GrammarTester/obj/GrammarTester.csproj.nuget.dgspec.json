@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\GrammarTester\\GrammarTester\\GrammarTester.csproj": {}
+    "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\Qualification project\\Testing\\Testers\\GrammarTester\\GrammarTester\\GrammarTester.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\GrammarTester\\GrammarTester\\GrammarTester.csproj": {
+    "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\Qualification project\\Testing\\Testers\\GrammarTester\\GrammarTester\\GrammarTester.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\GrammarTester\\GrammarTester\\GrammarTester.csproj",
+        "projectUniqueName": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\Qualification project\\Testing\\Testers\\GrammarTester\\GrammarTester\\GrammarTester.csproj",
         "projectName": "GrammarTester",
-        "projectPath": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\GrammarTester\\GrammarTester\\GrammarTester.csproj",
+        "projectPath": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\Qualification project\\Testing\\Testers\\GrammarTester\\GrammarTester\\GrammarTester.csproj",
         "packagesPath": "C:\\Users\\Artis\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\GrammarTester\\GrammarTester\\obj\\",
+        "outputPath": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\Qualification project\\Testing\\Testers\\GrammarTester\\GrammarTester\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Program Files\\Visual Studio\\Shared\\NuGetPackages",

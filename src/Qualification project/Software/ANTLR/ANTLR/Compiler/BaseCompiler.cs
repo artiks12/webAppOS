@@ -72,11 +72,11 @@ namespace AntlrCSharp
                 if (VisitBlockType(context.blockType()) == null) 
 				{ 
 					type = "";
-					if (context.blockBody() == null) { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a block type! Use 'class' or 'association' instead!"); }
+					if (context.blockBody() == null) { Errors.Add("At line " + context.Start.Line + ": '" + context.blockType().GetText() + "' is not a block type! Use 'class' or 'association' instead!"); }
 					else 
 					{
-						if (context.blockBody().webMemoryClass() != null) { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a block type! Use 'class' instead!"); }
-						else { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a block type! Use 'association' instead!"); }
+						if (context.blockBody().webMemoryClass() != null) { Errors.Add("At line " + context.Start.Line + ": '" + context.blockType().GetText() + "' is not a block type! Use 'class' instead!"); }
+						else { Errors.Add("At line " + context.Start.Line + ": '" + context.blockType().GetText() + "' is not a block type! Use 'association' instead!"); }
 					}	
 				}
 				else { type = context.blockType().GetText(); }
@@ -165,6 +165,8 @@ namespace AntlrCSharp
 
 				Console.WriteLine("");
 				Console.WriteLine("Compilation successful!");
+				
+				if (errorFile != "Errors.out") { using (StreamWriter sw = new StreamWriter(errorFile)) { } }
 			}
 		}
 	}

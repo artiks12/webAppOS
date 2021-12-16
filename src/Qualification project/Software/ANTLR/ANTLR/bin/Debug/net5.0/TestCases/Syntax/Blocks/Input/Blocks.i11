@@ -1,0 +1,4 @@
+class sourceClass {}
+class targetClass {}
+
+Integer (sourceName:sourceClass<->targetName:targetClass)

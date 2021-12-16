@@ -51,7 +51,8 @@ namespace AntlrCSharp
         /// </summary>
         public override object VisitAnnotationContent([NotNull] AnnotationContentContext context)
         {
-            uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+            var start = (AnnotationContext)context.Parent;
+            uint line = (uint)start.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
             // Parbauda, vai ir anotācijas tips
             if (context.annotationType() == null) 
@@ -103,14 +104,14 @@ namespace AntlrCSharp
         /// </summary>
         public override object VisitAnnotationDefinition([NotNull] AnnotationDefinitionContext context)
         {
-            uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+            uint line = (uint)context.Start.Line;
 
             // Pārbauda, vai ir sākumpēdiņas
             if (context.startQuote() == null) { Errors.Add("At line " + line + ": Syntax error! Missing '\"'!"); }
             else { line = (uint)context.startQuote().Stop.Line; }
 
             // Pārbauda, vai ir anotācijas vērtība
-            if (context.annotationValue() == null) { Errors.Add("At line " + line + ": Missing annotation definition!"); }
+            if (context.annotationValue() == null) { Errors.Add("At line " + line + ": Missing annotation value!"); }
             else
             {
                 VisitAnnotationValue(context.annotationValue());
@@ -196,10 +197,17 @@ namespace AntlrCSharp
         /// </summary>
         public override object VisitUrlAttributes([NotNull] UrlAttributesContext context)
         {
-            uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+            uint line;
+            var start = (AnnotationDefinitionContext)context.Parent.Parent;
+            if (start.startQuote() != null) { line = (uint)start.Start.Line; }
+            else { line = (uint)context.Start.Line; } // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
             // Pārbaudam, vai ir dots valodas protokols
-            if (context.protocol() == null) { Errors.Add("At line " + line + ": URL protocol not given!"); }
+            if (context.protocol() == null) 
+            { 
+                Errors.Add("At line " + line + ": URL protocol not given!");
+                line = (uint)(context.COLON())[0].Symbol.Line;
+            }
             else 
             {
                 _method.URL.Protocol = context.protocol().GetText();
@@ -215,7 +223,7 @@ namespace AntlrCSharp
                     }
                 }
                 if (found == false) { Errors.Add("At line " + context.protocol().Start.Line + ": unsupported URL protocol was given!"); }
-                line = (uint)(context.COLON())[1].Symbol.Line;
+                line = (uint)(context.COLON())[0].Symbol.Line;
             }
 
             // Pārbaudam, vai ir dota lokācija

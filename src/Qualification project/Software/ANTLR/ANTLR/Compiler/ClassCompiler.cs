@@ -18,11 +18,11 @@ namespace AntlrCSharp
 		/// </summary>
 		public override object VisitWebMemoryClass([NotNull] WebMemoryClassContext context)
 		{
-			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
-												  
+			var start = (BlocksContext)context.Parent.Parent;
+			uint line = (uint)start.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+
 			// Izveidojam klases instanci
 			_class = new();
-			_class.Line = (uint)context.Start.Line;
 
 			// Pārbaudam, vai klasei ir "galva".
 			if (context.classHead() == null) { Errors.Add("At line " + line + ": Missing class head!"); }
@@ -33,13 +33,18 @@ namespace AntlrCSharp
 			}
 
 			// Pārbaudam, vai klasei ir "ķermenis".
-			if (context.classBody() == null) { Errors.Add("At line " + line + ": Missing class body!"); }
+			if (context.classBody() == null) { Errors.Add("At line " + line + ": Missing class body!");}
 			else
 			{
 				VisitClassBody(context.classBody());
 			}
+
+			if (_class.ClassName != null) 
+			{ 
+				_class.Line = (uint)context.classHead().className().Start.Line;
+				Classes.Add(_class); // Pievienojam klasi sarakstā
+			}
 			
-			Classes.Add(_class); // Pievienojam klasi sarakstā
 			return null;
 		}
 
@@ -48,8 +53,11 @@ namespace AntlrCSharp
 		/// </summary>
 		public override object VisitClassHead([NotNull] ClassHeadContext context)
         {
+			var start = (BlocksContext)context.Parent.Parent.Parent;
+			uint line = (uint)start.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+
 			// Pārbaudam, vai klasei ir vards.
-			if (context.className() == null) { Errors.Add("At line " + context.Start.Line + ": Missing class name!"); }
+			if (context.className() == null) { Errors.Add("At line " + line + ": Missing class name!"); }
 
 			return VisitChildren(context);
 		}
@@ -70,14 +78,13 @@ namespace AntlrCSharp
         /// </summary>
         public override object VisitClassName([NotNull] ClassNameContext context)
 		{
-			_class.ClassName = context.GetText();
-
 			// Klases vārds nedrīkst būt rezervētais vārds
 			foreach (var r in Reserved) 
 			{
-				if (_class.ClassName == r) 
+				if (context.GetText() == r) 
 				{ 
 					Errors.Add("At line " + context.Start.Line + ": A class cannot be named '" + r + "'!");
+					_class.ClassName = null;
 					return null;
 				}
 			}
@@ -85,12 +92,15 @@ namespace AntlrCSharp
 			// Pārbaudam, vai eksistē klase ar doto vārdu
 			foreach (var c in Classes)
 			{
-				if (_class.ClassName == c.ClassName)
+				if (context.GetText() == c.ClassName)
 				{
 					Errors.Add("At line " + context.Start.Line + ": A class '" + context.GetText() + "' already exists! Check line " + c.Line + "!");
+					_class.ClassName = null;
 					return null;
 				}
 			}
+
+			_class.ClassName = context.GetText();
 
 			return null;
 		}
