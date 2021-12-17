@@ -20,6 +20,7 @@ namespace AntlrCSharp
 		{
 			// Sagatavojam īpašību
 			_attribute = new();
+			_attribute.generate = true;
 
 			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
@@ -105,11 +106,11 @@ namespace AntlrCSharp
 
 			if (checkattributeName(context, _class, false) == true)
 			{
-				// Pārbauda, vai klasei ir virsklase
-				if (_class.SuperClass != null)
+				var sc = _class.SuperClass;
+				while (sc != null)
 				{
-					if (checkattributeName(context, _class.SuperClass, true) == true) { _attribute.Name = context.GetText(); }
-					return null;
+					if (checkattributeName(context, sc, true) == false) { return null; }
+					sc = sc.SuperClass;
 				}
 				_attribute.Name = context.GetText();
 			}
@@ -120,25 +121,16 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Pārbauda atribūta vārda esamību klasē/virsklasē
 		/// </summary>
-		public bool checkattributeName([NotNull] FieldNameContext context, Class _class, bool isSuperClass)
+		/// <returns>Atgriež to, vai ir jāturpina pārbaudi!</returns>
+		public bool checkattributeName([NotNull] FieldNameContext context, Class _checkClass, bool isSuperClass)
 		{
 			string message;
 
-			if (isSuperClass == false) { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class " + _class.ClassName + "! Check line "; }
-			else { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass " + _class.ClassName + "! Check line "; }
-			
-			// Pārbauda, vai atribūta vārds atkārtojas klasē starp metodēm
-			foreach (var m in _class._methods)
-			{
-				if (m.Name == context.GetText())
-				{
-					Errors.Add(message + m.Line + "!");
-					return false;
-				}
-			}
+			if (isSuperClass == false) { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class '" + _checkClass.ClassName + "'! Check line "; }
+			else { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass '" + _checkClass.ClassName + "'! Check line "; }
 
 			// Pārbauda, vai atribūta vārds atkārtojas klasē starp asociācijām
-			foreach (var ae in _class._associationEnds)
+			foreach (var ae in _checkClass._associationEnds)
 			{
 				if (ae.RoleName == context.GetText())
 				{
@@ -149,8 +141,18 @@ namespace AntlrCSharp
 
 			if (isSuperClass == false)
 			{
+				// Pārbauda, vai atribūta vārds atkārtojas klasē starp metodēm
+				foreach (var m in _checkClass._methods)
+				{
+					if (m.Name == context.GetText())
+					{
+						Errors.Add(message + m.Line + "!");
+						return false;
+					}
+				}
+
 				// Pārbauda, vai atribūta vārds atkārtojas klasē starp citiem atribūtiem
-				foreach (var v in _class._attributes)
+				foreach (var v in _checkClass._attributes)
 				{
 					if (v.Name == context.GetText())
 					{
@@ -161,17 +163,23 @@ namespace AntlrCSharp
 			}
 			else 
 			{
-				// Pārbauda, vai atribūta vārds atkārtojas virsklasē starp citiem atribūtiem
-				foreach (var v in _class._attributes)
+				// Pārbauda, vai atribūta vārds atkārtojas klasē starp metodēm
+				foreach (var m in _checkClass._methods)
 				{
-					if (v.Name == context.GetText())
+					if (m.Name == context.GetText() && m.Protection == "public")
 					{
-						if (v.primitiveType == _attribute.primitiveType)
-						{
-							Errors.Add("At line " + context.Start.Line + ": attribute " + _attribute.Name + ", that exists in superclass " + _class.ClassName + " does not have the same datatype! Check line " + v.Line + "!");
-							return false;
-						}
-						return true;
+						Errors.Add(message + m.Line + "!");
+						return false;
+					}
+				}
+
+				// Pārbauda, vai atribūta vārds atkārtojas virsklasē starp citiem atribūtiem
+				foreach (var v in _checkClass._attributes)
+				{
+					if (v.Name == context.GetText() && v.Protection == "public")
+					{
+						if (v.Type != _attribute.Type) { Errors.Add("At line " + context.Start.Line + ": attribute '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' , does not have the same datatype! Check line " + v.Line + "!"); }
+						return false;
 					}
 				}
 			}

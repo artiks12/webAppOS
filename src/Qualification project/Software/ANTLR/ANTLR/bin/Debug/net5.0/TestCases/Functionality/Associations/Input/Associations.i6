@@ -1,0 +1,13 @@
+class sourceClass {}
+class targetClass {}
+
+association
+(
+public
+:
+sourceClass
+<->
+URL
+:
+targetClass
+)

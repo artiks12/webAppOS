@@ -24,7 +24,6 @@ namespace AntlrCSharp
 				bool needComa = false; // Vai ir vajadzīgs komats
 				var start = (MethodDefinitionContext)context.Parent;
 				uint line = (uint)start.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
-				Console.WriteLine(line);
 
 				var c = context.children;
 				// Pārbaudam visu, kas ir ierakstīts iekavās

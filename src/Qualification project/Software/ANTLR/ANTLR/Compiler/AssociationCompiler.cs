@@ -241,8 +241,8 @@ namespace AntlrCSharp
 		{
 			string message;
 
-			if (isSuperClass == false) { message = "At line " + line + ": a field with name '" + rolename + "' already exists in class " + _class.ClassName + "! Check line "; }
-			else { message = "At line " + line + ": a field with name '" + rolename + "' already exists in superclass " + _class.ClassName + "! Check line "; }
+			if (isSuperClass == false) { message = "At line " + line + ": a field with name '" + rolename + "' already exists in class '" + _class.ClassName + "'! Check line "; }
+			else { message = "At line " + line + ": a field with name '" + rolename + "' already exists in superclass '" + _class.ClassName + "'! Check line "; }
 
 			// Pārbauda, vai klasē ir atribūts, kura vārds sakrīit ar lomas vārdu
 			foreach (var v in _class._attributes)
@@ -318,11 +318,12 @@ namespace AntlrCSharp
 
 				if (checkRoleName(_source.RoleName, _target.Class, (uint)context.Start.Line, false) == true)
 				{
-					// Pārbauda, vai klasei ir virsklase
-					if (_source.Class.SuperClass != null)
+					var sc = _source.Class.SuperClass;
+					while (sc != null) 
 					{
-						if (checkRoleName(_source.RoleName, _target.Class.SuperClass, (uint)context.Start.Line, true) == true) { _source.RoleName = context.GetText(); }
-						return null;
+						if (checkRoleName(_source.RoleName, sc, (uint)context.Start.Line, true) == true) { _source.RoleName = context.GetText(); }
+						else { return null; }
+						sc = sc.SuperClass;
 					}
 					_source.RoleName = context.GetText();
 				}
@@ -357,11 +358,12 @@ namespace AntlrCSharp
 
 				if (checkRoleName(_target.RoleName, _source.Class, (uint)context.Start.Line, false) == true)
 				{
-					// Pārbauda, vai klasei ir virsklase
-					if (_source.Class.SuperClass != null)
+					var sc = _target.Class.SuperClass;
+					while (sc != null)
 					{
-						if (checkRoleName(_target.RoleName, _source.Class.SuperClass, (uint)context.Start.Line, true) == true) { _target.RoleName = context.GetText(); }
-						return null;
+						if (checkRoleName(_target.RoleName, sc, (uint)context.Start.Line, true) == true) { _target.RoleName = context.GetText(); }
+						else { return null; }
+						sc = sc.SuperClass;
 					}
 					_target.RoleName = context.GetText();
 				}

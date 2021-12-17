@@ -1,0 +1,20 @@
+class test1
+{
+	Integer 
+	test
+	;
+}
+
+class test2 : test1
+{
+	String
+	test
+	;
+}
+
+class test3 : test2
+{
+	Integer 
+	test
+	;
+}

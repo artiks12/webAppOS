@@ -1,0 +1,10 @@
+association
+(
+sourceName
+:
+BaseObject
+<->
+targetName
+:
+BaseObject
+)

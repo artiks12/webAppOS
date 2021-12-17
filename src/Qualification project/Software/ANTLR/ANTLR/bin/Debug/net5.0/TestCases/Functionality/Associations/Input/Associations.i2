@@ -1,0 +1,10 @@
+association
+(
+sourceName
+:
+public
+<->
+targetName
+:
+URL
+)

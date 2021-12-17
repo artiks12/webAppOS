@@ -20,6 +20,7 @@ namespace AntlrCSharp
 		{
 			// Sagatavojam metodi
 			_method = new();
+			_method.generate = true;
 			_urlFound = false;
 
 			var methodBody = context.fieldDefinition().attributeDefinition();
@@ -50,6 +51,10 @@ namespace AntlrCSharp
 					}
 					else { Errors.Add("At line " + line + ": Missing datatype for method!"); }
 
+					// Pārbauda, vai metodei ir argumentu definīcija
+					if (argumentBody != null) { VisitMethodDefinition(argumentBody); }
+					else { Errors.Add("At line " + methodBody.Stop.Line + ": Missing arguemnt definition for method!"); }
+
 					// Pārbauda, vai metodei ir vārds
 					if (methodBody.attribute().fieldName() != null)
 					{
@@ -62,9 +67,6 @@ namespace AntlrCSharp
 			}
 			else { Errors.Add("At line " + line + ": Missing datatype and name for method!"); }
 
-			// Pārbauda, vai metodei ir argumentu definīcija
-			if (argumentBody != null) { VisitMethodDefinition(argumentBody); }
-			else { Errors.Add("At line " + line + ": Missing arguemnt definition for method!"); }
 
 			// Pārbauda metodes anotācijas
 			if (context.annotation().Length > 0)
@@ -132,11 +134,12 @@ namespace AntlrCSharp
 
 			if (checkMethodName(context, _class, false) == true)
 			{
-				// Pārbauda, vai klasei ir virsklase
-				if (_class.SuperClass != null)
+				var sc = _class.SuperClass;
+				while (sc != null)
 				{
-					if(checkMethodName(context, _class.SuperClass, true) == true) { _method.Name = context.GetText(); }
-					return null;
+					if (checkMethodName(context, sc, true) == false) { return null; }
+					sc = sc.SuperClass;
+
 				}
 				_method.Name = context.GetText();
 			}
@@ -147,25 +150,17 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Pārbauda metodes vārda esamību klasē/virsklasē
 		/// </summary>
-		public bool checkMethodName([NotNull] FieldNameContext context, Class _class, bool isSuperClass) 
+		public bool checkMethodName([NotNull] FieldNameContext context, Class _checkClass, bool isSuperClass) 
 		{
 			string message;
 
-			if (isSuperClass == false) { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class " + _class.ClassName + "! Check line "; }
-			else { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass " + _class.ClassName + "! Check line "; }
+			if (isSuperClass == false) { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class '" + _checkClass.ClassName + "'! Check line "; }
+			else { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass '" + _checkClass.ClassName + "'! Check line "; }
 
-			// Pārbauda, vai metodes vārds atkārtojas klasē starp atribūtiem
-			foreach (var v in _class._attributes)
-			{
-				if (v.Name == context.GetText())
-				{
-					Errors.Add(message + v.Line + "!");
-					return false;
-				}
-			}
+			
 
 			// Pārbauda, vai metodes vārds atkārtojas klasē starp asociācijām
-			foreach (var ae in _class._associationEnds)
+			foreach (var ae in _checkClass._associationEnds)
 			{
 				if (ae.RoleName == context.GetText())
 				{
@@ -176,8 +171,18 @@ namespace AntlrCSharp
 
 			if (isSuperClass == false)
 			{
+				// Pārbauda, vai metodes vārds atkārtojas klasē starp atribūtiem
+				foreach (var v in _checkClass._attributes)
+				{
+					if (v.Name == context.GetText())
+					{
+						Errors.Add(message + v.Line + "!");
+						return false;
+					}
+				}
+
 				// Pārbauda, vai metodes vārds atkārtojas klasē starp citām metodēm
-				foreach (var m in _class._methods)
+				foreach (var m in _checkClass._methods)
 				{
 					if (m.Name == context.GetText())
 					{
@@ -188,14 +193,27 @@ namespace AntlrCSharp
 			}
 			else 
 			{
+				// Pārbauda, vai metodes vārds atkārtojas klasē starp atribūtiem
+				foreach (var v in _checkClass._attributes)
+				{
+					if (v.Name == context.GetText() && v.Protection == "public")
+					{
+						Errors.Add(message + v.Line + "!");
+						return false;
+					}
+				}
+
 				// Pārbauda, vai metode ir sastopama virsklasē
-				foreach (var m in _class._methods)
+				foreach (var m in _checkClass._methods)
 				{
 					// Pārbauda, vai metožu vārdi sakrīt
-					if (m.Name == _method.Name)
+					if (m.Name == context.GetText() && m.Protection == "public")
 					{
-						if (m.primitiveType == _method.primitiveType) { Errors.Add("At line " + context.Start.Line + ": Method " + _attribute.Name + ", that exists in superclass " + _class.ClassName + " does not have the same datatype! Check line " + m.Line + "!"); }
-						
+						if (m.Type != _method.Type) 
+						{ 
+							Errors.Add("At line " + context.Start.Line + ": Method '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' , does not have the same datatype! Check line " + m.Line + "!"); 
+						}
+
 						// Pārbauda, vai metožu argumentu skaits sakrīt
 						if (m._arguments.Count == _method._arguments.Count)
 						{
@@ -206,13 +224,16 @@ namespace AntlrCSharp
 								{
 									if (m._arguments[x].Type != _method._arguments[x].Type) 
 									{
-										Errors.Add("At line " + _method.Line + ": Argument No. " + (x + 1) + ", does not have the same datatype as in " + _class.ClassName + "! Check line " + m.Line + "!");
+										Errors.Add("At line " + _method._arguments[x].Line + ": Argument No. " + (x + 1) + ", does not have the same datatype as in '" + _checkClass.ClassName + "'! Check line " + m.Line + "!");
 									}
 								}
 							}
 						}
-						else { Errors.Add("At line " + context.Start.Line + ": Method " + _method.Name + ", that exists in superclass " + _class.ClassName + " does not have equal amount of arguments! Check line " + m.Line + "!"); }
-						return true;
+						else 
+						{ 
+							Errors.Add("At line " + context.Start.Line + ": Method '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' does not have equal amount of arguments! Check line " + m.Line + "!"); 
+						}
+						return false;
 					}
 				}
 			}

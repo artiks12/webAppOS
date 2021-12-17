@@ -1,0 +1,10 @@
+association
+(
+sourceName
+:
+class
+<->
+targetName
+:
+Integer
+)

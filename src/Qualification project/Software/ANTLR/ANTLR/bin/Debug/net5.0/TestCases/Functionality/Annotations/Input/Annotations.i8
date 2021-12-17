@@ -1,0 +1,16 @@
+class Class1
+{ 
+	[
+	URL
+	(
+	"
+	:
+	:
+	namespaceName.className#methodName
+	"
+	)
+	]
+	String str
+	()
+	;
+}

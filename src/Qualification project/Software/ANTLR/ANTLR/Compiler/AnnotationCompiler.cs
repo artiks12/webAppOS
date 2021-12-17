@@ -168,7 +168,7 @@ namespace AntlrCSharp
                 else 
                 { 
                     _method.URL = new();
-                    _method.URL.Line = (uint)context.Start.Line;
+                    _method.URL.Line = _annotationLine;
                 }
             }
             else 
@@ -187,7 +187,7 @@ namespace AntlrCSharp
                         break;
                     }
                 }
-                if (found == false) { Errors.Add("At line " + context.Start.Line + ": annotation type " + context.GetText() +" is not supported!"); }
+                if (found == false) { Errors.Add("At line " + context.Start.Line + ": annotation type '" + context.GetText() + "' is not supported!"); }
             }
             return null;
         }
