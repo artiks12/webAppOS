@@ -1,0 +1,17 @@
+class test1 {}
+
+class test2 : test1
+{
+	Integer 
+	test1
+	;
+	Integer 
+	test2
+	;
+	Integer 
+	BaseObject
+	;
+	Integer 
+	URL
+	;
+}

@@ -3,6 +3,12 @@ class test1
 	Integer 
 	test
 	;
+	
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	Integer 
+	test
+	()
+	;
 }
 
 class test2 : test1
