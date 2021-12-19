@@ -152,11 +152,6 @@ namespace AntlrCSharp
         /// Rinda, kurā metode tiek definēts failā
         /// </summary>
         public uint Line { get; set; }
-
-        /// <summary>
-        /// Vai ir jāģenerē lauks
-        /// </summary>
-        public bool generate { get; set; }
     }
 
     /// <summary>

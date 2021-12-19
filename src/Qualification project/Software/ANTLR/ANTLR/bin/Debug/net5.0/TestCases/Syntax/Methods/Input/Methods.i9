@@ -1,0 +1,9 @@
+class className
+{
+	[URL("dotnet:local:namespaceName.className#methodName1")]
+	[URL("dotnet:local:namespaceName.className#methodName2")]
+	Integer
+	int
+	()
+	;
+}

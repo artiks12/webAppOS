@@ -20,7 +20,6 @@ namespace AntlrCSharp
 		{
 			// Sagatavojam īpašību
 			_attribute = new();
-			_attribute.generate = true;
 
 			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 

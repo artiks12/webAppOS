@@ -20,7 +20,6 @@ namespace AntlrCSharp
 		{
 			// Sagatavojam metodi
 			_method = new();
-			_method.generate = true;
 			_urlFound = false;
 
 			var methodBody = context.fieldDefinition().attributeDefinition();
