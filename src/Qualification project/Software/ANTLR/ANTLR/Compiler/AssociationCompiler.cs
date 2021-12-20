@@ -32,24 +32,8 @@ namespace AntlrCSharp
 			if (context.associationDefinition().GetText() == "") { Errors.Add("At line " + context.Start.Line + ": missing association definition!");  }
 			else { VisitAssociationDefinition(context.associationDefinition()); } // Apstaigājam asociācijas definīciju
 
-			if (_source.RoleName != null || _target.RoleName != null)
-			{
-				if (_source.RoleName != null) 
-				{
-					_source.ID = (uint)Associations.Count;
-					_source.IsSource = true;
-					_association.Source = _source;
-					if (_targetClass != -1) { Classes[_targetClass].AssociationEnds.Add(_source); }
-				}
-				if (_target.RoleName != null) 
-				{
-					_target.ID = (uint)Associations.Count;
-					_target.IsSource = false;
-					_association.Target = _target;
-					if (_sourceClass != -1) { Classes[_sourceClass].AssociationEnds.Add(_target); }
-				}
-				Associations.Add(_association); // Pievienojam asociāciju sarakstam
-			}
+			// Pievienojam asociāciju sarakstam, ja ir pareizxs vismaz viens galapunkts
+			if (_source.RoleName != null || _target.RoleName != null) { Associations.Add(_association); }
 
 			return null;
 		}
@@ -266,7 +250,15 @@ namespace AntlrCSharp
 						if (checkRoleNameInSuperClass(context.GetText(), sc, (uint)context.Start.Line) == false) { return null; }
 						sc = sc.SuperClass;
 					}
-					if (checkSubClasses(context.GetText(), _target.Class, (uint)context.Start.Line, "subclass") == true) { _source.RoleName = context.GetText(); }
+					if (checkSubClasses(context.GetText(), _target.Class, (uint)context.Start.Line, "subclass") == true) 
+					{ 
+						_source.RoleName = context.GetText();
+						_source.Line = (uint)context.Start.Line;
+						_source.ID = (uint)Associations.Count;
+						_source.IsSource = true;
+						_association.Source = _source;
+						if (_targetClass != -1) { Classes[_targetClass].AssociationEnds.Add(_source); }
+					}
 				}
 			}
 
@@ -283,7 +275,7 @@ namespace AntlrCSharp
 			{
 				if (r == context.GetText())
 				{
-					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + r + "'!");
+					Errors.Add("At line " + context.Start.Line + ": association target role name cannot be '" + r + "'!");
 					return null;
 				}
 			}
@@ -293,7 +285,7 @@ namespace AntlrCSharp
 				// Pārbauda, vai lomas vārds nesakrīt ar pretējās klases vārdu
 				if (context.GetText() == _source.Class.ClassName)
 				{
-					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + context.GetText() + "'!");
+					Errors.Add("At line " + context.Start.Line + ": association target role name cannot be '" + context.GetText() + "'!");
 					return null;
 				}
 
@@ -305,7 +297,16 @@ namespace AntlrCSharp
 						if (checkRoleNameInSuperClass(context.GetText(), sc, (uint)context.Start.Line) == false) { return null; }
 						sc = sc.SuperClass;
 					}
-					if (checkSubClasses(context.GetText(), _source.Class, (uint)context.Start.Line, "subclass") == true) { _target.RoleName = context.GetText(); }
+					if (checkSubClasses(context.GetText(), _source.Class, (uint)context.Start.Line, "subclass") == true) 
+					{ 
+						_target.RoleName = context.GetText();
+						_target.Line = (uint)context.Start.Line;
+						_target.ID = (uint)Associations.Count;
+						_target.IsSource = false;
+						_association.Target = _target;
+						if (_sourceClass != -1) { Classes[_sourceClass].AssociationEnds.Add(_target); }
+
+					}
 				}
 			}
 
@@ -344,7 +345,7 @@ namespace AntlrCSharp
 			{
 				if (ae.RoleName == rolename)
 				{
-					Errors.Add("At line " + line + ": an association end with role name '" + ae.RoleName + "' already exists in " + type + " '" + checkClass.ClassName + "'! Check line " + Associations[(int)ae.ID].Line + "!");
+					Errors.Add("At line " + line + ": an association end with role name '" + ae.RoleName + "' already exists in " + type + " '" + checkClass.ClassName + "'! Check line " + ae.Line + "!");
 					return false;
 				}
 			}
@@ -380,11 +381,11 @@ namespace AntlrCSharp
 			}
 
 			// Pārbauda, vai virsklasē ir asociācijas galapunkts, kura vārds sakrīit ar lomas vārdu
-			foreach (var ae in checkClass.SuperClass.AssociationEnds)
+			foreach (var ae in checkClass.AssociationEnds)
 			{
 				if (ae.RoleName == rolename)
 				{
-					Errors.Add("At line " + line + ": an association end with role name '" + ae.RoleName + "' already exists in superclass '" + checkClass.SuperClass.ClassName + "'! Check line " + Associations[(int)ae.ID].Line + "!");
+					Errors.Add("At line " + line + ": an association end with role name '" + ae.RoleName + "' already exists in superclass '" + checkClass.ClassName + "'! Check line " + ae.Line + "!");
 					return false;
 				}
 			}

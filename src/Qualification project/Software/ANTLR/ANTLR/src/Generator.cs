@@ -61,9 +61,6 @@ namespace AntlrCSharp
         /// </summary>
         public static void generateConstructor(StreamWriter sw, Class _class, ref bool IsMade)
         {
-            if (IsMade == true) { sw.WriteLine(""); }
-            else { IsMade = true; }
-
             string argumentList = "";
             foreach (var v in _class.Attributes) 
             {
@@ -117,7 +114,7 @@ namespace AntlrCSharp
             sw.WriteLine("            List<string> associations = new() { " + associationList + " };");
             sw.WriteLine("            checkAssociations( associations , \"" + _class.ClassName + "\" );");
             sw.WriteLine("            _object = new( rObject, wm );");
-            sw.WriteLine("        }\n");
+            sw.WriteLine("        }");
         }
 
         /// <summary>
@@ -206,15 +203,15 @@ namespace AntlrCSharp
         /// <summary>
         /// Metode, kas ģenerē īpašības
         /// </summary>
-        public static void generateProperties(StreamWriter sw, Class _class, ref bool IsMade) 
+        public static void generateAttributes(StreamWriter sw, Class _class, ref bool IsMade) 
         {
             if (_class.Attributes.Count != 0)
             {
+                if (IsMade == true) { sw.WriteLine(""); }
+                else { IsMade = true; }
+
                 foreach (var a in _class.Attributes)
                 {
-                    if (IsMade == true) { sw.WriteLine(""); }
-                    else { IsMade = true; }
-
                     // Ģenerē īpašības "galvu"
                     sw.Write("\n        " + a.Protection + " " + a.Type + " " + a.Name + " \n");
 
@@ -304,13 +301,13 @@ namespace AntlrCSharp
             // Pārbauda, vai klasē ir asociācijas
             if (_class.AssociationEnds.Count != 0)
             {
+                if (IsMade == true) { sw.WriteLine(""); }
+                else { IsMade = true; }
+
                 foreach (var a in _class.AssociationEnds)
                 {
-                    if (IsMade == true) { sw.WriteLine(""); }
-                    else { IsMade = true; }
-
                     // Ģenerē asociācijas "galvu"
-                    sw.WriteLine("        public List<" + a.Class.ClassName + "> " + a.RoleName);
+                    sw.WriteLine("\n        public List<" + a.Class.ClassName + "> " + a.RoleName);
 
                     // Ģenerē metodes "ķermeni"
                     sw.WriteLine("        {");
@@ -340,11 +337,11 @@ namespace AntlrCSharp
             // Pārbauda, vai klasē ir metodes
             if (_class.Methods.Count != 0)
             {
+                if (IsMade == true) { sw.WriteLine(""); }
+                else { IsMade = true; }
+
                 foreach (var m in _class.Methods)
                 {
-                    if (IsMade == true) { sw.WriteLine(""); }
-                    else { IsMade = true; }
-
                     // Ģenerē metodes "galvu"
                     sw.Write("\n        " + m.Protection + " " + m.Type + " " + m.Name + " ");
 
@@ -392,7 +389,7 @@ namespace AntlrCSharp
 
             generateConstructor(sw,_class,ref IsMade);
 
-            generateProperties(sw,_class,ref IsMade); // Īpašību ģenerēšana
+            generateAttributes(sw,_class,ref IsMade); // Īpašību ģenerēšana
             generateAssociations(sw, _class, ref IsMade); // Asociāciju ģenerēsana
             generateMethods(sw, _class,ref IsMade); // Metožu ģenerēšana
 
@@ -419,6 +416,40 @@ namespace AntlrCSharp
             foreach (var _class in compiler.Classes)
             {
                 string filename = "Classes/" + _class.ClassName + ".cs";
+                using (StreamWriter sw = new StreamWriter(filename))
+                {
+                    sw.WriteLine("using WebAppOS;");
+                    sw.WriteLine("using System.Text.Json;");
+                    sw.WriteLine("using System;");
+                    sw.WriteLine("using System.Collections.Generic;\n");
+                    sw.WriteLine("namespace " + _namespace);
+                    sw.WriteLine("{");
+                    generateClass(sw, _class);
+                    sw.Write('}');
+                }
+            }
+        }
+
+        /// <summary>
+        /// Ģenerēšanas pamatmetode
+        /// </summary>
+        public static void Test(string _namespace, string outFile)
+        {
+            // Ģenerē klases "BaseObject" kodu
+            using (StreamWriter sw = new StreamWriter(outFile + "BaseObject.cs"))
+            {
+                sw.WriteLine("using WebAppOS;");
+                sw.WriteLine("using System.Collections.Generic;\n");
+                sw.WriteLine("namespace " + _namespace);
+                sw.WriteLine("{");
+                generateBaseObject(sw);
+                sw.Write('}');
+            }
+
+            // Ģenerē kodu visām klasēm.
+            foreach (var _class in compiler.Classes)
+            {
+                string filename = outFile + _class.ClassName + ".cs";
                 using (StreamWriter sw = new StreamWriter(filename))
                 {
                     sw.WriteLine("using WebAppOS;");

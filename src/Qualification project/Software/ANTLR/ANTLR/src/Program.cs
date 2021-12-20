@@ -60,19 +60,24 @@ namespace AntlrCSharp
         {
             Console.Write("Specify test type: ");
             string type = Console.ReadLine();
-            while (type != "Syntax" && type != "Functionality")
+            while (type != "Syntax" && type != "Functionality" && type != "Generator")
             {
                 type = Console.ReadLine();
             }
 
-            Console.Write("Specify test group: ");
-            string filename = Console.ReadLine();
-            while (filename == "") 
-            {
-                filename = Console.ReadLine();
-            }
+            string filename = "Generator";
+            string path = "TestCases/" + type + "/";
 
-            string path = "TestCases/" + type + "/" + filename;
+            if (type != "Generator") 
+            {
+                Console.Write("Specify test group: ");
+                filename = Console.ReadLine();
+                while (filename == "")
+                {
+                    filename = Console.ReadLine();
+                }
+                path += filename;
+            }
 
             string _namespace = "Test";
             int length = Directory.GetFiles(path+"/Input/").Length;
@@ -81,6 +86,8 @@ namespace AntlrCSharp
             {
                 string inFile = path + "/Input/" + filename + ".i" + count;
                 string outFile = path + "/Output/" + filename + ".o" + count;
+
+                if (type == "Generator") { outFile = path + "/Output/i" + count + "/"; }
 
                 Console.WriteLine("testing: " + inFile);
 
@@ -101,7 +108,7 @@ namespace AntlrCSharp
                 CodeContext codeContext = parser.code();
                 compiler = new Compiler();
 
-                compiler.Compile(codeContext, _namespace, outFile); // Kompilējam kodu
+                compiler.Test(codeContext, _namespace, type, outFile); // Kompilējam kodu
 
                 Console.WriteLine("\n");
             }

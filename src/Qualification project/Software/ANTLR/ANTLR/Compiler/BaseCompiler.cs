@@ -119,7 +119,7 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Kompilēšanas pamtfunkcija
 		/// </summary>
-		public void Compile(LanguageParser.CodeContext context, string _namespace, string errorFile = "Errors.out") 
+		public void Compile(LanguageParser.CodeContext context, string _namespace) 
 		{
 			// Sākam kompilēšanu ar sarakstu iestatīsanu
 			Classes = new();
@@ -139,34 +139,60 @@ namespace AntlrCSharp
 			if (Errors.Count != 0)
 			{
 				Console.WriteLine("");
-				Console.WriteLine("Compilation unsuccessful! See errors in file " + errorFile + "!");
-				if (errorFile == "Errors.out")
+				Console.WriteLine("Compilation unsuccessful! Encountered errors:");
+				foreach (var error in Errors)
 				{
-					foreach (var error in Errors)
-					{
-						Console.WriteLine(error);
-					}
-				}
-				else 
-				{
-					using (StreamWriter sw = new StreamWriter(errorFile))
-					{
-						foreach (var error in Errors)
-						{
-							sw.WriteLine(error);
-						}
-					}
-					
+					Console.WriteLine(error);
 				}
 			}
 			else 
-			{ 
-				//Program.generate(_namespace);
+			{
+				Program.generate(_namespace);
 
 				Console.WriteLine("");
 				Console.WriteLine("Compilation successful!");
+			}
+		}
+
+		public void Test(LanguageParser.CodeContext context, string _namespace, string type, string outFile) 
+		{
+			// Sākam kompilēšanu ar sarakstu iestatīsanu
+			Classes = new();
+			Associations = new();
+			Errors = new();
+
+			// Pārbauda, vai padotā vārdtelpa ir sintaktiski pareizs
+			if (!checkNamespace(_namespace))
+			{
+				Errors.Add("'" + _namespace + "' is in incorrect format!");
+			}
+
+			// Apstaigā kodu
+			VisitChildren(context);
+
+			// Pārbauda, vai kodā nav kļūdu. Ja nav, tad ģenerējam starpkodu
+			if (Errors.Count != 0)
+			{
+				Console.WriteLine("");
+				Console.WriteLine("Compilation unsuccessful! See errors in file " + outFile + "!");
 				
-				if (errorFile != "Errors.out") { using (StreamWriter sw = new StreamWriter(errorFile)) { } }
+				using (StreamWriter sw = new StreamWriter(outFile+"Errors.out"))
+				{
+					foreach (var error in Errors)
+					{
+						sw.WriteLine(error);
+					}
+				}
+			}
+			else
+			{
+				if (type == "Generator")
+				{
+					Program.Test(_namespace, outFile);
+				}
+
+				Console.WriteLine("");
+				Console.WriteLine("Compilation successful!");
 			}
 		}
 	}

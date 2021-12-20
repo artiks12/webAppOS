@@ -77,6 +77,11 @@ namespace AntlrCSharp
         /// Vai asociācijas galapunkts ir avots
         /// </summary>
         public bool IsSource { get; set; }
+
+        /// <summary>
+        /// Rinda, kurā metode tiek definēts failā
+        /// </summary>
+        public uint Line { get; set; }
     }
 
     /// <summary>

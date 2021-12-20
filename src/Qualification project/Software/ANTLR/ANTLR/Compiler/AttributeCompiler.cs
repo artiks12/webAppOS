@@ -162,7 +162,7 @@ namespace AntlrCSharp
 			{
 				if (ae.RoleName == context.GetText())
 				{
-					Errors.Add(message + Associations[(int)ae.ID].Line + "!");
+					Errors.Add(message + ae.Line + "!");
 					return false;
 				}
 			}

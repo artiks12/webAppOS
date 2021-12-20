@@ -1,0 +1,7 @@
+class test1 
+{
+	Integer _int;
+	String _str;
+	Boolean _bool;
+	Real _double;
+}

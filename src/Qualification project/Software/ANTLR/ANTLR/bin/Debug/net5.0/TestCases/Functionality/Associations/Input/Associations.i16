@@ -1,0 +1,11 @@
+class test1{}
+class test2 : test1{}
+class test3 : test2
+{
+private
+Integer 
+targetName; 
+}
+class test4 {}
+
+association(sourceName1:test1<->targetName:test4)

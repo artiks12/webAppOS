@@ -189,7 +189,7 @@ namespace AntlrCSharp
 			{
 				if (ae.RoleName == context.GetText())
 				{
-					Errors.Add(message + Associations[(int)ae.ID].Line + "!");
+					Errors.Add(message + ae.Line + "!");
 					return false;
 				}
 			}
@@ -225,7 +225,7 @@ namespace AntlrCSharp
 							{
 								if (m.Arguments[x].Type != _method.Arguments[x].Type)
 								{
-									Errors.Add("At line " + _method.Arguments[x].Line + ": Argument No. " + (x + 1) + ", does not have the same datatype as in '" + _checkClass.ClassName + "'! Check line " + m.Line + "!");
+									Errors.Add("At line " + _method.Arguments[x].Line + ": Argument No. " + (x + 1) + ", does not have the same datatype as in '" + _checkClass.ClassName + "'! Check line " + m.Arguments[x].Line + "!");
 								}
 							}
 						}

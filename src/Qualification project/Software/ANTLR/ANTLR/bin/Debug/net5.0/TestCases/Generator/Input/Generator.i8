@@ -1,0 +1,23 @@
+class test1 
+{
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	private Integer _int();
+	
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	public String _str(Integer a);
+}
+
+class test2 : test1 
+{
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	public Integer _int();
+	
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	private String _str(Integer a);
+	
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	private Boolean _bool(Integer a , Integer b);
+	
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	public Real _double(String a, Boolean b, Real c);
+}

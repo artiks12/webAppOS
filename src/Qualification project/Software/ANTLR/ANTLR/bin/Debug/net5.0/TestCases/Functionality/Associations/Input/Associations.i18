@@ -1,0 +1,5 @@
+class test1{}
+
+association
+(source:test1
+<->target:test1)

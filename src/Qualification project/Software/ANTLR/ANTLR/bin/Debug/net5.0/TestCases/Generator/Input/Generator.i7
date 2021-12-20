@@ -1,0 +1,13 @@
+class test1 
+{
+	public Integer _int;
+	private Real _double;
+}
+
+class test2 : test1
+{
+	public Integer _int;
+	public String _str;
+	private Boolean _bool;
+	public Real _double;
+}

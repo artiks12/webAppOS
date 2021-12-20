@@ -1,0 +1,17 @@
+class test1 
+{
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	Integer _int();
+	
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	String _str(Integer a);
+	
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	Boolean _bool(Integer a , Integer b);
+	
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	Real _double(String a, Boolean b, Real c);
+	
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	Void _void();
+}

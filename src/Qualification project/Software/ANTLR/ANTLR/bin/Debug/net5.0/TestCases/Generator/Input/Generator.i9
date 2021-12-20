@@ -1,0 +1,12 @@
+class test1 
+{
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	Boolean _bool(Integer a , Integer b);
+	
+	public Integer _int;
+	
+	private Real _double;
+	
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	String _string(String a, Boolean b, Real c);
+}

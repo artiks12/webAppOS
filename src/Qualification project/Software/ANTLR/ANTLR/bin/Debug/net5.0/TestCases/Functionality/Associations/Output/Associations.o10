@@ -1,1 +1,1 @@
-At line 15: a field with name 'rolename' already exists in subclass 'test11'! Check line 11!
+At line 25: an association end with role name 'test2' already exists in class 'targetClass'! Check line 14!
