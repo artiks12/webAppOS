@@ -1,4 +1,2 @@
-At line 6: Syntax error! Missing ':'!
-At line 8: Syntax error! Missing ':'!
-At line 6: Missing source class!
-At line 8: Missing target class!
+At line 6: association source role name cannot be 'public'!
+At line 10: association source role name cannot be 'URL'!

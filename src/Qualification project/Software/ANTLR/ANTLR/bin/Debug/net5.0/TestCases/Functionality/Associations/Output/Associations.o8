@@ -1,2 +1,2 @@
-At line 5: Missing source name!
-At line 8: Missing target name!
+At line 6: association source role name cannot be 'targetClass'!
+At line 10: association source role name cannot be 'sourceClass'!

@@ -1,9 +1,0 @@
-class Class1
-{
-	[
-	("dotnet:local:namespaceName.className#methodName")
-	]
-	String str
-	()
-	;
-}

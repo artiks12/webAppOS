@@ -20,6 +20,7 @@ namespace AntlrCSharp
 		{
 			// Sagatavojam metodi
 			_method = new();
+			_method.generate = true;
 			_urlFound = false;
 
 			var methodBody = context.fieldDefinition().attributeDefinition();
@@ -81,7 +82,7 @@ namespace AntlrCSharp
 			if (_method.Name != null) 
 			{
 				_method.Line = (uint)context.fieldDefinition().attributeDefinition().attribute().fieldName().Start.Line;
-				_class._methods.Add(_method);
+				_class.Methods.Add(_method);
 			}
 
 			return null;
@@ -131,12 +132,12 @@ namespace AntlrCSharp
 				}
 			}
 
-			if (checkMethodName(context, _class, false) == true)
+			if (checkMethodNameInClass(context, _class) == true)
 			{
 				var sc = _class.SuperClass;
 				while (sc != null)
 				{
-					if (checkMethodName(context, sc, true) == false) { return null; }
+					if (checkMethodNameInSuperClass(context, sc) == false) { return null; }
 					sc = sc.SuperClass;
 
 				}
@@ -149,17 +150,42 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Pārbauda metodes vārda esamību klasē/virsklasē
 		/// </summary>
-		public bool checkMethodName([NotNull] FieldNameContext context, Class _checkClass, bool isSuperClass) 
+		public bool checkMethodNameInClass([NotNull] FieldNameContext context, Class _checkClass) 
 		{
-			string message;
+			string message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class '" + _checkClass.ClassName + "'! Check line ";
 
-			if (isSuperClass == false) { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class '" + _checkClass.ClassName + "'! Check line "; }
-			else { message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass '" + _checkClass.ClassName + "'! Check line "; }
+			// Pārbauda, vai metodes vārds atkārtojas klasē starp atribūtiem
+			foreach (var v in _checkClass.Attributes)
+			{
+				if (v.Name == context.GetText())
+				{
+					Errors.Add(message + v.Line + "!");
+					return false;
+				}
+			}
 
+			// Pārbauda, vai metodes vārds atkārtojas klasē starp citām metodēm
+			foreach (var m in _checkClass.Methods)
+			{
+				if (m.Name == context.GetText())
+				{
+					Errors.Add(message + m.Line + "!");
+					return false;
+				}
+			}
 			
+			return true;
+		}
+
+		/// <summary>
+		/// Pārbauda metodes vārda esamību klasē/virsklasē
+		/// </summary>
+		public bool checkMethodNameInSuperClass([NotNull] FieldNameContext context, Class _checkClass)
+		{
+			string message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass '" + _checkClass.ClassName + "'! Check line ";
 
 			// Pārbauda, vai metodes vārds atkārtojas klasē starp asociācijām
-			foreach (var ae in _checkClass._associationEnds)
+			foreach (var ae in _checkClass.AssociationEnds)
 			{
 				if (ae.RoleName == context.GetText())
 				{
@@ -168,74 +194,50 @@ namespace AntlrCSharp
 				}
 			}
 
-			if (isSuperClass == false)
+			// Pārbauda, vai metodes vārds atkārtojas klasē starp atribūtiem
+			foreach (var v in _checkClass.Attributes)
 			{
-				// Pārbauda, vai metodes vārds atkārtojas klasē starp atribūtiem
-				foreach (var v in _checkClass._attributes)
+				if (v.Name == context.GetText() && v.Protection == "public")
 				{
-					if (v.Name == context.GetText())
-					{
-						Errors.Add(message + v.Line + "!");
-						return false;
-					}
-				}
-
-				// Pārbauda, vai metodes vārds atkārtojas klasē starp citām metodēm
-				foreach (var m in _checkClass._methods)
-				{
-					if (m.Name == context.GetText())
-					{
-						Errors.Add(message + m.Line + "!");
-						return false;
-					}
+					Errors.Add(message + v.Line + "!");
+					return false;
 				}
 			}
-			else 
+
+			// Pārbauda, vai metode ir sastopama virsklasē
+			foreach (var m in _checkClass.Methods)
 			{
-				// Pārbauda, vai metodes vārds atkārtojas klasē starp atribūtiem
-				foreach (var v in _checkClass._attributes)
+				// Pārbauda, vai metožu vārdi sakrīt
+				if (m.Name == context.GetText() && m.Protection == "public")
 				{
-					if (v.Name == context.GetText() && v.Protection == "public")
+					if (m.Type != _method.Type)
 					{
-						Errors.Add(message + v.Line + "!");
-						return false;
+						Errors.Add("At line " + context.Start.Line + ": Method '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' , does not have the same datatype! Check line " + m.Line + "!");
 					}
-				}
 
-				// Pārbauda, vai metode ir sastopama virsklasē
-				foreach (var m in _checkClass._methods)
-				{
-					// Pārbauda, vai metožu vārdi sakrīt
-					if (m.Name == context.GetText() && m.Protection == "public")
+					// Pārbauda, vai metožu argumentu skaits sakrīt
+					if (m.Arguments.Count == _method.Arguments.Count)
 					{
-						if (m.Type != _method.Type) 
-						{ 
-							Errors.Add("At line " + context.Start.Line + ": Method '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' , does not have the same datatype! Check line " + m.Line + "!"); 
-						}
-
-						// Pārbauda, vai metožu argumentu skaits sakrīt
-						if (m._arguments.Count == _method._arguments.Count)
+						// Pārbauda, vai metožu argumentu datu tipi un vārdi sakrīt
+						for (int x = 0; x < m.Arguments.Count; x++)
 						{
-							// Pārbauda, vai metožu argumentu datu tipi un vārdi sakrīt
-							for (int x = 0; x < m._arguments.Count; x++)
+							if (m.Arguments[x].Type != null && _method.Arguments[x].Type != null)
 							{
-								if (m._arguments[x].Type != null && _method._arguments[x].Type != null)
+								if (m.Arguments[x].Type != _method.Arguments[x].Type)
 								{
-									if (m._arguments[x].Type != _method._arguments[x].Type) 
-									{
-										Errors.Add("At line " + _method._arguments[x].Line + ": Argument No. " + (x + 1) + ", does not have the same datatype as in '" + _checkClass.ClassName + "'! Check line " + m.Line + "!");
-									}
+									Errors.Add("At line " + _method.Arguments[x].Line + ": Argument No. " + (x + 1) + ", does not have the same datatype as in '" + _checkClass.ClassName + "'! Check line " + m.Line + "!");
 								}
 							}
 						}
-						else 
-						{ 
-							Errors.Add("At line " + context.Start.Line + ": Method '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' does not have equal amount of arguments! Check line " + m.Line + "!"); 
-						}
-						return false;
 					}
+					else
+					{
+						Errors.Add("At line " + context.Start.Line + ": Method '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' does not have equal amount of arguments! Check line " + m.Line + "!");
+					}
+					return false;
 				}
 			}
+
 			return true;
 		}
 	}

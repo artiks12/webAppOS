@@ -42,6 +42,7 @@ namespace AntlrCSharp
 			if (_class.ClassName != null) 
 			{ 
 				_class.Line = (uint)context.classHead().className().Start.Line;
+				if (_class.SuperClass != null) { _class.SuperClass.SubClasses.Add(_class); } // Ja ir virsklase, tad tajā saglabājam jauno klasi kā apakšklasi.
 				Classes.Add(_class); // Pievienojam klasi sarakstā
 			}
 			

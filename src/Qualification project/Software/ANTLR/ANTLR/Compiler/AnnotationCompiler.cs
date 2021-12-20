@@ -42,7 +42,7 @@ namespace AntlrCSharp
             // Pārbauda, vai ir aizverošā kvadrātiekava
             if (context.SQUARECLOSE() == null) { Errors.Add("At line " + line + ": Syntax error! Missing ']'!"); }
 
-            if (_isUrl == false) { _method._annotations.Add(_annotation); }
+            if (_isUrl == false) { _method.Annotations.Add(_annotation); }
             return null;
         }
 
@@ -164,7 +164,7 @@ namespace AntlrCSharp
                 _isUrl = true;
 
                 // Pārbauda, vai metodei jau ir izveidota url anotācija
-                if ( _urlFound == true ) { Errors.Add("At line " + context.Start.Line + ": a URL definition for method '" + _method.Name + "' is already given! Check line " + _method.URL.Line + "!"); }
+                if ( _urlFound == true ) { Errors.Add("At line " + context.Start.Line + ": a definition for URL for method '" + _method.Name + "' is already given! Check line " + _method.URL.Line + "!"); }
                 else 
                 { 
                     _method.URL = new();

@@ -39,14 +39,14 @@ namespace AntlrCSharp
 					_source.ID = (uint)Associations.Count;
 					_source.IsSource = true;
 					_association.Source = _source;
-					if (_targetClass != -1) { Classes[_targetClass]._associationEnds.Add(_source); }
+					if (_targetClass != -1) { Classes[_targetClass].AssociationEnds.Add(_source); }
 				}
 				if (_target.RoleName != null) 
 				{
 					_target.ID = (uint)Associations.Count;
 					_target.IsSource = false;
 					_association.Target = _target;
-					if (_sourceClass != -1) { Classes[_sourceClass]._associationEnds.Add(_target); }
+					if (_sourceClass != -1) { Classes[_sourceClass].AssociationEnds.Add(_target); }
 				}
 				Associations.Add(_association); // Pievienojam asociāciju sarakstam
 			}
@@ -142,6 +142,72 @@ namespace AntlrCSharp
 		}
 
 		/// <summary>
+		/// Apstaigājam asociācijas avota klasi
+		/// </summary>
+		public override object VisitAssociationSourceClass([NotNull] AssociationSourceClassContext context)
+		{
+			VisitAssociationClass(context.GetText(),context.Start.Line,true);
+			return null;
+		}
+
+		/// <summary>
+		/// Apstaigājam asociācijas mērķa klasi
+		/// </summary>
+		public override object VisitAssociationTargetClass([NotNull] AssociationTargetClassContext context)
+		{
+			VisitAssociationClass(context.GetText(), context.Start.Line, false);
+			return null;
+		}
+
+		/// <summary>
+		/// Apstaigājam asociācijas klasi
+		/// </summary>
+		/// <param name="className"></param>
+		/// <param name="line"></param>
+		/// <param name="isSource"></param>
+		public object VisitAssociationClass(string className, int line, bool isSource)
+		{
+			foreach (var r in Reserved)
+			{
+				if (className == r)
+				{
+					Errors.Add("At line " + line + ": A class cannot be named '" + r + "'!");
+					return null;
+				}
+			}
+
+			bool found = false;
+
+			// Pārbauda, vai eksiste avotklase.
+			for (int x = 0; x < Classes.Count; x++)
+			{
+				if (Classes[x].ClassName == className)
+				{
+					if (isSource == true)
+					{
+						_source.Class = Classes[x];
+						_sourceClass = x;
+					}
+					else
+					{
+						_target.Class = Classes[x];
+						_targetClass = x;
+					}
+					found = true;
+					break;
+				}
+			}
+
+			string message;
+			if (isSource == true) { message = "At line " + line + ": there is no class '" + className + "' to use as source class!"; }
+			else { message = "At line " + line + ": there is no class '" + className + "' to use as target class!"; }
+
+			if (found == false) { Errors.Add(message); }
+
+			return null;
+		}
+
+		/// <summary>
 		/// Apstaigājam asociācijas lomu vārdus
 		/// </summary>
 		public object VisitAssociationRoleNames([NotNull] AssociationDefinitionContext context)
@@ -169,130 +235,6 @@ namespace AntlrCSharp
 		}
 
 		/// <summary>
-		/// Apstaigājam asociācijas klasi
-		/// </summary>
-		/// <param name="className"></param>
-		/// <param name="line"></param>
-		/// <param name="isSource"></param>
-		public object VisitAssociationClass(string className, int line, bool isSource) 
-		{
-			foreach (var r in Reserved)
-			{
-				if (className == r)
-				{
-					Errors.Add("At line " + line + ": A class cannot be named '" + r + "'!");
-					return null;
-				}
-			}
-
-			bool found = false;
-
-			// Pārbauda, vai eksiste avotklase.
-			for (int x = 0; x < Classes.Count; x++)
-			{
-				if (Classes[x].ClassName == className)
-				{
-					if (isSource == true)
-					{
-						_source.Class = Classes[x];
-						_sourceClass = x;
-					}
-					else 
-					{
-						_target.Class = Classes[x];
-						_targetClass = x;
-					}
-					found = true;
-					break;
-				}
-			}
-
-			string message;
-			if (isSource == true) { message = "At line " + line + ": there is no class '" + className + "' to use as source class!"; }
-            else { message = "At line " + line + ": there is no class '" + className + "' to use as target class!"; }
-
-			if (found == false) { Errors.Add(message); }
-
-			return null;
-		}
-
-		/// <summary>
-		/// Apstaigājam asociācijas avota klasi
-		/// </summary>
-		public override object VisitAssociationSourceClass([NotNull] AssociationSourceClassContext context)
-		{
-			VisitAssociationClass(context.GetText(),context.Start.Line,true);
-			return null;
-		}
-
-		/// <summary>
-		/// Apstaigājam asociācijas mērķa klasi
-		/// </summary>
-		public override object VisitAssociationTargetClass([NotNull] AssociationTargetClassContext context)
-		{
-			VisitAssociationClass(context.GetText(), context.Start.Line, false);
-			return null;
-		}
-
-		/// <summary>
-		/// Funkcija, kas pārbauda lomas vārda kļūdas
-		/// </summary>
-		public bool checkRoleName(string rolename, Class _class, uint line, bool isSuperClass)
-		{
-			string message;
-
-			if (isSuperClass == false) { message = "At line " + line + ": a field with name '" + rolename + "' already exists in class '" + _class.ClassName + "'! Check line "; }
-			else { message = "At line " + line + ": a field with name '" + rolename + "' already exists in superclass '" + _class.ClassName + "'! Check line "; }
-
-			// Pārbauda, vai klasē ir atribūts, kura vārds sakrīit ar lomas vārdu
-			foreach (var v in _class._attributes)
-			{
-				if (v.Name == rolename)
-				{
-					Errors.Add(message + v.Line + "!");
-					return false;
-				}
-			}
-
-			// Pārbauda, vai klasē ir metode, kura vārds sakrīit ar lomas vārdu
-			foreach (var m in _class._methods)
-			{
-				if (m.Name == rolename)
-				{
-					Errors.Add(message + m.Line + "!");
-					return false;
-				}
-			}
-
-			if (isSuperClass == false)
-			{
-				// Pārbauda, vai klasē ir asociācijas galapunkts, kura vārds sakrīit ar lomas vārdu
-				foreach (var ae in _class._associationEnds)
-				{
-					if (ae.RoleName == rolename)
-					{
-						Errors.Add("At line " + line + ": an association with role name '" + ae.RoleName + "' already exists in class '" + _class.ClassName + "'! Check line " + Associations[(int)ae.ID].Line + "!");
-						return false;
-					}
-				}
-			}
-			else
-			{
-				// Pārbauda, vai virsklasē ir asociācijas galapunkts, kura vārds sakrīit ar lomas vārdu
-				foreach (var ae in _class.SuperClass._associationEnds)
-				{
-					if (ae.RoleName == rolename)
-					{
-						Errors.Add("At line " + line + ": an association with role name '" + ae.RoleName + "' already exists in super class '" + _class.SuperClass.ClassName + "'! Check line " + Associations[(int)ae.ID].Line + "!");
-						return false;
-					}
-				}
-			}
-
-			return true;
-		}
-
-		/// <summary>
 		/// Apstaigājam asociācijas avota lomas vārdu
 		/// </summary>
 		public override object VisitAssociationSourceName([NotNull] AssociationSourceNameContext context)
@@ -316,16 +258,15 @@ namespace AntlrCSharp
 					return null;
 				}
 
-				if (checkRoleName(_source.RoleName, _target.Class, (uint)context.Start.Line, false) == true)
+				if (checkRoleNameInClass(context.GetText(), _target.Class, (uint)context.Start.Line, "class") == true)
 				{
-					var sc = _source.Class.SuperClass;
+					var sc = _target.Class.SuperClass;
 					while (sc != null) 
 					{
-						if (checkRoleName(_source.RoleName, sc, (uint)context.Start.Line, true) == true) { _source.RoleName = context.GetText(); }
-						else { return null; }
+						if (checkRoleNameInSuperClass(context.GetText(), sc, (uint)context.Start.Line) == false) { return null; }
 						sc = sc.SuperClass;
 					}
-					_source.RoleName = context.GetText();
+					if (checkSubClasses(context.GetText(), _target.Class, (uint)context.Start.Line, "subclass") == true) { _source.RoleName = context.GetText(); }
 				}
 			}
 
@@ -340,7 +281,7 @@ namespace AntlrCSharp
 			// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved)
 			{
-				if (r == _target.RoleName)
+				if (r == context.GetText())
 				{
 					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + r + "'!");
 					return null;
@@ -350,26 +291,119 @@ namespace AntlrCSharp
 			if (_source.Class != null) 
 			{
 				// Pārbauda, vai lomas vārds nesakrīt ar pretējās klases vārdu
-				if (_target.RoleName == _source.Class.ClassName)
+				if (context.GetText() == _source.Class.ClassName)
 				{
 					Errors.Add("At line " + context.Start.Line + ": association source role name cannot be '" + context.GetText() + "'!");
 					return null;
 				}
 
-				if (checkRoleName(_target.RoleName, _source.Class, (uint)context.Start.Line, false) == true)
+				if (checkRoleNameInClass(context.GetText(), _source.Class, (uint)context.Start.Line, "class") == true)
 				{
-					var sc = _target.Class.SuperClass;
+					var sc = _source.Class.SuperClass;
 					while (sc != null)
 					{
-						if (checkRoleName(_target.RoleName, sc, (uint)context.Start.Line, true) == true) { _target.RoleName = context.GetText(); }
-						else { return null; }
+						if (checkRoleNameInSuperClass(context.GetText(), sc, (uint)context.Start.Line) == false) { return null; }
 						sc = sc.SuperClass;
 					}
-					_target.RoleName = context.GetText();
+					if (checkSubClasses(context.GetText(), _source.Class, (uint)context.Start.Line, "subclass") == true) { _target.RoleName = context.GetText(); }
 				}
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// Funkcija, kas pārbauda lomas vārda kļūdas
+		/// </summary>
+		public bool checkRoleNameInClass(string rolename, Class checkClass, uint line, string type)
+		{
+			string message = "At line " + line + ": a field with name '" + rolename + "' already exists in " + type + " '" + checkClass.ClassName + "'! Check line ";
+
+			// Pārbauda, vai klasē ir atribūts, kura vārds sakrīit ar lomas vārdu
+			foreach (var v in checkClass.Attributes)
+			{
+				if (v.Name == rolename)
+				{
+					Errors.Add(message + v.Line + "!");
+					return false;
+				}
+			}
+
+			// Pārbauda, vai klasē ir metode, kura vārds sakrīit ar lomas vārdu
+			foreach (var m in checkClass.Methods)
+			{
+				if (m.Name == rolename)
+				{
+					Errors.Add(message + m.Line + "!");
+					return false;
+				}
+			}
+
+			// Pārbauda, vai klasē ir asociācijas galapunkts, kura vārds sakrīit ar lomas vārdu
+			foreach (var ae in checkClass.AssociationEnds)
+			{
+				if (ae.RoleName == rolename)
+				{
+					Errors.Add("At line " + line + ": an association end with role name '" + ae.RoleName + "' already exists in " + type + " '" + checkClass.ClassName + "'! Check line " + Associations[(int)ae.ID].Line + "!");
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		/// Funkcija, kas pārbauda lomas vārda kļūdas
+		/// </summary>
+		public bool checkRoleNameInSuperClass(string rolename, Class checkClass, uint line)
+		{
+			string message = "At line " + line + ": a field with name '" + rolename + "' already exists in superclass '" + checkClass.ClassName + "'! Check line ";
+
+			// Pārbauda, vai klasē ir atribūts, kura vārds sakrīit ar lomas vārdu
+			foreach (var v in checkClass.Attributes)
+			{
+				if (v.Name == rolename && v.Protection == "public")
+				{
+					Errors.Add(message + v.Line + "!");
+					return false;
+				}
+			}
+
+			// Pārbauda, vai klasē ir metode, kura vārds sakrīit ar lomas vārdu
+			foreach (var m in checkClass.Methods)
+			{
+				if (m.Name == rolename && m.Protection == "public")
+				{
+					Errors.Add(message + m.Line + "!");
+					return false;
+				}
+			}
+
+			// Pārbauda, vai virsklasē ir asociācijas galapunkts, kura vārds sakrīit ar lomas vārdu
+			foreach (var ae in checkClass.SuperClass.AssociationEnds)
+			{
+				if (ae.RoleName == rolename)
+				{
+					Errors.Add("At line " + line + ": an association end with role name '" + ae.RoleName + "' already exists in superclass '" + checkClass.SuperClass.ClassName + "'! Check line " + Associations[(int)ae.ID].Line + "!");
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		public bool checkSubClasses(string rolename, Class checkClass, uint line, string type)
+		{
+			foreach (var sub in checkClass.SubClasses) 
+			{
+				if (checkRoleNameInClass(rolename, sub, line, type) == false) { return false; };
+				if (sub.SubClasses.Count != 0) 
+				{
+					if (checkSubClasses(rolename, sub, line, type) == false) { return false; };
+				}
+			}
+			
+			return true;
 		}
 	}
 }

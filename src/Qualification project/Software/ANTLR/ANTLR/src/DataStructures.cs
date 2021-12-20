@@ -152,6 +152,11 @@ namespace AntlrCSharp
         /// Rinda, kurā metode tiek definēts failā
         /// </summary>
         public uint Line { get; set; }
+
+        /// <summary>
+        /// Vai ir jāģenerē lauks
+        /// </summary>
+        public bool generate { get; set; }
     }
 
     /// <summary>
@@ -190,12 +195,12 @@ namespace AntlrCSharp
         /// <summary>
         /// Saraksts ar metodes argumentiem
         /// </summary>
-        public List<Attribute> _arguments;
+        public List<Attribute> Arguments;
 
         /// <summary>
         /// Saraksts ar anotācijām
         /// </summary>
-        public List<Annotation> _annotations;
+        public List<Annotation> Annotations;
 
         /// <summary>
         /// Metodes URL
@@ -204,8 +209,8 @@ namespace AntlrCSharp
 
         public Method()
         {
-            _arguments = new();
-            _annotations = new();
+            Arguments = new();
+            Annotations = new();
         }
 
         /// <summary>
@@ -239,17 +244,22 @@ namespace AntlrCSharp
         /// <summary>
         /// Saraksts ar metodes argumentiem
         /// </summary>
-        public List<AssociationEnd> _associationEnds;
+        public List<AssociationEnd> AssociationEnds;
 
         /// <summary>
         /// Saraksts ar mainīgajiem
         /// </summary>
-        public List<Attribute> _attributes;
+        public List<Attribute> Attributes;
 
         /// <summary>
         /// Saraksts ar metodēm
         /// </summary>
-        public List<Method> _methods;
+        public List<Method> Methods;
+
+        /// <summary>
+        /// Saraksts ar virsklasēm
+        /// </summary>
+        public List<Class> SubClasses;
 
         /// <summary>
         /// Saraksts ar virsklasēm
@@ -268,9 +278,10 @@ namespace AntlrCSharp
         
         public Class()
         {
-            _attributes = new();
-            _methods = new();
-            _associationEnds = new();
+            Attributes = new();
+            Methods = new();
+            AssociationEnds = new();
+            SubClasses = new();
         }
     }
 }

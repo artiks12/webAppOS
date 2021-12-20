@@ -65,14 +65,14 @@ namespace AntlrCSharp
             else { IsMade = true; }
 
             string argumentList = "";
-            foreach (var v in _class._attributes) 
+            foreach (var v in _class.Attributes) 
             {
                 if (argumentList == "") { argumentList += "\"" + v.Name + "\" , \"" + v.primitiveType + "\""; }
                 else { argumentList += " , \"" + v.Name + "\" , \"" + v.primitiveType + "\""; }
             }
 
             string associationList = "";
-            foreach (var v in _class._associationEnds)
+            foreach (var v in _class.AssociationEnds)
             {
                 var association = compiler.Associations[(int)v.ID];
 
@@ -178,7 +178,7 @@ namespace AntlrCSharp
         {
             sw.Write("(");
             int count = 1;
-            foreach (var arg in m._arguments)
+            foreach (var arg in m.Arguments)
             {
                 if (count == 1) { sw.Write(" " + arg.Type + " " + arg.Name + ""); }
                 else { sw.Write(" , " + arg.Type + " " + arg.Name + ""); }
@@ -208,9 +208,9 @@ namespace AntlrCSharp
         /// </summary>
         public static void generateProperties(StreamWriter sw, Class _class, ref bool IsMade) 
         {
-            if (_class._attributes.Count != 0)
+            if (_class.Attributes.Count != 0)
             {
-                foreach (var a in _class._attributes)
+                foreach (var a in _class.Attributes)
                 {
                     if (IsMade == true) { sw.WriteLine(""); }
                     else { IsMade = true; }
@@ -302,9 +302,9 @@ namespace AntlrCSharp
         public static void generateAssociations(StreamWriter sw, Class _class, ref bool IsMade) 
         {
             // Pārbauda, vai klasē ir asociācijas
-            if (_class._associationEnds.Count != 0)
+            if (_class.AssociationEnds.Count != 0)
             {
-                foreach (var a in _class._associationEnds)
+                foreach (var a in _class.AssociationEnds)
                 {
                     if (IsMade == true) { sw.WriteLine(""); }
                     else { IsMade = true; }
@@ -338,9 +338,9 @@ namespace AntlrCSharp
         public static void generateMethods(StreamWriter sw, Class _class, ref bool IsMade)
         {
             // Pārbauda, vai klasē ir metodes
-            if (_class._methods.Count != 0)
+            if (_class.Methods.Count != 0)
             {
-                foreach (var m in _class._methods)
+                foreach (var m in _class.Methods)
                 {
                     if (IsMade == true) { sw.WriteLine(""); }
                     else { IsMade = true; }
@@ -352,7 +352,7 @@ namespace AntlrCSharp
 
                     // Ģenerē metodes "ķermeni"
                     sw.WriteLine("        {");
-                    sw.WriteLine("            string arguments = JsonSerializer.Serialize( new { " + argumentList(m._arguments) + " } );");
+                    sw.WriteLine("            string arguments = JsonSerializer.Serialize( new { " + argumentList(m.Arguments) + " } );");
                     sw.WriteLine("            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference , \"" + m.Name + "\" , arguments );");
                     sw.WriteLine("            var json = JsonDocument.Parse(result);");
                     sw.WriteLine("            JsonElement errorMessage;");

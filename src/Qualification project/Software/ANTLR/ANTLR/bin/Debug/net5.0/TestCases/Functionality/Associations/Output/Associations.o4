@@ -1,2 +1,2 @@
-At line 8: missing arrows for association definition!
-At line 8: missing target definition!
+At line 5: there is no class 'sourceClass' to use as source class!
+At line 9: there is no class 'targetClass' to use as target class!

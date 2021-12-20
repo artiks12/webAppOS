@@ -1,3 +1,2 @@
-At line 7: missing arrows for association definition!
-At line 5: Missing source name!
-At line 7: Missing target name!
+At line 18: a field with name 'test2' already exists in class 'targetClass'! Check line 11!
+At line 22: a field with name 'test1' already exists in class 'sourceClass'! Check line 4!

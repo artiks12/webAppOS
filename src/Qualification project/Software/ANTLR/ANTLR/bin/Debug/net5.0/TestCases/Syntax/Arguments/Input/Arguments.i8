@@ -3,10 +3,9 @@ class className
 	[URL("dotnet:local:namespaceName.className#methodName")]
 	String str
 	(
-		Integer 
-		test1
-		Integer 
-		test2
+		Integer test1,
+		String test1,
+		Integer test1
 	)
 	;
 }

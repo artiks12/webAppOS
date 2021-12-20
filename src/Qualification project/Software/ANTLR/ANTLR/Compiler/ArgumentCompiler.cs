@@ -79,7 +79,7 @@ namespace AntlrCSharp
 
 			if (_argument.Name != null) { _argument.Line = (uint)context.argumentName().Start.Line; }
 			else { _argument.Line = (uint)context.Start.Line; }
-			_method._arguments.Add(_argument);
+			_method.Arguments.Add(_argument);
 
 			return null;
 		}
@@ -116,7 +116,7 @@ namespace AntlrCSharp
 			}
 
 			// Pārbauda, vai arguments ar doto vārdu jau ir definēts starp citiem argumentiem
-			foreach (var arg in _method._arguments)
+			foreach (var arg in _method.Arguments)
 			{
 				if (arg.Name == context.GetText())
 				{

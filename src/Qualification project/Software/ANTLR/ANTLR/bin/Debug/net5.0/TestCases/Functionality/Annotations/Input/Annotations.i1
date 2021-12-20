@@ -1,8 +1,0 @@
-class Class1
-{
-	[
-	]
-	String str
-	()
-	;
-}

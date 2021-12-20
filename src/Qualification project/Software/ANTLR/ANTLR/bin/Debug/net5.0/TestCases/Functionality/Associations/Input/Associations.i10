@@ -1,0 +1,15 @@
+class test1 {}
+class test2 : test1{}
+class test3 : test1{}
+class test4 : test1{}
+class test5 : test1{}
+class test6 : test2{}
+class test7 : test2{}
+class test8 : test4{}
+class test9 : test8{}
+class test10 : test8{}
+class test11 : test8{ Integer rolename; }
+
+class test12 {}
+
+association(rolename:test12<->target:test1);

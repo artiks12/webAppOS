@@ -3,12 +3,6 @@ class test1
 	Integer 
 	test
 	;
-	
-	[URL("dotnet:local:namespaceName.className#methodName")]
-	Integer 
-	test
-	()
-	;
 }
 
 class test2 : test1
@@ -22,16 +16,6 @@ class test2 : test1
 	String 
 	test
 	;
-	
-	Integer 
-	test
-	;
-	
-	[URL("dotnet:local:namespaceName.className#methodName")]
-	String 
-	test
-	()
-	;
 }
 
 class test3 : test2
@@ -44,15 +28,5 @@ class test3 : test2
 	String 
 	test
 	()
-	;
-	
-	[URL("dotnet:local:namespaceName.className#methodName")]
-	Integer 
-	test
-	()
-	;
-	
-	String 
-	test
 	;
 }

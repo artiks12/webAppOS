@@ -1,11 +1,15 @@
 class Class1
 { 
 	[
-	URL
+	path
 	(
+	"
+	dotnet
 	:
-	:
+	local
+	;
 	namespaceName.className#methodName
+	"
 	)
 	]
 	String str
