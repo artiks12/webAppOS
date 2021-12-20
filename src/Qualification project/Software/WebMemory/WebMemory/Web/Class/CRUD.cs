@@ -109,5 +109,23 @@
             var a = FindTargetAssociationEndByName(targetRoleName);
             if (a != null) { _k.deleteAssociation(a.GetReference); }
         }
+
+        /// <summary>
+        /// Izveido ģeneralizāciju starp klasēm
+        /// </summary>
+        public void CreateGeneralization(string SuperClass)
+        {
+            var g = _m.FindClassByName(SuperClass);
+            if (g != null) { _k.CreateGeneralization(_r, g.GetReference); }
+        }
+
+        /// <summary>
+        /// Izveido ģeneralizāciju starp klasēm
+        /// </summary>
+        public void DeleteGeneralization(string SuperClass)
+        {
+            var g = _m.FindClassByName(SuperClass);
+            if (g != null) { _k.DeleteGeneralization(_r , g.GetReference); }
+        }
     }
 }

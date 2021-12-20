@@ -22,3 +22,15 @@ C:\Users\Artis\Documents\GitHub\webAppOS\src\WebMemory\WebMemory\obj\Debug\net5.
 C:\Users\Artis\Documents\GitHub\webAppOS\src\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.dll
 C:\Users\Artis\Documents\GitHub\webAppOS\src\WebMemory\WebMemory\obj\Debug\net5.0\ref\WebMemory.dll
 C:\Users\Artis\Documents\GitHub\webAppOS\src\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.pdb
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Software\WebMemory\WebMemory\bin\Debug\net5.0\WebMemory.deps.json
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Software\WebMemory\WebMemory\bin\Debug\net5.0\WebMemory.dll
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Software\WebMemory\WebMemory\bin\Debug\net5.0\ref\WebMemory.dll
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Software\WebMemory\WebMemory\bin\Debug\net5.0\WebMemory.pdb
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Software\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.csproj.AssemblyReference.cache
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Software\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Software\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.AssemblyInfoInputs.cache
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Software\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.AssemblyInfo.cs
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Software\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.csproj.CoreCompileInputs.cache
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Software\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.dll
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Software\WebMemory\WebMemory\obj\Debug\net5.0\ref\WebMemory.dll
+C:\Users\Artis\Documents\GitHub\webAppOS\src\Qualification project\Software\WebMemory\WebMemory\obj\Debug\net5.0\WebMemory.pdb
