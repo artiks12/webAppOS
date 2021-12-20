@@ -56,9 +56,9 @@ namespace AntlrCSharp
             sw.WriteLine("            _wc = wc;");
             sw.WriteLine("        }\n");
 
-            sw.WriteLine("        public BaseObject ()");
+            sw.WriteLine("        public BaseObject ( IWebMemory wm )");
             sw.WriteLine("        {");
-            sw.WriteLine("            ");
+            sw.WriteLine("            _wm = wm;");
             sw.WriteLine("        }\n");
         }
 
@@ -104,52 +104,83 @@ namespace AntlrCSharp
                 else { associationList += " , \"" + sourceName + "\" , \"" + targetName + "\" , \"" + targetClass + "\" , \"" + IsComposition + "\""; }
             }
 
-            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )");
-            sw.WriteLine("        {");
-            sw.WriteLine("            List<string> attributes = new() { " + argumentList + " };");
-            sw.WriteLine("            List<string> associations = new() { " + associationList + " };");
-            sw.WriteLine("            checkClass( attributes , associations , \"" + _class.ClassName + "\" );");
-            if (_class.SuperClass != null)
+            for (int x = 0; x < 3; x++) 
             {
-                sw.WriteLine("            {0} {0} = new();", _class.SuperClass.ClassName);
-            }
-            foreach (var ac in _class.AssociationEnds)
-            {
-                sw.WriteLine("            {0} {0} = new();", ac.Class.ClassName);
-            }
-            sw.WriteLine("            _object = _wm.FindClassByName( \"" + _class.ClassName + "\" ).CreateObject();");
-            sw.WriteLine("        }\n");
+                // Uzģenerējam galvu
+                switch (x) 
+                {
+                    case 0:
+                        sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )");
+                    break;
+                    case 1:
+                        sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject)");
+                    break;
+                    case 2:
+                        sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm ) : base( wm )");
+                    break;
+                }
 
-            sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )");
-            sw.WriteLine("        {");
-            sw.WriteLine("            List<string> attributes = new() { " + argumentList + " };");
-            sw.WriteLine("            List<string> associations = new() { " + associationList + " };");
-            sw.WriteLine("            checkClass( attributes , associations , \"" + _class.ClassName + "\" );");
-            sw.WriteLine("            _object = new( rObject, wm );");
-            if (_class.SuperClass != null)
-            {
-                sw.WriteLine("            {0} {0} = new();", _class.SuperClass.ClassName);
-            }
-            foreach (var ac in _class.AssociationEnds)
-            {
-                sw.WriteLine("            {0} {0} = new();", ac.Class.ClassName);
-            }
-            sw.WriteLine("        }\n");
+                sw.WriteLine("        {");
 
-            sw.WriteLine("        public " + _class.ClassName + " () : base()");
-            sw.WriteLine("        {");
-            sw.WriteLine("            List<string> attributes = new() { " + argumentList + " };");
-            sw.WriteLine("            List<string> associations = new() { " + associationList + " };");
-            sw.WriteLine("            checkClass( attributes , associations , \"" + _class.ClassName + "\" );");
-            if (_class.SuperClass != null)
-            {
-                sw.WriteLine("            {0} {0} = new();", _class.SuperClass.ClassName);
+                // Klases pārbaude
+                if (argumentList != "")
+                {
+                    sw.WriteLine("            List<string> attributes = new() { " + argumentList + " };");
+                    sw.WriteLine("            var o = checkClass( attributes , \"" + _class.ClassName + "\" );");
+                }
+                else
+                {
+                    sw.WriteLine("            var o = checkClass( null , \"" + _class.ClassName + "\" );");
+                }
+
+
+                if (_class.SuperClass != null || associationList != "") 
+                {
+                    sw.WriteLine("            if(o == false)");
+                    sw.WriteLine("            {");
+                }
+                // Virsklases pārbaude
+                if (_class.SuperClass != null)
+                {
+                    sw.WriteLine("               // SuperClass Check");
+                    sw.WriteLine("               {0} {0} = new( _wm );", _class.SuperClass.ClassName);
+                    sw.WriteLine("               var c = _wm.FindClassByName( \"" + _class.ClassName + "\");");
+                    sw.WriteLine("               c.CreateGeneralization( \"" + _class.SuperClass.ClassName + "\");");
+                }
+
+                // Asociācijas klašu pārbaude
+                if (associationList != "")
+                {
+                    sw.WriteLine("               // Association classes Check");
+                    sw.WriteLine("               List<string> associations = new() { " + associationList + " };");
+                    foreach (var ac in _class.AssociationEnds)
+                    {
+                        sw.WriteLine("               {0} {0} = new( _wm );", ac.Class.ClassName);
+                    }
+                    sw.WriteLine("               for(int x=0; x<associations.Count; x+=4)");
+                    sw.WriteLine("               {");
+                    sw.WriteLine("                   checkAssociationEnd( associations[x] , associations[x+1] , \"" + _class.ClassName + "\" , associations[x+2] ,  associations[x+3] );");
+                    sw.WriteLine("               }\n");
+                }
+                if (_class.SuperClass != null || associationList != "")
+                {
+                    sw.WriteLine("            }");
+                }
+
+
+                // Objekta izveide
+                switch (x) 
+                {
+                    case 0:
+                        sw.WriteLine("            _object = _wm.FindClassByName( \"" + _class.ClassName + "\" ).CreateObject();");
+                    break;
+                    case 1:
+                        sw.WriteLine("            _object = new( rObject, wm );");
+                    break;
+                }
+
+                sw.WriteLine("        }\n");
             }
-            foreach (var ac in _class.AssociationEnds)
-            {
-                sw.WriteLine("            {0} {0} = new();", ac.Class.ClassName);
-            }
-            sw.WriteLine("        }");
         }
 
         /// <summary>
@@ -157,21 +188,19 @@ namespace AntlrCSharp
         /// </summary>
         public static void generateCheckClass(StreamWriter sw) 
         {
-            sw.WriteLine("        protected void checkClass( List<string> attributes , List<string> associations , string className )");
+            sw.WriteLine("        protected bool checkClass( List<string> attributes , string className )");
             sw.WriteLine("        {");
             sw.WriteLine("            var c = _wm.FindClassByName( className );");
             sw.WriteLine("            if (c == null)");
             sw.WriteLine("            {");
             sw.WriteLine("                c = _wm.CreateClass( className );");
             sw.WriteLine("            }");
+            sw.WriteLine("            else { return true; }");
             sw.WriteLine("            for(int x=0; x<attributes.Count; x+=2)");
             sw.WriteLine("            {");
             sw.WriteLine("                checkAttribute( attributes[x] , attributes[x+1] , c );");
             sw.WriteLine("            }");
-            sw.WriteLine("            for(int x=0; x<associations.Count; x+=4)");
-            sw.WriteLine("            {");
-            sw.WriteLine("                checkAssociationEnd( associations[x] , associations[x+1] , className , associations[x+2] ,  associations[x+3] );");
-            sw.WriteLine("            }");
+            sw.WriteLine("            return false;");
             sw.WriteLine("        }");
         }
 
@@ -202,10 +231,6 @@ namespace AntlrCSharp
             sw.WriteLine("        {");
             sw.WriteLine("            var cSource = _wm.FindClassByName( sourceClass );");
             sw.WriteLine("            var cTarget = _wm.FindClassByName( targetClass );");
-            sw.WriteLine("            if (cTarget == null)");
-            sw.WriteLine("            {");
-            sw.WriteLine("                cTarget = _wm.CreateClass( targetClass );");
-            sw.WriteLine("            }");
             sw.WriteLine("            var a = cSource.FindTargetAssociationEndByName( targetName );");
             sw.WriteLine("            if (a == null)");
             sw.WriteLine("            {");

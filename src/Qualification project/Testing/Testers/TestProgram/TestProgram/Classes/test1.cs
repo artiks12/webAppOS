@@ -10,25 +10,23 @@ namespace Test
         public test1 ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
         {
             List<string> attributes = new() { "_bool" , "Boolean" , "_real" , "Real" };
-            List<string> associations = new() {  };
-            checkClass( attributes , associations , "test1" );
+            var o = checkClass( attributes , "test1" );
             _object = _wm.FindClassByName( "test1" ).CreateObject();
         }
 
-        public test1 ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )
+        public test1 ( IWebMemory wm , IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject)
         {
             List<string> attributes = new() { "_bool" , "Boolean" , "_real" , "Real" };
-            List<string> associations = new() {  };
-            checkClass( attributes , associations , "test1" );
+            var o = checkClass( attributes , "test1" );
             _object = new( rObject, wm );
         }
 
-        public test1 () : base()
+        public test1 ( IWebMemory wm ) : base( wm )
         {
             List<string> attributes = new() { "_bool" , "Boolean" , "_real" , "Real" };
-            List<string> associations = new() {  };
-            checkClass( attributes , associations , "test1" );
+            var o = checkClass( attributes , "test1" );
         }
+
 
 
         public bool _bool 

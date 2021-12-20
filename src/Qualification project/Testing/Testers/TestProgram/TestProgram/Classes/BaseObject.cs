@@ -21,26 +21,24 @@ namespace Test
             _wc = wc;
         }
 
-        public BaseObject ()
+        public BaseObject ( IWebMemory wm )
         {
-            
+            _wm = wm;
         }
 
-        protected void checkClass( List<string> attributes , List<string> associations , string className )
+        protected bool checkClass( List<string> attributes , string className )
         {
             var c = _wm.FindClassByName( className );
             if (c == null)
             {
                 c = _wm.CreateClass( className );
             }
+            else { return true; }
             for(int x=0; x<attributes.Count; x+=2)
             {
                 checkAttribute( attributes[x] , attributes[x+1] , c );
             }
-            for(int x=0; x<associations.Count; x+=4)
-            {
-                checkAssociationEnd( associations[x] , associations[x+1] , className , associations[x+2] ,  associations[x+3] );
-            }
+            return false;
         }
 
         protected void checkAttribute( string name , string type , WebClass c )
@@ -56,10 +54,6 @@ namespace Test
         {
             var cSource = _wm.FindClassByName( sourceClass );
             var cTarget = _wm.FindClassByName( targetClass );
-            if (cTarget == null)
-            {
-                cTarget = _wm.CreateClass( targetClass );
-            }
             var a = cSource.FindTargetAssociationEndByName( targetName );
             if (a == null)
             {

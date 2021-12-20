@@ -10,25 +10,23 @@ namespace Test
         public test2 ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
         {
             List<string> attributes = new() { "_int1" , "Integer" , "_int2" , "Integer" };
-            List<string> associations = new() {  };
-            checkClass( attributes , associations , "test2" );
+            var o = checkClass( attributes , "test2" );
             _object = _wm.FindClassByName( "test2" ).CreateObject();
         }
 
-        public test2 ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )
+        public test2 ( IWebMemory wm , IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject)
         {
             List<string> attributes = new() { "_int1" , "Integer" , "_int2" , "Integer" };
-            List<string> associations = new() {  };
-            checkClass( attributes , associations , "test2" );
+            var o = checkClass( attributes , "test2" );
             _object = new( rObject, wm );
         }
 
-        public test2 () : base()
+        public test2 ( IWebMemory wm ) : base( wm )
         {
             List<string> attributes = new() { "_int1" , "Integer" , "_int2" , "Integer" };
-            List<string> associations = new() {  };
-            checkClass( attributes , associations , "test2" );
+            var o = checkClass( attributes , "test2" );
         }
+
 
 
         public long _int1 
