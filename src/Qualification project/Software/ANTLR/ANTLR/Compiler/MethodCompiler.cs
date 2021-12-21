@@ -132,6 +132,8 @@ namespace AntlrCSharp
 				}
 			}
 
+			if (context.GetText().StartsWith("_constructor_")) { Errors.Add("At line " + context.Start.Line + ": A method cannot start with '_constructor_'!"); }
+
 			if (checkMethodNameInClass(context, _class) == true)
 			{
 				var sc = _class.SuperClass;

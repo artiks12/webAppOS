@@ -13,7 +13,6 @@ namespace AntlrCSharp
     {
         private static Compiler compiler; // Kompilatora objekts
 
-        /*
         /// <summary>
         /// Programmas galvenā funkcija
         /// </summary>
@@ -50,9 +49,9 @@ namespace AntlrCSharp
 
             compiler.Compile(codeContext, _namespace); // Kompilējam kodu
         }
-        */
-
         
+
+        /*
         /// <summary>
         /// Testēšanai
         /// </summary>
@@ -113,6 +112,6 @@ namespace AntlrCSharp
                 Console.WriteLine("\n");
             }
         }
-        
+        */
     }
 }

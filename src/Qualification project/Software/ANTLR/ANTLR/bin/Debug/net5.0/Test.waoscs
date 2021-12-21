@@ -1,4 +1,4 @@
-class test1
+class _constructor_test2
 {
 	Boolean _bool;
 	Real _real;

@@ -233,6 +233,8 @@ namespace AntlrCSharp
 				}
 			}
 
+			if (context.GetText().StartsWith("_constructor_")) { Errors.Add("At line " + context.Start.Line + ": A role name cannot start with '_constructor_'!"); }
+
 			if (_target.Class != null)
 			{
 				// Pārbauda, vai lomas vārds nesakrīt ar pretējās klases vārdu
@@ -279,6 +281,8 @@ namespace AntlrCSharp
 					return null;
 				}
 			}
+
+			if (context.GetText().StartsWith("_constructor_")) { Errors.Add("At line " + context.Start.Line + ": A role name cannot start with '_constructor_'!"); }
 
 			if (_source.Class != null) 
 			{

@@ -104,6 +104,8 @@ namespace AntlrCSharp
 				}
 			}
 
+			if (context.GetText().StartsWith("_constructor_")) { Errors.Add("At line " + context.Start.Line + ": An attribute cannot start with '_constructor_'!"); }
+
 			if (checkAttributeNameInClass(context, _class) == true)
 			{
 				var sc = _class.SuperClass;
