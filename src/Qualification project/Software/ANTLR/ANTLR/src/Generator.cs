@@ -104,69 +104,67 @@ namespace AntlrCSharp
                 else { associationList += " , \"" + sourceName + "\" , \"" + targetName + "\" , \"" + targetClass + "\" , \"" + IsComposition + "\""; }
             }
 
+            /// Kompilēsanas funkcijas kopīgās daļas sākums
+            sw.WriteLine("        private void _constructor()");
+            sw.WriteLine("        {");
+
+            sw.WriteLine("            List<string> attributes = new() { " + argumentList + " };");
+            sw.WriteLine("            var o = checkClass( attributes , \"" + _class.ClassName + "\" );");
+
+
+            if (_class.SuperClass != null || associationList != "")
+            {
+                sw.WriteLine("            if(o == false)");
+                sw.WriteLine("            {");
+            }
+            // Virsklases pārbaude
+            if (_class.SuperClass != null)
+            {
+                sw.WriteLine("               // SuperClass Check");
+                sw.WriteLine("               {0} {0} = new( _wm );", _class.SuperClass.ClassName);
+                sw.WriteLine("               var c = _wm.FindClassByName( \"" + _class.ClassName + "\");");
+                sw.WriteLine("               c.CreateGeneralization( \"" + _class.SuperClass.ClassName + "\");");
+            }
+
+            // Asociācijas klašu pārbaude
+            if (associationList != "")
+            {
+                sw.WriteLine("               // Association classes Check");
+                sw.WriteLine("               List<string> associations = new() { " + associationList + " };");
+                foreach (var ac in _class.AssociationEnds)
+                {
+                    sw.WriteLine("               {0} {0} = new( _wm );", ac.Class.ClassName);
+                }
+                sw.WriteLine("               for(int x=0; x<associations.Count; x+=4)");
+                sw.WriteLine("               {");
+                sw.WriteLine("                   checkAssociationEnd( associations[x] , associations[x+1] , \"" + _class.ClassName + "\" , associations[x+2] ,  associations[x+3] );");
+                sw.WriteLine("               }");
+            }
+            if (_class.SuperClass != null || associationList != "")
+            {
+                sw.WriteLine("            }");
+            }
+            sw.WriteLine("        }");
+            /// Kompilēsanas funkcijas kopīgās daļas beigas
+
             for (int x = 0; x < 3; x++) 
             {
                 // Uzģenerējam galvu
                 switch (x) 
                 {
                     case 0:
-                        sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )");
+                        sw.WriteLine("\n        public " + _class.ClassName + " ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )");
                     break;
                     case 1:
-                        sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm , IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject)");
+                        sw.WriteLine("\n        public " + _class.ClassName + " ( IWebMemory wm , IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject)");
                     break;
                     case 2:
-                        sw.WriteLine("        public " + _class.ClassName + " ( IWebMemory wm ) : base( wm )");
+                        sw.WriteLine("\n        public " + _class.ClassName + " ( IWebMemory wm ) : base( wm )");
                     break;
                 }
 
                 sw.WriteLine("        {");
-
-                // Klases pārbaude
-                if (argumentList != "")
-                {
-                    sw.WriteLine("            List<string> attributes = new() { " + argumentList + " };");
-                    sw.WriteLine("            var o = checkClass( attributes , \"" + _class.ClassName + "\" );");
-                }
-                else
-                {
-                    sw.WriteLine("            var o = checkClass( null , \"" + _class.ClassName + "\" );");
-                }
-
-
-                if (_class.SuperClass != null || associationList != "") 
-                {
-                    sw.WriteLine("            if(o == false)");
-                    sw.WriteLine("            {");
-                }
-                // Virsklases pārbaude
-                if (_class.SuperClass != null)
-                {
-                    sw.WriteLine("               // SuperClass Check");
-                    sw.WriteLine("               {0} {0} = new( _wm );", _class.SuperClass.ClassName);
-                    sw.WriteLine("               var c = _wm.FindClassByName( \"" + _class.ClassName + "\");");
-                    sw.WriteLine("               c.CreateGeneralization( \"" + _class.SuperClass.ClassName + "\");");
-                }
-
-                // Asociācijas klašu pārbaude
-                if (associationList != "")
-                {
-                    sw.WriteLine("               // Association classes Check");
-                    sw.WriteLine("               List<string> associations = new() { " + associationList + " };");
-                    foreach (var ac in _class.AssociationEnds)
-                    {
-                        sw.WriteLine("               {0} {0} = new( _wm );", ac.Class.ClassName);
-                    }
-                    sw.WriteLine("               for(int x=0; x<associations.Count; x+=4)");
-                    sw.WriteLine("               {");
-                    sw.WriteLine("                   checkAssociationEnd( associations[x] , associations[x+1] , \"" + _class.ClassName + "\" , associations[x+2] ,  associations[x+3] );");
-                    sw.WriteLine("               }\n");
-                }
-                if (_class.SuperClass != null || associationList != "")
-                {
-                    sw.WriteLine("            }");
-                }
-
+                sw.WriteLine("            _constructor();");
 
                 // Objekta izveide
                 switch (x) 
@@ -179,7 +177,7 @@ namespace AntlrCSharp
                     break;
                 }
 
-                sw.WriteLine("        }\n");
+                sw.WriteLine("        }");
             }
         }
 

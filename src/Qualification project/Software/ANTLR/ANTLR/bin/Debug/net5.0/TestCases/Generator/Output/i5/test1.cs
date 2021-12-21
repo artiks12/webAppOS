@@ -7,22 +7,27 @@ namespace Test
 {
     class test1 : BaseObject
     {
-        public test1 ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
+        private void _constructor()
         {
             List<string> attributes = new() { "_int" , "Integer" , "_str" , "String" , "_bool" , "Boolean" , "_double" , "Real" };
-            checkClass( attributes , "test1" );
-            List<string> associations = new() {  };
-            checkAssociations( associations , "test1" );
+            var o = checkClass( attributes , "test1" );
+        }
+
+        public test1 ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
+        {
+            _constructor();
             _object = _wm.FindClassByName( "test1" ).CreateObject();
         }
 
-        public test1 ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )
+        public test1 ( IWebMemory wm , IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject)
         {
-            List<string> attributes = new() { "_int" , "Integer" , "_str" , "String" , "_bool" , "Boolean" , "_double" , "Real" };
-            checkClass( attributes , "test1" );
-            List<string> associations = new() {  };
-            checkAssociations( associations , "test1" );
+            _constructor();
             _object = new( rObject, wm );
+        }
+
+        public test1 ( IWebMemory wm ) : base( wm )
+        {
+            _constructor();
         }
 
 

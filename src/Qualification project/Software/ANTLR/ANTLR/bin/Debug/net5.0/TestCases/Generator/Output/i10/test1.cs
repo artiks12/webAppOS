@@ -7,22 +7,40 @@ namespace Test
 {
     class test1 : BaseObject
     {
-        public test1 ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
+        private void _constructor()
         {
             List<string> attributes = new() {  };
-            checkClass( attributes , "test1" );
-            List<string> associations = new() { "source1" , "target1" , "test2" , "false" , "target2" , "source2" , "test2" , "false" , "target3" , "source3" , "test2" , "true" , "source4" , "target4" , "test2" , "true" };
-            checkAssociations( associations , "test1" );
+            var o = checkClass( attributes , "test1" );
+            if(o == false)
+            {
+               // Association classes Check
+               List<string> associations = new() { "source1" , "target1" , "test2" , "false" , "target2" , "source2" , "test2" , "false" , "target3" , "source3" , "test2" , "true" , "source4" , "target4" , "test2" , "true" };
+               test2 test2 = new( _wm );
+               test2 test2 = new( _wm );
+               test2 test2 = new( _wm );
+               test2 test2 = new( _wm );
+               for(int x=0; x<associations.Count; x+=4)
+               {
+                   checkAssociationEnd( associations[x] , associations[x+1] , "test1" , associations[x+2] ,  associations[x+3] );
+               }
+            }
+        }
+
+        public test1 ( IWebMemory wm , IRemoteWebCalls wc ) : base( wm , wc )
+        {
+            _constructor();
             _object = _wm.FindClassByName( "test1" ).CreateObject();
         }
 
-        public test1 ( IWebMemory wm, IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject )
+        public test1 ( IWebMemory wm , IRemoteWebCalls wc , long rObject ) : base( wm , wc , rObject)
         {
-            List<string> attributes = new() {  };
-            checkClass( attributes , "test1" );
-            List<string> associations = new() { "source1" , "target1" , "test2" , "false" , "target2" , "source2" , "test2" , "false" , "target3" , "source3" , "test2" , "true" , "source4" , "target4" , "test2" , "true" };
-            checkAssociations( associations , "test1" );
+            _constructor();
             _object = new( rObject, wm );
+        }
+
+        public test1 ( IWebMemory wm ) : base( wm )
+        {
+            _constructor();
         }
 
 
