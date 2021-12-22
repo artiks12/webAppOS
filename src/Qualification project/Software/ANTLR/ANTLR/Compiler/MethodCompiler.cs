@@ -25,13 +25,21 @@ namespace AntlrCSharp
 
 			var methodBody = context.fieldDefinition().attributeDefinition();
 			var argumentBody = context.fieldDefinition().methodDefinition();
-			
-			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
-			if (context.annotation().Length != 0) { line = (uint)context.annotation()[context.annotation().Length - 1].Start.Line; }
-			
 
+			uint line = (uint)context.Start.Line; ; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
+
+			// Mainam rindu
+			if (methodBody != null) { line = (uint)methodBody.Stop.Line; }
+			else if (context.annotation().Length != 0) { line = (uint)context.annotation()[context.annotation().Length - 1].Stop.Line; }
+
+			// Pārbauda, vai metodei ir definēti argumenti
+			if (argumentBody != null) { VisitMethodDefinition(argumentBody); }
+			else { Errors.Add("At line " + line + ": Missing arguemnt definition for method!"); }
+
+			// Pārbaudam, vai metodei ir definēts ķermenis
 			if (methodBody != null)
 			{
+				line = (uint)methodBody.Start.Line;
 				// Pārbauda, vai metodei ir aizsardzība
 				if (methodBody.fieldProtection() != null) 
 				{
@@ -51,23 +59,14 @@ namespace AntlrCSharp
 					}
 					else { Errors.Add("At line " + line + ": Missing datatype for method!"); }
 
-					// Pārbauda, vai metodei ir argumentu definīcija
-					if (argumentBody != null) { VisitMethodDefinition(argumentBody); }
-					else { Errors.Add("At line " + methodBody.Stop.Line + ": Missing arguemnt definition for method!"); }
-
 					// Pārbauda, vai metodei ir vārds
-					if (methodBody.attribute().fieldName() != null)
-					{
-						line = (uint)methodBody.attribute().fieldName().Stop.Line;
-						VisitMethodName(methodBody.attribute().fieldName());
-					}
+					if (methodBody.attribute().fieldName() != null) { VisitMethodName(methodBody.attribute().fieldName()); }
 					else { Errors.Add("At line " + line + ": Missing name for method!"); }
 				}
 				else { Errors.Add("At line " + line + ": Missing datatype and name for method!"); }
 			}
 			else { Errors.Add("At line " + line + ": Missing datatype and name for method!"); }
-
-
+									
 			// Pārbauda metodes anotācijas
 			if (context.annotation().Length > 0)
 			{
@@ -79,6 +78,7 @@ namespace AntlrCSharp
 			}
 			else { Errors.Add("At line " + context.Start.Line + ": Missing method URL!"); }
 
+			// Ja metodei ir vārds vai metodes vārds neatkārtojas, tad klasē saglabā metodi
 			if (_method.Name != null) 
 			{
 				_method.Line = (uint)context.fieldDefinition().attributeDefinition().attribute().fieldName().Start.Line;
@@ -105,6 +105,7 @@ namespace AntlrCSharp
 		{
 			_method.Type = context.GetText();
 
+			// Pārbauda, vai metodei ir pareizs datu tips
 			if (_method.Type == null) { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a valid data type!"); }
 			
 			return null;
@@ -132,6 +133,7 @@ namespace AntlrCSharp
 				}
 			}
 
+			// Pārbauda, vai metodes vārds sākas ar "_constructor_"
 			if (context.GetText().StartsWith("_constructor_")) { Errors.Add("At line " + context.Start.Line + ": A method cannot start with '_constructor_'!"); }
 
 			if (checkMethodNameInClass(context, _class) == true)
@@ -150,8 +152,9 @@ namespace AntlrCSharp
 		}
 
 		/// <summary>
-		/// Pārbauda metodes vārda esamību klasē/virsklasē
+		/// Pārbauda metodes vārda esamību klasē
 		/// </summary>
+		/// <returns>Atgriež true, ja metodes vārds klasē neeksistē, citādi atgriež false</returns>
 		public bool checkMethodNameInClass([NotNull] FieldNameContext context, Class _checkClass) 
 		{
 			string message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class '" + _checkClass.ClassName + "'! Check line ";
@@ -180,8 +183,9 @@ namespace AntlrCSharp
 		}
 
 		/// <summary>
-		/// Pārbauda metodes vārda esamību klasē/virsklasē
+		/// Pārbauda metodes vārda esamību virsklasē
 		/// </summary>
+		/// <returns>Atgriež true, ja metodes vārds virsklasē neeksistē, citādi atgriež false</returns>
 		public bool checkMethodNameInSuperClass([NotNull] FieldNameContext context, Class _checkClass)
 		{
 			string message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass '" + _checkClass.ClassName + "'! Check line ";
@@ -212,6 +216,7 @@ namespace AntlrCSharp
 				// Pārbauda, vai metožu vārdi sakrīt
 				if (m.Name == context.GetText() && m.Protection == "public")
 				{
+					// Pārbauda, vai metodēm sakrīt datu tipi
 					if (m.Type != _method.Type)
 					{
 						Errors.Add("At line " + context.Start.Line + ": Method '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' , does not have the same datatype! Check line " + m.Line + "!");
@@ -223,8 +228,10 @@ namespace AntlrCSharp
 						// Pārbauda, vai metožu argumentu datu tipi un vārdi sakrīt
 						for (int x = 0; x < m.Arguments.Count; x++)
 						{
+							// Pārliecinās, ka abiem argumentiem ir datu tipi
 							if (m.Arguments[x].Type != null && _method.Arguments[x].Type != null)
 							{
+								// Pārbauda, vai argumentu datu tipi sakrīt
 								if (m.Arguments[x].Type != _method.Arguments[x].Type)
 								{
 									Errors.Add("At line " + _method.Arguments[x].Line + ": Argument No. " + (x + 1) + ", does not have the same datatype as in '" + _checkClass.ClassName + "'! Check line " + m.Arguments[x].Line + "!");

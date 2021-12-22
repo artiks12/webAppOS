@@ -142,7 +142,11 @@ namespace AntlrCSharp
             set { _type = value; }
         }
 
+        /// <summary>
+        /// Metodes tips RAAPI
+        /// </summary>
         public string primitiveType { get { return _type; } }
+        
         /// <summary>
         /// Metodes vārds
         /// </summary>
@@ -197,6 +201,12 @@ namespace AntlrCSharp
     /// </summary>
     public class Method : Field
     {
+        public Method()
+        {
+            Arguments = new();
+            Annotations = new();
+        }
+
         /// <summary>
         /// Saraksts ar metodes argumentiem
         /// </summary>
@@ -211,12 +221,6 @@ namespace AntlrCSharp
         /// Metodes URL
         /// </summary>
         public URL URL { get; set; }
-
-        public Method()
-        {
-            Arguments = new();
-            Annotations = new();
-        }
 
         /// <summary>
         /// Metodes atgriežamā vērtība
@@ -246,6 +250,14 @@ namespace AntlrCSharp
     /// </summary>
     public class Class
     {
+        public Class()
+        {
+            Attributes = new();
+            Methods = new();
+            AssociationEnds = new();
+            SubClasses = new();
+        }
+
         /// <summary>
         /// Saraksts ar metodes argumentiem
         /// </summary>
@@ -280,13 +292,5 @@ namespace AntlrCSharp
         /// Rinda, kurā klase tiek definēts failā
         /// </summary>
         public uint Line { get; set; }
-        
-        public Class()
-        {
-            Attributes = new();
-            Methods = new();
-            AssociationEnds = new();
-            SubClasses = new();
-        }
     }
 }

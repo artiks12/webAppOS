@@ -52,6 +52,7 @@ namespace AntlrCSharp
 			}
 			else { Errors.Add("At line " + line + ": Missing datatype and name for attribute!"); }
 
+			// Ja atribūtam ir dots vārds vai atribūts neatkārtojas, tad tas tiek saglabāts klasē
 			if (_attribute.Name != null) 
 			{
 				_attribute.Line = (uint)context.attribute().fieldName().Start.Line;
@@ -78,6 +79,7 @@ namespace AntlrCSharp
 		{
 			_attribute.Type = context.GetText();
 
+			// Pārbaudam, vai atribūtam ir dots pareizs datu tips
 			if (_attribute.Type == null || _attribute.Type == "void") { Errors.Add("At line " + context.Start.Line + ": '" + context.GetText() + "' is not a valid data type for attribute!"); }
 
 			return null;
@@ -104,10 +106,13 @@ namespace AntlrCSharp
 				}
 			}
 
+			// Pārbauda, vai atribūts sākas ar "_constructor_"
 			if (context.GetText().StartsWith("_constructor_")) { Errors.Add("At line " + context.Start.Line + ": An attribute cannot start with '_constructor_'!"); }
 
+			// Pārbauda, vai atribūta vārds jau ir sastopams klasē
 			if (checkAttributeNameInClass(context, _class) == true)
 			{
+				// Pārbauda, vai atribūta vārds jau ir sastopams virsklasēs
 				var sc = _class.SuperClass;
 				while (sc != null)
 				{
@@ -121,9 +126,9 @@ namespace AntlrCSharp
 		}
 
 		/// <summary>
-		/// Pārbauda atribūta vārda esamību klasē/virsklasē
+		/// Pārbauda atribūta vārda esamību klasē
 		/// </summary>
-		/// <returns>Atgriež to, vai ir jāturpina pārbaudi!</returns>
+		/// <returns>Atgriež true, ja atribūta vārds klasē neeksistē, citādi atgriež false</returns>
 		public bool checkAttributeNameInClass([NotNull] FieldNameContext context, Class _checkClass)
 		{
 			string message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class '" + _checkClass.ClassName + "'! Check line ";
@@ -152,9 +157,9 @@ namespace AntlrCSharp
 		}
 
 		/// <summary>
-		/// Pārbauda atribūta vārda esamību klasē/virsklasē
+		/// Pārbauda atribūta vārda esamību virsklasē
 		/// </summary>
-		/// <returns>Atgriež to, vai ir jāturpina pārbaudi!</returns>
+		/// <returns>Atgriež true, ja atribūta vārds virsklasē neeksistē, citādi atgriež false</returns>
 		public bool checkAttributeNameInSuperClass([NotNull] FieldNameContext context, Class _checkClass)
 		{
 			string message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass '" + _checkClass.ClassName + "'! Check line ";
@@ -184,6 +189,7 @@ namespace AntlrCSharp
 			{
 				if (v.Name == context.GetText() && v.Protection == "public")
 				{
+					// Pārbauda, vai sakrītošajiem atribūtiem ir vienāds datu tips
 					if (v.Type != _attribute.Type) { Errors.Add("At line " + context.Start.Line + ": attribute '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' , does not have the same datatype! Check line " + v.Line + "!"); }
 					return false;
 				}

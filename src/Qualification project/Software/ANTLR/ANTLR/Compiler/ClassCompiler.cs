@@ -18,11 +18,10 @@ namespace AntlrCSharp
 		/// </summary>
 		public override object VisitWebMemoryClass([NotNull] WebMemoryClassContext context)
 		{
-			var start = (BlocksContext)context.Parent.Parent;
+			var start = (BlocksContext)context.Parent.Parent; // Rindas fiksēšanu sākam no bloka tipa.
 			uint line = (uint)start.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
-			// Izveidojam klases instanci
-			_class = new();
+			_class = new(); // Izveidojam klases instanci
 
 			// Pārbaudam, vai klasei ir "galva".
 			if (context.classHead() == null) { Errors.Add("At line " + line + ": Missing class head!"); }
@@ -39,10 +38,11 @@ namespace AntlrCSharp
 				VisitClassBody(context.classBody());
 			}
 
+			// Ja klasei ir vārds vai klase neatkārtojas, tad klase tiek saglabāta kompilatorā
 			if (_class.ClassName != null) 
 			{ 
 				_class.Line = (uint)context.classHead().className().Start.Line;
-				if (_class.SuperClass != null) { _class.SuperClass.SubClasses.Add(_class); } // Ja ir virsklase, tad tajā saglabājam jauno klasi kā apakšklasi.
+				if (_class.SuperClass != null) { _class.SuperClass.SubClasses.Add(_class); } // Ja klasei ir virsklase, tad tajā saglabājam šo klasi kā apakšklasi.
 				Classes.Add(_class); // Pievienojam klasi sarakstā
 			}
 			
@@ -54,7 +54,7 @@ namespace AntlrCSharp
 		/// </summary>
 		public override object VisitClassHead([NotNull] ClassHeadContext context)
         {
-			var start = (BlocksContext)context.Parent.Parent.Parent;
+			var start = (BlocksContext)context.Parent.Parent.Parent; // Rindas fiksēšanu sākam no bloka tipa.
 			uint line = (uint)start.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
 			// Pārbaudam, vai klasei ir vards.
@@ -79,7 +79,7 @@ namespace AntlrCSharp
         /// </summary>
         public override object VisitClassName([NotNull] ClassNameContext context)
 		{
-			// Klases vārds nedrīkst būt rezervētais vārds
+			// Pārbaudam, vai klases vards sakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved) 
 			{
 				if (context.GetText() == r) 
@@ -111,14 +111,14 @@ namespace AntlrCSharp
 		/// </summary>
 		public override object VisitSuperClassName([NotNull] SuperClassNameContext context)
 		{
-			// Vispirms pārbaudam, vai virsklasei ir tāds pats vārds, kā pamatklasei
+			// Pārbaudam, vai virsklasei ir tāds pats vārds, kā pamatklasei
 			if (context.GetText() == _class.ClassName)
 			{
 				Errors.Add("At line " + context.Start.Line + ": Cannot inherit from class of the same name!");
 			}
 			else 
 			{
-				// Klases vārds nedrīkst būt rezervētais vārds
+				// Pārbaudam, vai klases vards sakrīt ar rezervētajiem vārdiem
 				foreach (var r in Reserved)
 				{
 					if (context.GetText() == r)
@@ -128,8 +128,9 @@ namespace AntlrCSharp
 					}
 				}
 
-				bool found = false;
+				bool found = false; // Nosaka, vai virsklase ir atrasta
 
+				// Pārbaudam, vai eksistē klase, kuru var likt kā virsklasi
 				foreach (var c in Classes)
 				{
 					if (context.GetText() == c.ClassName)
@@ -139,10 +140,9 @@ namespace AntlrCSharp
 						break;
 					}
 				}
-				if (found == false)
-				{
-					Errors.Add("At line " + context.Start.Line + ": There is no class '" + context.GetText() + "' for class '" + _class.ClassName + "' to inherit from!");
-				}
+
+				// Ja virsklase nav atrasta, tad saglabajam kļūdu
+				if (found == false) { Errors.Add("At line " + context.Start.Line + ": There is no class '" + context.GetText() + "' for class '" + _class.ClassName + "' to inherit from!"); }
 			}
 			return null;
 		}

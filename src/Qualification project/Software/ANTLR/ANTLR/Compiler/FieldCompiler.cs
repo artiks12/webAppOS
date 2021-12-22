@@ -36,7 +36,7 @@ namespace AntlrCSharp
         /// </summary>
         public override object VisitField([NotNull] FieldContext context)
         {
-            // Ja laukam ir vismaz viena anoptācija, vai ir iekavas, tad tā ir metode. Citādi, tā ir īpasiba
+            // Ja laukam ir vismaz viena anotācija, vai ir iekavas, tad tā ir metode. Citādi, tā ir īpasiba
             // Pārbauda, vai laukam ir anotācijas
             if (context.annotation().Length != 0)  { VisitMethod(context); }
             else 

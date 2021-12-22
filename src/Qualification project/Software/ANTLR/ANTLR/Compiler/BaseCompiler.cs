@@ -15,7 +15,7 @@ namespace AntlrCSharp
 		public List<Class> Classes; // Saraksts ar klasēm.
 		public List<Association> Associations; // Saraksts ar asociācijām.
 		public List<string> Errors; // Saraksts ar kļūdām.
-		public List<string> Reserved = new() { "class", "association", "Void" , "Integer", "String", "Boolean", "Real", "URL", "private", "public", "BaseObject" , "_constructor" , "_wm" , "_wc" , "_object" }; // Saraksts ar rezervētajiem vārdiem.
+		public List<string> Reserved = new() { "class", "association", "Void" , "Integer", "String", "Boolean", "Real", "private", "public", "BaseObject" , "_constructor" , "_wm" , "_wc" , "_object" }; // Saraksts ar rezervētajiem vārdiem.
 
 		private List<string> AnnotationTypes = new() { "path" }; // Saraksts ar anotāciju tipiem
 		private List<string> URLProtocols = new() { "staticJava", "dotnet" , "python3" }; // Saraksts ar URL Valodu protokoliem
@@ -63,15 +63,18 @@ namespace AntlrCSharp
 			// Pārbauda, vai blokam ir "galva" jeb tips.
 			if (context.blockType() == null)
 			{
+				// Ja blokam nav tipa, tad skatās, kāds atslēgvārds trūkst
 				if (context.blockBody().webMemoryClass() != null) { Errors.Add("At line " + line + ": Missing keyword 'class'!"); }
 				else { Errors.Add("At line " + line + ": Missing keyword 'association'!"); }
 				type = "";
 			}
 			else 
 			{
-                if (VisitBlockType(context.blockType()) == null) 
+				// Ja blokam nav tipa, tad skatās, vai tas ir pareizs
+				if (VisitBlockType(context.blockType()) == null) 
 				{ 
 					type = "";
+					// Ja tips nav pareizs, tad skatās, kādam ir jābūt tipam atkarībā no ķermeņa, ja tāds ir dots
 					if (context.blockBody() == null) { Errors.Add("At line " + context.Start.Line + ": '" + context.blockType().GetText() + "' is not a block type! Use 'class' or 'association' instead!"); }
 					else 
 					{
@@ -87,10 +90,12 @@ namespace AntlrCSharp
 			// Pārbauda, vai blokam ir ķermenis
 			if (context.blockBody() == null) 
 			{
+				// Ja blokam nav ķermeņa, tad kļūdu saglabā tikai tad, ja padotais tips ir pareizs
 				if (type != "") { Errors.Add("At line " + line + ": Missing " + context.blockType().GetText() + " body!"); }
 			}
 			else 
 			{
+				// Ja blokam ir ķermenis, tad pirms tas tiek apstaigāts, pārbauda vai sakrīt tips un ķermenis, ja padotais tips ir pareizs
 				if (type != "") 
 				{
 					if (context.blockBody().webMemoryClass() != null) { body = "class"; }
@@ -135,7 +140,7 @@ namespace AntlrCSharp
 			// Apstaigā kodu
 			VisitChildren(context);
 
-			// Pārbauda, vai kodā nav kļūdu. Ja nav, tad ģenerējam starpkodu
+			// Pārbauda, vai kodā nav kļūdu. Ja nav, tad ģenerējam starpkodu, citādi izdrukājam kļūdas.
 			if (Errors.Count != 0)
 			{
 				Console.WriteLine("");
@@ -154,6 +159,9 @@ namespace AntlrCSharp
 			}
 		}
 
+		/// <summary>
+		/// Kompilatora testēšanas funkcija
+		/// </summary>
 		public void Test(LanguageParser.CodeContext context, string _namespace, string type, string outFile) 
 		{
 			// Sākam kompilēšanu ar sarakstu iestatīsanu
