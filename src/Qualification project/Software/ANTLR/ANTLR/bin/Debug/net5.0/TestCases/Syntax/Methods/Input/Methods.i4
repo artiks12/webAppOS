@@ -4,4 +4,7 @@ class className
 	[path("C:/test")]
 	()
 	;
+	
+	()
+	;
 }

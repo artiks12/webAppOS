@@ -3,7 +3,8 @@ class targetClass {}
 
 association
 (
-sourceName 
-: 
+sourceName
+:
 sourceClass
+<->
 )

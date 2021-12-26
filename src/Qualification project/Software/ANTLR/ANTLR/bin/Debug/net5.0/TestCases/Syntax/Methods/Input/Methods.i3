@@ -1,8 +1,12 @@
 class className
 {
-	[URL("dotnet:local:namespaceName.className#methodName")]
 	[path("C:/test")]
+	[URL("dotnet:local:namespaceName.className#methodName")]
 	Integer 
-	int
+	_int
+	;
+	
+	[path("C:/test")]
+	[URL("dotnet:local:namespaceName.className#methodName")]
 	;
 }

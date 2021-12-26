@@ -1,7 +1,23 @@
 class className
 {
-	public
-	class
-	Class
-	;
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	Integer
+	test1
+	()
+	
+	Integer 
+	integer1
+	
+	Integer 
+	integer2
+	
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	Integer
+	test2
+	()
+	
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	Integer
+	test3
+	()
 }

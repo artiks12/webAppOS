@@ -1,3 +1,11 @@
+class superClass{}
+
 class 
 : 
+{}
+
+:
+superClass 
+{}
+
 {}

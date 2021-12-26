@@ -2,7 +2,7 @@ class className
 {
 	[path("C:/test")]
 	Integer 
-	int
+	_int
 	()
 	;
 }
