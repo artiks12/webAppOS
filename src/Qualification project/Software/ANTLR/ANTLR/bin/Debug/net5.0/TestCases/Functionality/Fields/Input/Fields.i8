@@ -1,5 +1,18 @@
 class test1
 {
+}
+
+class test2
+{
+}
+
+association
+(test:test2
+<->
+target:test1)
+
+class test3 : test1
+{
 	public
 	Integer 
 	test
@@ -7,18 +20,8 @@ class test1
 	
 	[URL("dotnet:local:namespaceName.className#methodName")]
 	public
-	Boolean 
+	Integer
 	test
 	()
-	;
-	
-	public
-	String 
-	test
-	;
-	
-	public
-	Integer 
-	test
 	;
 }

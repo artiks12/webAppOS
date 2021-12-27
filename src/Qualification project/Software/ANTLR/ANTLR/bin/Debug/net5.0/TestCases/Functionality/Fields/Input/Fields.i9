@@ -1,0 +1,17 @@
+class test1
+{
+	Integer 
+	test
+	;
+}
+
+class test2 : test1
+{
+	Integer 
+	test
+	;
+	
+	Integer 
+	test
+	;
+}

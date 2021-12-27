@@ -2,5 +2,12 @@ class test1{}
 class test2 : test1 {}
 
 association
-(role:test1
-<->role:test2)
+(
+role
+:
+test1
+<->
+role
+:
+test2
+)

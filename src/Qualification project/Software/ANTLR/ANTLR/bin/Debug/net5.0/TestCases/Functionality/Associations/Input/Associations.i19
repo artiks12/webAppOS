@@ -1,5 +1,13 @@
 class test1{}
+class test2 : test1 {}
 
 association
-(role:test1
-<->role:test1)
+(
+sourceName
+:
+test1
+<->
+targetName
+:
+test2
+)

@@ -2,9 +2,9 @@ association
 (
 sourceName
 :
-BaseObject
+sourceClass
 <->
 targetName
 :
-BaseObject
+targetClass
 )

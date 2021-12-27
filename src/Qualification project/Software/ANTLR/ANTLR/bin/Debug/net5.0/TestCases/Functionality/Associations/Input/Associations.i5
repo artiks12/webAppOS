@@ -3,11 +3,11 @@ class targetClass {}
 
 association
 (
-class
+public
 :
 sourceClass
 <->
-Integer
+BaseObject
 :
 targetClass
 )

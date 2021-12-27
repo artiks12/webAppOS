@@ -1,7 +1,12 @@
 class test1{}
 class test2 : test1{}
-class test3 : test2{}
-class test4 {}
+class test3 : test1{}
+class test4 : test1{}
+class test5 : test4{}
 
-association(sourceName3:test3<->targetName:test4)
-association(sourceName1:test1<->targetName:test4)
+class test6 {}
+
+association(sourceName2:test2<->targetName:test6)
+association(sourceName4:test4<->targetName:test6)
+association(sourceName5:test5<->targetName:test6)
+association(sourceName1:test1<->targetName:test6)

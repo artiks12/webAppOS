@@ -1,5 +1,12 @@
 class test1{}
 
 association
-(source:test1
-<->target:test1)
+(
+role
+:
+test1
+<->
+role
+:
+test1
+)

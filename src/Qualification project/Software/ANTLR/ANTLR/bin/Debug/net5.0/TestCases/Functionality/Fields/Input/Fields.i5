@@ -1,18 +1,30 @@
 class test1
 {
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	public
+	Integer 
+	test
+	()
+	;
 }
 
-class test2
+class test2 : test1
 {
+	[URL("dotnet:local:namespaceName.className#methodName")]
+	public
+	Integer 
+	test
+	()
+	;
+	
+	public
+	String 
+	test
+	;
 	
 }
 
-association
-(test:test2
-<->
-target:test1)
-
-class test3 : test1
+class test3 : test2
 {
 	public
 	Integer 
@@ -21,7 +33,7 @@ class test3 : test1
 	
 	[URL("dotnet:local:namespaceName.className#methodName")]
 	public
-	Integer
+	String 
 	test
 	()
 	;

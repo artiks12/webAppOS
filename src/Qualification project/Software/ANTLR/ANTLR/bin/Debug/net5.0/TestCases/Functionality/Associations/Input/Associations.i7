@@ -3,11 +3,11 @@ class targetClass {}
 
 association
 (
-BaseObject
+_constructor_
 :
 sourceClass
 <->
-BaseObject
+_constructor_iylagbek
 :
 targetClass
 )

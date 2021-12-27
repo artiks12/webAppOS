@@ -1,10 +1,13 @@
+class sourceClass {}
+class targetClass {}
+
 association
 (
-sourceName
+class
 :
 sourceClass
 <->
-targetName
+Integer
 :
 targetClass
 )

@@ -1,14 +1,12 @@
 class test1{}
-class test2 : test1{}
-class test3 : test2
-{
-[URL("dotnet:local:namespaceName.className#methodName")]
-public
-Integer 
-targetName
-()
-;
-}
-class test4 {}
 
-association(sourceName1:test1<->targetName:test4)
+association
+(
+source
+:
+test1
+<->
+target
+:
+test1
+)

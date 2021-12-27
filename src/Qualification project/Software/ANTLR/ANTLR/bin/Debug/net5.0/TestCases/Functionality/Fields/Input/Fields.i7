@@ -1,6 +1,6 @@
 class test1
 {
-	public
+	private
 	Integer 
 	test
 	;
@@ -9,30 +9,15 @@ class test1
 class test2 : test1
 {
 	[URL("dotnet:local:namespaceName.className#methodName")]
-	public
 	Integer 
 	test
 	()
 	;
-	
-	public
-	String 
-	test
-	;
-	
 }
 
 class test3 : test2
 {
-	public
 	Integer 
 	test
-	;
-	
-	[URL("dotnet:local:namespaceName.className#methodName")]
-	public
-	String 
-	test
-	()
 	;
 }

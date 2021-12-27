@@ -1,23 +1,23 @@
-class sourceClass 
-{
-	Integer
-	test1
-	;
-}
-class targetClass 
-{
-	[URL("dotnet:local:namespaceName.className#methodName")]
-	String
-	test2
-	()
-	;
-}
+class sourceClass {}
+class targetClass {}
+class sourceClass2 {}
 
 association
 (
 test2
 :
 sourceClass
+<->
+test1
+:
+targetClass
+)
+
+association
+(
+test2
+:
+sourceClass2
 <->
 test1
 :

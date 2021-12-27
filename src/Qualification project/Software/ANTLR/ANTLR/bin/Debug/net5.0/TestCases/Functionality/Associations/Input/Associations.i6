@@ -3,11 +3,11 @@ class targetClass {}
 
 association
 (
-public
+targetClass
 :
 sourceClass
 <->
-URL
+sourceClass
 :
 targetClass
 )
