@@ -139,9 +139,20 @@ namespace AntlrCSharp
             List<Class> associationClasses = new();
             foreach (var ac in _class.AssociationEnds)
             {
-                if (!associationClasses.Contains(ac.Class))
+                if (!associationClasses.Contains(ac.Class) && ac.Class.ClassName != _class.ClassName)
                 {
-                    associationClasses.Add(ac.Class);
+                    var sc = _class.SuperClass;
+                    bool found = false;
+                    while (sc != null) 
+                    {
+                        if (ac.Class.ClassName == sc.ClassName) 
+                        { 
+                            found = true; 
+                            break; 
+                        }
+                        sc = sc.SuperClass;
+                    }
+                    if (found == false) { associationClasses.Add(ac.Class); }
                 }
             }
 

@@ -1,16 +1,43 @@
-class _constructor_test2
+class _class1 
 {
-	Boolean _bool;
-	Real _real;
+	private Integer _int;
+	public String _str;
+}
+class _class2 : _class1 
+{
+	public Integer _int;
+	public Boolean _bool;
+}
+class _class3 : _class1 
+{
+
+}
+class _class4 : _class2 
+{
+	public Real _real;
+}
+class _class5 : _class2 
+{
+	public Real _real;
+}
+class _class6 : _class3 
+{
+	public Integer _int;
 }
 
-class test2
-{
-	Integer _int1;
-	Integer _int2;
-}
+association(source1:_class2<->target1:_class6)
 
-class test3 : test2
-{
-	String _str;
-}
+class _class7{}
+class _class8{}
+class _class9{}
+
+association(source1:_class7<->target1:_class8)
+association(source2:_class8<->target2:_class9)
+
+class _class10{}
+class _class11{}
+class _class12{}
+
+association(source1:_class10<->target1:_class11)
+association(source2:_class11<->target2:_class12)
+association(source3:_class12<->target3:_class10)

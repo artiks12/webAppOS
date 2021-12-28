@@ -76,7 +76,7 @@ namespace WebAppOS
         {
             List<WebObject> links = LinkedObjects(a).ToList();
             
-            foreach (var o in links) { _k.deleteLink(this._r, o.GetReference, a.GetReference); }
+            foreach (var o in links) { _k.deleteLink(_r, o.GetReference, a.GetReference); }
             
             foreach (var o in oList) { LinkObject(a, o); }
         }

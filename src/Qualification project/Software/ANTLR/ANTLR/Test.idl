@@ -1,7 +1,0 @@
-class Artis
-{
-	Integer Vecums;
-	String Vards;
-	Boolean IrStudents;
-	Real Nauda;
-}

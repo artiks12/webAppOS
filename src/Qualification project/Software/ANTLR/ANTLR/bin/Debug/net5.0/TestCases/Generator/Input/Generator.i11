@@ -1,0 +1,5 @@
+class test1 {}
+class test2 : test1{}
+
+association(source1:test1<->target1:test1)
+association(source2:test2<->target2:test1)

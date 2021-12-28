@@ -178,7 +178,7 @@ namespace AntlrCSharp
         {
             string sourceClass;
             string targetClass = a.Class.ClassName;
-            string targetName = a.Class.ClassName;
+            string targetName = a.RoleName;
 
             if (a.IsSource == true) { sourceClass = _association.Target.Class.ClassName; }
             else { sourceClass = _association.Source.Class.ClassName; }
