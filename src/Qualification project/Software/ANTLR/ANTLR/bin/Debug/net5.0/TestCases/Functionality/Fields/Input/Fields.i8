@@ -1,15 +1,16 @@
-class test1
-{
-}
-
-class test2
-{
-}
+class test1{}
+class test2{}
 
 association
-(test:test2
+(
+test
+:
+test2
 <->
-target:test1)
+target
+:
+test1
+)
 
 class test3 : test1
 {
