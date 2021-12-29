@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace WebAppOS
 {
@@ -58,14 +59,26 @@ namespace WebAppOS
         /// </summary>
         /// <param name="roleName">Asociācijas galapunkta lomas vārds</param>
         /// <param name="oTarget">Mērķa klase</param>
-        public void LinkObject(string roleName, WebObject oTarget) { _k.createLink(_r, oTarget._r, _k.findAssociationEnd(_r,roleName)); }
+        public void LinkObject(string roleName, WebObject oTarget) 
+        {
+            var classes = Classes();
+            foreach (var c in classes) 
+            {
+                var a = _k.findAssociationEnd(c.GetReference, roleName);
+                if (a != 0) 
+                {
+                    _k.createLink(_r, oTarget._r, a);
+                    break;
+                }
+            }
+        }
 
         /// <summary>
         /// Sasaista objektus, izmantojot Asociācijas galapunktu.
         /// </summary>
         /// <param name="a">Asociācijas galapunkts</param>
         /// <param name="oTarget">Mērķa klase</param>
-        public void LinkObject(WebAssociationEnd a, WebObject oTarget) { _k.createLink(_r, oTarget._r, _k.findAssociationEnd(_r, a.Name)); }
+        public bool LinkObject(WebAssociationEnd a, WebObject oTarget) { return _k.createLink(_r, oTarget._r, a.GetReference); }
 
         /// <summary>
         /// Izmet vecos linkus (dObject) ar deleteLink funkciju un tad pielikt klāt elementus no oList

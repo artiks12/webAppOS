@@ -26,7 +26,7 @@ namespace TestProgram
 
             _class2 _item2_1 = new(memory, calls);
 
-            List<_class6> list = _item2_1.target1;
+            List<_class6> list = new();
             Console.WriteLine(list.Count);
 
             list.Add(_item6_1);

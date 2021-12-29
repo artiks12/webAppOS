@@ -2,6 +2,7 @@ using WebAppOS;
 using System.Text.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Test
 {
@@ -39,7 +40,7 @@ namespace Test
             {
                 var c = _wm.FindClassByName( "_class2" );
                 var a = c.FindTargetAssociationEndByName( "target1" );
-                var list = _object.LinkedObjects(a);
+                var list = _object.LinkedObjects(a).ToList();
                 List<_class6> result = new();
                 foreach (var l in list)
                 {

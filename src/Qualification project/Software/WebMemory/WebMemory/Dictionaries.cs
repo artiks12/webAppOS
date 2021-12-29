@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace WebAppOS
 {
@@ -27,15 +28,26 @@ namespace WebAppOS
         public static Dictionary<long, WebObject> D_GetLinkedObjects(long rObject, TDAKernel _k, IWebMemory _m, string roleName)
         {
             Dictionary<long, WebObject> d = new();
-            var it = _k.getIteratorForLinkedObjects(rObject, _k.findAssociationEnd(rObject, roleName));
-            var r = _k.resolveIteratorFirst(it);
-            while (r != 0)
+            
+            var classes = D_GetObjectClasses(rObject,_k,_m);
+            IEnumerable<WebClass> query = from i in classes select i.Value;
+            foreach (var c in query)
             {
-                WebObject o = new(r, _m);
-                d.Add(r, o);
-                r = _k.resolveIteratorNext(it);
+                var a = _k.findAssociationEnd(c.GetReference, roleName);
+                if (a != 0)
+                {
+                    var it = _k.getIteratorForLinkedObjects(rObject, a);
+                    var r = _k.resolveIteratorFirst(it);
+                    while (r != 0)
+                    {
+                        WebObject o = new(r, _m);
+                        d.Add(r, o);
+                        r = _k.resolveIteratorNext(it);
+                    }
+                    _k.freeIterator(it);
+                    break;
+                }
             }
-            _k.freeIterator(it);
             return d;
         }
 
