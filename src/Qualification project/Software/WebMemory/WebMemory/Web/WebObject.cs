@@ -65,7 +65,7 @@ namespace WebAppOS
             if (c != null) 
             {
                 var a = _k.findAssociationEnd(c.GetReference, roleName);
-                _k.createLink(_r, oTarget._r, a);
+                LinkObject(new WebAssociationEnd(a, _m), oTarget);
             }
         }
 
@@ -77,6 +77,28 @@ namespace WebAppOS
         public void LinkObject(WebAssociationEnd a, WebObject oTarget) { _k.createLink(_r, oTarget._r, a.GetReference); }
 
         /// <summary>
+        /// Izdzēš objektu saiti, izmantojot Asociācijas galapunkta lomas vārdu.
+        /// </summary>
+        /// <param name="roleName">Asociācijas galapunkta lomas vārds</param>
+        /// <param name="oTarget">Mērķa klase</param>
+        public void UnlinkObject(string roleName, WebObject oTarget) 
+        {
+            var c = getAssociationClassByRoleName(roleName);
+            if (c != null)
+            {
+                var a = _k.findAssociationEnd(c.GetReference, roleName);
+                UnlinkObject(new WebAssociationEnd(a, _m), oTarget);
+            }
+        }
+
+        /// <summary>
+        /// Izdzēš objektu saiti, izmantojot Asociācijas galapunktu.
+        /// </summary>
+        /// <param name="a">Asociācijas galapunkts</param>
+        /// <param name="oTarget">Mērķa klase</param>
+        public void UnlinkObject(WebAssociationEnd a, WebObject oTarget) { _k.deleteLink(_r, oTarget.GetReference, a.GetReference); }
+
+        /// <summary>
         /// Izmet vecos linkus (dObject) ar deleteLink funkciju un tad pielikt klāt elementus no oList
         /// </summary>
         /// <param name="a"></param>
@@ -85,7 +107,7 @@ namespace WebAppOS
         {
             List<WebObject> links = LinkedObjects(a).ToList();
             
-            foreach (var o in links) { _k.deleteLink(_r, o.GetReference, a.GetReference); }
+            foreach (var o in links) { UnlinkObject(a, o); }
             
             foreach (var o in oList) { LinkObject(a, o); }
         }
@@ -98,9 +120,7 @@ namespace WebAppOS
         {
             var c = getAssociationClassByRoleName(roleName);
             var a = _k.findAssociationEnd(c.GetReference,roleName);
-            var d = Dictionaries.D_GetLinkedObjects(_r , a, _k, _m);
-            IEnumerable<WebObject> query = from i in d select i.Value;
-            return query;
+            return LinkedObjects(new WebAssociationEnd(a,_m));
         }
 
         /// <summary>
