@@ -61,15 +61,11 @@ namespace WebAppOS
         /// <param name="oTarget">Mērķa klase</param>
         public void LinkObject(string roleName, WebObject oTarget) 
         {
-            var classes = Classes();
-            foreach (var c in classes) 
+            var c = getAssociationClassByRoleName(roleName);
+            if (c != null) 
             {
                 var a = _k.findAssociationEnd(c.GetReference, roleName);
-                if (a != 0) 
-                {
-                    _k.createLink(_r, oTarget._r, a);
-                    break;
-                }
+                _k.createLink(_r, oTarget._r, a);
             }
         }
 
@@ -78,7 +74,7 @@ namespace WebAppOS
         /// </summary>
         /// <param name="a">Asociācijas galapunkts</param>
         /// <param name="oTarget">Mērķa klase</param>
-        public bool LinkObject(WebAssociationEnd a, WebObject oTarget) { return _k.createLink(_r, oTarget._r, a.GetReference); }
+        public void LinkObject(WebAssociationEnd a, WebObject oTarget) { _k.createLink(_r, oTarget._r, a.GetReference); }
 
         /// <summary>
         /// Izmet vecos linkus (dObject) ar deleteLink funkciju un tad pielikt klāt elementus no oList
@@ -100,7 +96,9 @@ namespace WebAppOS
         /// <param name="roleName">Asociācijas galapunkta lomas vārds</param>
         public IEnumerable<WebObject> LinkedObjects(string roleName)
         {
-            var d = Dictionaries.D_GetLinkedObjects(_r,_k,_m,roleName);
+            var c = getAssociationClassByRoleName(roleName);
+            var a = _k.findAssociationEnd(c.GetReference,roleName);
+            var d = Dictionaries.D_GetLinkedObjects(_r , a, _k, _m);
             IEnumerable<WebObject> query = from i in d select i.Value;
             return query;
         }
@@ -111,7 +109,7 @@ namespace WebAppOS
         /// <param name="a">Asociācijas galapunkts</param>
         public IEnumerable<WebObject> LinkedObjects(WebAssociationEnd a)
         {
-            var d = Dictionaries.D_GetLinkedObjects(_r, _k, _m, a.Name);
+            var d = Dictionaries.D_GetLinkedObjects(_r, a.GetReference, _k, _m);
             IEnumerable<WebObject> query = from i in d select i.Value;
             return query;
         }
@@ -131,5 +129,20 @@ namespace WebAppOS
         /// </summary>
         /// <returns></returns>
         public long GetReference { get { return _r; } }
+
+        /// <summary>
+        /// Atrod asociācijas avota klasi pēc lomas vārda
+        /// </summary>
+        /// <param name="targetRoleName">Asociācijas mērķa lomas vārds</param>
+        public WebClass getAssociationClassByRoleName(string targetRoleName) 
+        {
+            var classes = Classes();
+            foreach (var c in classes)
+            {
+                var a = _k.findAssociationEnd(c.GetReference, targetRoleName);
+                if (a != 0) { return c; }
+            }
+            return null;
+        }
     }
 }

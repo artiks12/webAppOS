@@ -25,29 +25,18 @@ namespace WebAppOS
         /// <summary>
         /// Iegūst objekta saistītos objektus
         /// </summary>
-        public static Dictionary<long, WebObject> D_GetLinkedObjects(long rObject, TDAKernel _k, IWebMemory _m, string roleName)
+        public static Dictionary<long, WebObject> D_GetLinkedObjects(long rObject, long rAssociationEnd, TDAKernel _k, IWebMemory _m)
         {
             Dictionary<long, WebObject> d = new();
-            
-            var classes = D_GetObjectClasses(rObject,_k,_m);
-            IEnumerable<WebClass> query = from i in classes select i.Value;
-            foreach (var c in query)
+            var it = _k.getIteratorForLinkedObjects(rObject, rAssociationEnd);
+            var r = _k.resolveIteratorFirst(it);
+            while (r != 0)
             {
-                var a = _k.findAssociationEnd(c.GetReference, roleName);
-                if (a != 0)
-                {
-                    var it = _k.getIteratorForLinkedObjects(rObject, a);
-                    var r = _k.resolveIteratorFirst(it);
-                    while (r != 0)
-                    {
-                        WebObject o = new(r, _m);
-                        d.Add(r, o);
-                        r = _k.resolveIteratorNext(it);
-                    }
-                    _k.freeIterator(it);
-                    break;
-                }
+                WebObject o = new(r, _m);
+                d.Add(r, o);
+                r = _k.resolveIteratorNext(it);
             }
+            _k.freeIterator(it);
             return d;
         }
 
