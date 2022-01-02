@@ -23,6 +23,6 @@ class test1
 	public
 	Integer 
 	test
-	()
+	(Integer a)
 	;
 }

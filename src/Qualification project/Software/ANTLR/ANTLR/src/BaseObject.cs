@@ -60,11 +60,6 @@ namespace AntlrCSharp
             sw.WriteLine("            _wm = wm;");
             sw.WriteLine("            _wc = wc;");
             sw.WriteLine("        }\n");
-
-            sw.WriteLine("        protected BaseObject ( IWebMemory wm )");
-            sw.WriteLine("        {");
-            sw.WriteLine("            _wm = wm;");
-            sw.WriteLine("        }\n");
         }
 
         /// <summary>

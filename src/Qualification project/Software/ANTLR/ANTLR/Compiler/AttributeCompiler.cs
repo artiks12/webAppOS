@@ -190,8 +190,13 @@ namespace AntlrCSharp
 				if (v.Name == context.GetText() && v.Protection == "public")
 				{
 					// Pārbauda, vai sakrītošajiem atribūtiem ir vienāds datu tips
-					if (v.Type != _attribute.Type) { Errors.Add("At line " + context.Start.Line + ": attribute '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' , does not have the same datatype! Check line " + v.Line + "!"); }
-					return false;
+					if (v.Type != _attribute.Type) 
+					{ 
+						Errors.Add("At line " + context.Start.Line + ": attribute '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' , does not have the same datatype! Check line " + v.Line + "!"); 
+						return false; 
+					}
+					_attribute.generate = false;
+					return true;
 				}
 			}
 

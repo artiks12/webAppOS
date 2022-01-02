@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            test6();
+            test1();
             
         }
     }

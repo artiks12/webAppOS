@@ -23,8 +23,14 @@ namespace AntlrCSharp
 			_method.generate = true;
 			_urlFound = false;
 
-			var methodBody = context.fieldDefinition().attributeDefinition();
-			var argumentBody = context.fieldDefinition().methodDefinition();
+			AttributeDefinitionContext methodBody = null;
+			MethodDefinitionContext argumentBody = null;
+			var temp = context.fieldDefinition();
+			if (temp != null) 
+			{
+				methodBody = temp.attributeDefinition();
+				argumentBody = temp.methodDefinition();
+			}
 
 			uint line = (uint)context.Start.Line; ; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
@@ -216,10 +222,13 @@ namespace AntlrCSharp
 				// Pārbauda, vai metožu vārdi sakrīt
 				if (m.Name == context.GetText() && m.Protection == "public")
 				{
+					bool error = true;
+
 					// Pārbauda, vai metodēm sakrīt datu tipi
 					if (m.Type != _method.Type)
 					{
 						Errors.Add("At line " + context.Start.Line + ": Method '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' , does not have the same datatype! Check line " + m.Line + "!");
+						error = false;
 					}
 
 					// Pārbauda, vai metožu argumentu skaits sakrīt
@@ -235,6 +244,7 @@ namespace AntlrCSharp
 								if (m.Arguments[x].Type != _method.Arguments[x].Type)
 								{
 									Errors.Add("At line " + _method.Arguments[x].Line + ": Argument No. " + (x + 1) + ", does not have the same datatype as in '" + _checkClass.ClassName + "'! Check line " + m.Arguments[x].Line + "!");
+									error = false;
 								}
 							}
 						}
@@ -242,8 +252,11 @@ namespace AntlrCSharp
 					else
 					{
 						Errors.Add("At line " + context.Start.Line + ": Method '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' does not have equal amount of arguments! Check line " + m.Line + "!");
+						error = false;
 					}
-					return false;
+
+					if (error == true) { _method.generate = false; }
+					return true;
 				}
 			}
 

@@ -1,2 +1,2 @@
-At line 6: association source role name cannot be 'BaseObject'!
-At line 10: association target role name cannot be 'BaseObject'!
+At line 6: A role name cannot start with '_constructor_'!
+At line 10: A role name cannot start with '_constructor_'!

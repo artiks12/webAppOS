@@ -10,21 +10,16 @@ namespace Test
         public WebObject _object;
 
 
-        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc )
+        protected BaseObject ( IWebMemory wm , IRemoteWebCalls wc )
         {
             _wm = wm;
             _wc = wc;
         }
 
-        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )
+        protected BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )
         {
             _wm = wm;
             _wc = wc;
-        }
-
-        public BaseObject ( IWebMemory wm )
-        {
-            _wm = wm;
         }
 
         protected bool checkClass( List<string> attributes , string className )
@@ -62,6 +57,25 @@ namespace Test
                 if (Composition == "true") { isComposition = true; }
                 else { isComposition = false; }
                 cSource.CreateAssociation( cTarget, sourceName, targetName, isComposition);
+            }
+        }
+
+        protected void _constructor_test1()
+        {
+            List<string> attributes = new() {  };
+            var o = checkClass( attributes , "test1" );
+        }
+
+        protected void _constructor_test2()
+        {
+            List<string> attributes = new() {  };
+            var o = checkClass( attributes , "test2" );
+            if(o == false)
+            {
+               // SuperClass Check
+               _constructor_test1();
+               var c = _wm.FindClassByName( "test2");
+               c.CreateGeneralization( "test1");
             }
         }
     }

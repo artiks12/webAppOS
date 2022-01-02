@@ -15,7 +15,7 @@ namespace AntlrCSharp
 		public List<Class> Classes; // Saraksts ar klasēm.
 		public List<Association> Associations; // Saraksts ar asociācijām.
 		public List<string> Errors; // Saraksts ar kļūdām.
-		public List<string> Reserved = new() { "class", "association", "Void" , "Integer", "String", "Boolean", "Real", "private", "public", "BaseObject" , "_constructor" , "_wm" , "_wc" , "_object" }; // Saraksts ar rezervētajiem vārdiem.
+		public List<string> Reserved = new() { "class", "association", "Void" , "Integer", "String", "Boolean", "Real", "private", "public", "BaseObject" , "URL" , "_constructor" , "_wm" , "_wc" , "_object" }; // Saraksts ar rezervētajiem vārdiem.
 
 		private List<string> AnnotationTypes = new() { "path" }; // Saraksts ar anotāciju tipiem
 		private List<string> URLProtocols = new() { "staticJava", "dotnet" , "python3" }; // Saraksts ar URL Valodu protokoliem
@@ -175,8 +175,11 @@ namespace AntlrCSharp
 				Errors.Add("'" + _namespace + "' is in incorrect format!");
 			}
 
-			// Apstaigā kodu
-			VisitChildren(context);
+			if (_namespace == "Test") 
+			{
+				// Apstaigā kodu
+				VisitChildren(context);
+			}
 
 			// Pārbauda, vai kodā nav kļūdu. Ja nav, tad ģenerējam starpkodu
 			if (Errors.Count != 0)
@@ -184,7 +187,7 @@ namespace AntlrCSharp
 				Console.WriteLine("");
 				Console.WriteLine("Compilation unsuccessful! See errors in file " + outFile + "!");
 				
-				using (StreamWriter sw = new StreamWriter(outFile+"Errors.out"))
+				using (StreamWriter sw = new StreamWriter(outFile))
 				{
 					foreach (var error in Errors)
 					{
@@ -198,9 +201,20 @@ namespace AntlrCSharp
 				{
 					Program.Test(_namespace, outFile);
 				}
+				else 
+				{
+					using (StreamWriter sw = new StreamWriter(outFile))
+					{
+						foreach (var error in Errors)
+						{
+							sw.WriteLine(error);
+						}
+					}
+				}
 
 				Console.WriteLine("");
 				Console.WriteLine("Compilation successful!");
+				
 			}
 		}
 	}

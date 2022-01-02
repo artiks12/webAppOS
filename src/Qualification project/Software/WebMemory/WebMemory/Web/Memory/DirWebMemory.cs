@@ -27,7 +27,7 @@ namespace WebAppOS
 
         /// <summary>
         /// Iegūst TDAKernel instanci
-        /// </summary?
+        /// </summary>
         public TDAKernel GetTDAKernel() { return _k; }
         
         /// <summary>
@@ -75,10 +75,17 @@ namespace WebAppOS
         /// Izdzēš klasi
         /// </summary>
         /// <param name="name">klases vārds</param>
-        public void DeleteClass(string name)
+        public int DeleteClass(string name)
         {
             var c = FindClassByName(name);
-            if(c != null) { _k.deleteClass(c.GetReference); }
+            if (c != null)
+            {
+                Console.WriteLine("Class: " + c.GetReference);
+                var result = _k.deleteClass(c.GetReference);
+                if (result == false) { return 0; }
+                else { return 1; }
+            }
+            return -1;
         }
     }
 }

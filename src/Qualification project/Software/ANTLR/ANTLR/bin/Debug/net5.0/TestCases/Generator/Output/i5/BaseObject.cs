@@ -10,21 +10,16 @@ namespace Test
         public WebObject _object;
 
 
-        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc )
+        protected BaseObject ( IWebMemory wm , IRemoteWebCalls wc )
         {
             _wm = wm;
             _wc = wc;
         }
 
-        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )
+        protected BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )
         {
             _wm = wm;
             _wc = wc;
-        }
-
-        public BaseObject ( IWebMemory wm )
-        {
-            _wm = wm;
         }
 
         protected bool checkClass( List<string> attributes , string className )
@@ -63,6 +58,12 @@ namespace Test
                 else { isComposition = false; }
                 cSource.CreateAssociation( cTarget, sourceName, targetName, isComposition);
             }
+        }
+
+        protected void _constructor_test1()
+        {
+            List<string> attributes = new() { "_int" , "Integer" , "_str" , "String" , "_bool" , "Boolean" , "_double" , "Real" };
+            var o = checkClass( attributes , "test1" );
         }
     }
 }

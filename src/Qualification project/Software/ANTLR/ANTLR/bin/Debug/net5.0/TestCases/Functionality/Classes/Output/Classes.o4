@@ -1,2 +1,1 @@
-At line 2: A class cannot be named 'URL'!
-At line 4: A class cannot be named 'BaseObject'!
+At line 4: There is no class 'test2' for class 'test1' to inherit from!

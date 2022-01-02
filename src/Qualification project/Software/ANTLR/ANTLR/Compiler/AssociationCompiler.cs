@@ -55,7 +55,7 @@ namespace AntlrCSharp
 				if (context.associationSource().COLON() == null) 
 				{
 					line = (uint)context.associationSource().associationSourceName().Stop.Line; // Ja kola nav, tad noteikti ir lomas vārds
-					Errors.Add("At line " + line + ": Syntax error! Missing ':'!"); 
+					Errors.Add("At line " + line + ": Syntax error! Missing ':' at source definition!"); 
 				}
 
 				line = (uint)context.associationSource().Stop.Line;
@@ -78,7 +78,7 @@ namespace AntlrCSharp
 				if (context.associationTarget().COLON() == null) 
 				{
 					line = (uint)context.associationTarget().associationTargetName().Stop.Line; // Ja kola nav, tad noteikti ir lomas vārds
-					Errors.Add("At line " + line + ": Syntax error! Missing ':'!"); 
+					Errors.Add("At line " + line + ": Syntax error! Missing ':' at target definition!"); 
 				}
 			}
 
@@ -244,18 +244,20 @@ namespace AntlrCSharp
 		/// </summary>
 		public object VisitAssociationRoleName(string roleName, Class associationClass, uint line, bool IsSource) 
 		{
+			string direction = IsSource ? "source" : "target";
+
 			// Pārbauda, vai lomas vārds nesakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved)
 			{
 				if (r == roleName)
 				{
-					Errors.Add("At line " + line + ": association source role name cannot be '" + r + "'!");
+					Errors.Add("At line " + line + ": association " + direction + " role name cannot be '" + r + "'!");
 					return null;
 				}
 			}
 
 			// Pārbauda, vai lomas vārds nesākas ar "_constructor_"
-			if (roleName.StartsWith("_constructor_")) { Errors.Add("At line " + line + ": A role name cannot start with '_constructor_'!"); }
+			if (roleName.StartsWith("_constructor_")) { Errors.Add("At line " + line + ": Association " + direction + " role name cannot start with '_constructor_'!"); }
 
 			// Parbauda, vai ir defineta klase, kurā tiks likts skatāmais lomas vārds
 			if (associationClass != null)
@@ -263,7 +265,7 @@ namespace AntlrCSharp
 				// Pārbauda, vai lomas vārds nesakrīt ar pretējās klases vārdu
 				if (roleName == associationClass.ClassName)
 				{
-					Errors.Add("At line " + line + ": association source role name cannot be '" + roleName + "'!");
+					Errors.Add("At line " + line + ": association " + direction + " role name cannot be '" + roleName + "'!");
 					return null;
 				}
 

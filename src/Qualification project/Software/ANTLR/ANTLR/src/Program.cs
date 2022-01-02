@@ -13,6 +13,7 @@ namespace AntlrCSharp
     {
         private static Compiler compiler; // Kompilatora objekts
 
+        /*
         /// <summary>
         /// Programmas galvenā funkcija
         /// </summary>
@@ -49,9 +50,9 @@ namespace AntlrCSharp
 
             compiler.Compile(codeContext, _namespace); // Kompilējam kodu
         }
-        
+        */
 
-        /*
+        
         /// <summary>
         /// Testēšanai
         /// </summary>
@@ -79,6 +80,7 @@ namespace AntlrCSharp
             }
 
             string _namespace = "Test";
+            
             int length = Directory.GetFiles(path+"/Input/").Length;
 
             for (int count = 1; count <= length; count++) 
@@ -97,6 +99,11 @@ namespace AntlrCSharp
                     text = sr.ReadToEnd();
                 }
 
+                if (filename == "Namespaces")
+                {
+                    _namespace = text;
+                }
+
                 // Sagatavojam lekseri un parseri
                 AntlrInputStream input = new AntlrInputStream(text);
                 LanguageLexer lexer = new LanguageLexer(input);
@@ -112,6 +119,5 @@ namespace AntlrCSharp
                 Console.WriteLine("\n");
             }
         }
-        */
     }
 }

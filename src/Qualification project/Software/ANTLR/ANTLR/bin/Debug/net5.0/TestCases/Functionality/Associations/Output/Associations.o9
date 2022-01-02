@@ -1,2 +1,1 @@
-At line 18: a field with name 'test2' already exists in class 'targetClass'! Check line 11!
-At line 22: a field with name 'test1' already exists in class 'sourceClass'! Check line 4!
+At line 18: an association end with role name 'test2' already exists in class 'targetClass'! Check line 7!

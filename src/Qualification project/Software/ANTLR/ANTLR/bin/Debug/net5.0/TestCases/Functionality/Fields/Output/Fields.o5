@@ -1,2 +1,4 @@
-At line 19: a field with name 'test' already exists in superclass 'test1'! Check line 11!
-At line 25: a field with name 'test' already exists in superclass 'test1'! Check line 11!
+At line 22: a field with name 'test' already exists in class 'test2'! Check line 16!
+At line 31: a field with name 'test' already exists in superclass 'test2'! Check line 16!
+At line 37: Method 'test' , that exists in superclass 'test2' , does not have the same datatype! Check line 16!
+At line 37: Method 'test' , that exists in superclass 'test1' , does not have the same datatype! Check line 6!

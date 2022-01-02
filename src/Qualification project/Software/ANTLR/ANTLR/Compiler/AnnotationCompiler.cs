@@ -78,8 +78,7 @@ namespace AntlrCSharp
                 if (_urlFound == true) { Errors.Add("At line " + context.Start.Line + ": a definition for URL for method '" + _method.Name + "' is already given! Check line " + _method.URL.Line + "!"); }
                 else
                 {
-                    _method.URL = new();
-                    _method.URL.Line = _annotationLine;
+                    _urlFound = true;
                 }
             }
             else
@@ -155,15 +154,19 @@ namespace AntlrCSharp
             if (_isUrl == true)
             {
                 // Pārbauda, vai metodei jau ir definēts URL
-                if (_urlFound == false)
+                if (_urlFound == true)
                 {
-                    // Pārbauda, vai ir doti URL būtiskie attribūti
-                    if (context.urlAttributes() == null) { Errors.Add("At line " + context.Start.Line + ": URL attributes for method '" + _method.Name + "' are not given!"); }
-                    else
+                    if (_method.URL == null) 
                     {
-                        VisitUrlAttributes(context.urlAttributes());
-                        _method.URL.MethodPath = context.annotationAttributes().GetText();
-                        _urlFound = true;
+                        _method.URL = new();
+                        _method.URL.Line = _annotationLine;
+                        // Pārbauda, vai ir doti URL būtiskie attribūti
+                        if (context.urlAttributes() == null) { Errors.Add("At line " + context.Start.Line + ": URL attributes for method '" + _method.Name + "' are not given!"); }
+                        else
+                        {
+                            VisitUrlAttributes(context.urlAttributes());
+                            _method.URL.MethodPath = context.annotationAttributes().GetText();
+                        }
                     }
                 }
             }

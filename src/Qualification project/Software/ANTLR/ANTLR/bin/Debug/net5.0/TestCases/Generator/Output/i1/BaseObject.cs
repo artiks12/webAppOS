@@ -9,21 +9,16 @@ namespace Test
         protected static IRemoteWebCalls _wc;
         public WebObject _object;
 
-        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc )
+        protected BaseObject ( IWebMemory wm , IRemoteWebCalls wc )
         {
             _wm = wm;
             _wc = wc;
         }
 
-        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )
+        protected BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )
         {
             _wm = wm;
             _wc = wc;
-        }
-
-        public BaseObject ( IWebMemory wm )
-        {
-            _wm = wm;
         }
 
         protected bool checkClass( List<string> attributes , string className )

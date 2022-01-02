@@ -10,21 +10,16 @@ namespace Test
         public WebObject _object;
 
 
-        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc )
+        protected BaseObject ( IWebMemory wm , IRemoteWebCalls wc )
         {
             _wm = wm;
             _wc = wc;
         }
 
-        public BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )
+        protected BaseObject ( IWebMemory wm , IRemoteWebCalls wc , long rObject )
         {
             _wm = wm;
             _wc = wc;
-        }
-
-        public BaseObject ( IWebMemory wm )
-        {
-            _wm = wm;
         }
 
         protected bool checkClass( List<string> attributes , string className )
@@ -62,6 +57,42 @@ namespace Test
                 if (Composition == "true") { isComposition = true; }
                 else { isComposition = false; }
                 cSource.CreateAssociation( cTarget, sourceName, targetName, isComposition);
+            }
+        }
+
+        protected void _constructor_test1()
+        {
+            List<string> attributes = new() { "_int" , "Integer" , "_double" , "Real" };
+            var o = checkClass( attributes , "test1" );
+            if(o == false)
+            {
+               // Association classes Check
+               List<string> associations = new() { "source1" , "target1" , "test2" , "false" , "target2" , "source2" , "test2" , "false" , "target3" , "source3" , "test2" , "true" , "source4" , "target4" , "test2" , "true" };
+               _constructor_test2();
+               for(int x=0; x<associations.Count; x+=4)
+               {
+                   checkAssociationEnd( associations[x] , associations[x+1] , "test1" , associations[x+2] ,  associations[x+3] );
+               }
+            }
+        }
+
+        protected void _constructor_test2()
+        {
+            List<string> attributes = new() {  };
+            var o = checkClass( attributes , "test2" );
+            if(o == false)
+            {
+               // SuperClass Check
+               _constructor_test1();
+               var c = _wm.FindClassByName( "test2");
+               c.CreateGeneralization( "test1");
+
+               // Association classes Check
+               List<string> associations = new() { "target1" , "source1" , "test1" , "false" , "source2" , "target2" , "test1" , "false" , "source3" , "target3" , "test1" , "true" , "target4" , "source4" , "test1" , "true" };
+               for(int x=0; x<associations.Count; x+=4)
+               {
+                   checkAssociationEnd( associations[x] , associations[x+1] , "test2" , associations[x+2] ,  associations[x+3] );
+               }
             }
         }
     }

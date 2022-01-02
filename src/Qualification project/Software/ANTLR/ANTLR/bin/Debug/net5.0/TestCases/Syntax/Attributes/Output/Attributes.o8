@@ -1,2 +1,1 @@
-At line 4: Syntax error! Missing ';'!
-At line 6: Syntax error! Missing ';'!
+At line 4: 'class' is not a valid data type for attribute!

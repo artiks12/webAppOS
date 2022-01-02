@@ -36,6 +36,6 @@ namespace WebAppOS
         /// Izdzēš klasi
         /// </summary>
         /// <param name="name">klases vārds</param>
-        public void DeleteClass(string name);
+        public int DeleteClass(string name);
     }
 }

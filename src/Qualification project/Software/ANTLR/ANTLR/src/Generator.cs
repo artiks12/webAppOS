@@ -135,14 +135,17 @@ namespace AntlrCSharp
 
                 foreach (var a in _class.Attributes)
                 {
-                    // Ģenerē īpašības "galvu"
-                    sw.Write("\n        " + a.Protection + " " + a.Type + " " + a.Name + " \n");
+                    if (a.generate == true) 
+                    {
+                        // Ģenerē īpašības "galvu"
+                        sw.Write("\n        " + a.Protection + " " + a.Type + " " + a.Name + " \n");
 
-                    // Ģenerē īpašības "ķermeni"
-                    sw.Write("        {\n");
-                    sw.WriteLine("            get { " + a.GetValue + "; }");
-                    sw.WriteLine("            set { _object[\"" + a.Name + "\"] = Convert.ToString( value ); }");
-                    sw.Write("        }\n");
+                        // Ģenerē īpašības "ķermeni"
+                        sw.Write("        {\n");
+                        sw.WriteLine("            get { " + a.GetValue + "; }");
+                        sw.WriteLine("            set { _object[\"" + a.Name + "\"] = Convert.ToString( value ); }");
+                        sw.Write("        }\n");
+                    }
                 }
             }
         }
@@ -223,33 +226,36 @@ namespace AntlrCSharp
 
                 foreach (var m in _class.Methods)
                 {
-                    // Ģenerē metodes "galvu"
-                    sw.Write("\n        " + m.Protection + " " + m.Type + " " + m.Name + " ");
-
-                    generateArguments(sw,m); // Argumentu ģenerēšana
-
-                    // Ģenerē metodes "ķermeni"
-                    sw.WriteLine("        {");
-                    sw.WriteLine("            string arguments = JsonSerializer.Serialize( new { " + argumentList(m.Arguments) + " } );");
-                    sw.WriteLine("            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference , \"" + m.Name + "\" , arguments );");
-                    sw.WriteLine("            var json = JsonDocument.Parse(result);");
-                    sw.WriteLine("            JsonElement errorMessage;");
-                    sw.WriteLine("            if (json.RootElement.TryGetAttribute(\"error\", out errorMessage) == true)");
-                    sw.WriteLine("            {");
-                    sw.WriteLine("                throw new Exception(errorMessage.GetString());");
-                    sw.WriteLine("            }");
-
-                    // Neģenerējam, ja metodes tips ir void.
-                    if (m.Type != "void") 
+                    if (m.generate == true) 
                     {
-                        sw.WriteLine("            else");
+                        // Ģenerē metodes "galvu"
+                        sw.Write("\n        " + m.Protection + " " + m.Type + " " + m.Name + " ");
+
+                        generateArguments(sw, m); // Argumentu ģenerēšana
+
+                        // Ģenerē metodes "ķermeni"
+                        sw.WriteLine("        {");
+                        sw.WriteLine("            string arguments = JsonSerializer.Serialize( new { " + argumentList(m.Arguments) + " } );");
+                        sw.WriteLine("            string result = _wc.WebCall( _wm.GetTDAKernel() , _object.GetReference , \"" + m.Name + "\" , arguments );");
+                        sw.WriteLine("            var json = JsonDocument.Parse(result);");
+                        sw.WriteLine("            JsonElement errorMessage;");
+                        sw.WriteLine("            if (json.RootElement.TryGetAttribute(\"error\", out errorMessage) == true)");
                         sw.WriteLine("            {");
-                        sw.WriteLine("                var r = json.RootElement.GetAttribute(\"result\");");
-                        sw.WriteLine("                " + m.ReturnValue);
+                        sw.WriteLine("                throw new Exception(errorMessage.GetString());");
                         sw.WriteLine("            }");
+
+                        // Neģenerējam, ja metodes tips ir void.
+                        if (m.Type != "void")
+                        {
+                            sw.WriteLine("            else");
+                            sw.WriteLine("            {");
+                            sw.WriteLine("                var r = json.RootElement.GetAttribute(\"result\");");
+                            sw.WriteLine("                " + m.ReturnValue);
+                            sw.WriteLine("            }");
+                        }
+
+                        sw.WriteLine("        }");
                     }
-                    
-                    sw.WriteLine("        }");
                 }
             }
         }

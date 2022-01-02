@@ -20,13 +20,14 @@ namespace TestProgram
                 Console.WriteLine(c.Name);
             }
 
-            if (memory.FindClassByName("Frame") != null) { Console.WriteLine(memory.FindClassByName("Frame").Name); }
-            else { Console.WriteLine("Class 'Frame' not found!"); }
+            if (memory.FindClassByName("CSV") != null) { Console.WriteLine(memory.FindClassByName("CSV").Name); }
+            else { Console.WriteLine("Class 'CSV' not found!"); }
             
-            memory.DeleteClass("Frame");
+            Console.WriteLine(memory.DeleteClass("CSV"));
+            Console.WriteLine(memory.DeleteClass("CSV"));
 
-            if (memory.FindClassByName("Frame") != null){ Console.WriteLine(memory.FindClassByName("Frame").Name); }
-            else { Console.WriteLine("Class 'Frame' not found!"); }
+            if (memory.FindClassByName("CSV") != null){ Console.WriteLine(memory.FindClassByName("CSV").Name); }
+            else { Console.WriteLine("Class 'CSV' not found!"); }
 
             return true;
         }
