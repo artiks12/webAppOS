@@ -83,7 +83,7 @@ namespace WebAppOS
                 Console.WriteLine("Class: " + c.GetReference);
                 var result = _k.deleteClass(c.GetReference);
                 if (result == false) { return 0; }
-                else { return 1; }
+                return 1;
             }
             return -1;
         }

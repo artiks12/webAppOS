@@ -75,7 +75,7 @@ namespace AntlrCSharp
                 _isUrl = true;
 
                 // Pārbauda, vai metodei jau ir izveidota url anotācija
-                if (_urlFound == true) { Errors.Add("At line " + context.Start.Line + ": a definition for URL for method '" + _method.Name + "' is already given! Check line " + _method.URL.Line + "!"); }
+                if (_urlFound == true) { Errors.Add("At line " + context.Start.Line + ": a URL definition for method '" + _method.Name + "' is already given! Check line " + _method.URL.Line + "!"); }
                 else
                 {
                     _urlFound = true;

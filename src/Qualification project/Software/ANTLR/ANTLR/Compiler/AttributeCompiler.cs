@@ -93,7 +93,7 @@ namespace AntlrCSharp
 			// Pārbauda, vai atribūta vārds sakrīt ar klases vārdu
 			if (context.GetText() == _class.ClassName)
 			{
-				Errors.Add("At line " + context.Start.Line + ": A attribute cannot be named after class name!");
+				Errors.Add("At line " + context.Start.Line + ": An attribute cannot be named after class name!");
 				return null;
 			}
 			// Pārbauda, vai atribūta vārds sakrīt ar rezervētajiem vārdiem
@@ -101,7 +101,7 @@ namespace AntlrCSharp
 			{
 				if (context.GetText() == r)
 				{
-					Errors.Add("At line " + context.Start.Line + ": A attribute cannot be named '" + r + "'!");
+					Errors.Add("At line " + context.Start.Line + ": An attribute cannot be named '" + r + "'!");
 					return null;
 				}
 			}
@@ -192,7 +192,7 @@ namespace AntlrCSharp
 					// Pārbauda, vai sakrītošajiem atribūtiem ir vienāds datu tips
 					if (v.Type != _attribute.Type) 
 					{ 
-						Errors.Add("At line " + context.Start.Line + ": attribute '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' , does not have the same datatype! Check line " + v.Line + "!"); 
+						Errors.Add("At line " + context.Start.Line + ": Attribute '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' , does not have the same datatype! Check line " + v.Line + "!"); 
 						return false; 
 					}
 					_attribute.generate = false;

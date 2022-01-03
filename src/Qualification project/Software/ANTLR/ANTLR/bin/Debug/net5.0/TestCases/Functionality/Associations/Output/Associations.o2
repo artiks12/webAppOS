@@ -1,2 +1,2 @@
-At line 5: A class cannot be named 'public'!
-At line 9: A class cannot be named 'URL'!
+At line 5: A source class cannot be named 'public'!
+At line 9: A target class cannot be named 'URL'!

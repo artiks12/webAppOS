@@ -4,7 +4,8 @@
     {
         static void Main(string[] args)
         {
-            test1();
+            //WebMemory_test2();
+            WebMemory_test3();
             
         }
     }

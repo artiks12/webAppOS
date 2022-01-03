@@ -54,5 +54,15 @@ namespace WebAppOS
             IEnumerable<WebAssociationEnd> query = from i in d select i.Value;
             return query;
         }
+
+        /// <summary>
+        ///  Saraksts ar izejošo associāciju galapunktiem
+        /// </summary>
+        public IEnumerable<WebObject> Objects()
+        {
+            var d = Dictionaries.D_GetClassObjects(_r, _k, _m);
+            IEnumerable<WebObject> query = from i in d select i.Value;
+            return query;
+        }
     }
 }

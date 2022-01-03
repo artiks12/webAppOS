@@ -123,7 +123,7 @@ namespace AntlrCSharp
 				{
 					if (context.GetText() == r)
 					{
-						Errors.Add("At line " + context.Start.Line + ": A class cannot be named '" + r + "'!");
+						Errors.Add("At line " + context.Start.Line + ": A superclass cannot be named '" + r + "'!");
 						return null;
 					}
 				}

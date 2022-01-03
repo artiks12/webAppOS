@@ -12,11 +12,11 @@ namespace WebAppOS
         {
             Dictionary<long, WebClass> d = new();
             var it = _k.getIteratorForDirectObjectClasses(rObject);
-            var rClass = _k.resolveIteratorFirst(it);
-            while (rClass != 0)
+            var r = _k.resolveIteratorFirst(it);
+            while (r != 0)
             {
-                d.Add(rClass, _m.FindClassByReference(rClass));
-                rClass = _k.resolveIteratorNext(it);
+                if (!d.ContainsKey(r)) { d.Add(r, _m.FindClassByReference(r)); }
+                r = _k.resolveIteratorNext(it);
             }
             _k.freeIterator(it);
             return d;
@@ -33,7 +33,7 @@ namespace WebAppOS
             while (r != 0)
             {
                 WebObject o = new(r, _m);
-                d.Add(r, o);
+                if (!d.ContainsKey(r)) { d.Add(r, o); }
                 r = _k.resolveIteratorNext(it);
             }
             _k.freeIterator(it);
@@ -47,12 +47,12 @@ namespace WebAppOS
         {
             Dictionary<long, WebClass> d = new();
             var it = _k.getIteratorForClasses();
-            var rClass = _k.resolveIteratorFirst(it);
-            while (rClass != 0)
+            var r = _k.resolveIteratorFirst(it);
+            while (r != 0)
             {
-                WebClass c = new(rClass, _m);
-                d.Add(rClass, c);
-                rClass = _k.resolveIteratorNext(it);
+                WebClass c = new(r, _m);
+                if (!d.ContainsKey(r)) { d.Add(r, c); }
+                r = _k.resolveIteratorNext(it);
             }
             _k.freeIterator(it);
             return d;
@@ -69,7 +69,7 @@ namespace WebAppOS
             while (r != 0)
             {
                 WebObject o = new(r, _m);
-                d.Add(r, o);
+                if (!d.ContainsKey(r)) { d.Add(r, o); }
                 r = _k.resolveIteratorNext(it);
             }
             _k.freeIterator(it);
@@ -87,7 +87,7 @@ namespace WebAppOS
             while (r != 0)
             {
                 WebAttribute a = new(r, _m);
-                d.Add(r, a);
+                if (!d.ContainsKey(r)) { d.Add(r, a); }
                 r = _k.resolveIteratorNext(it);
             }
             _k.freeIterator(it);
@@ -105,7 +105,7 @@ namespace WebAppOS
             while (r != 0)
             {
                 WebAssociationEnd e = new(r, _m);
-                d.Add(r, e);
+                if (!d.ContainsKey(r)) { d.Add(r, e); }
                 r = _k.resolveIteratorNext(it);
             }
             _k.freeIterator(it);
@@ -123,7 +123,7 @@ namespace WebAppOS
             while (r != 0)
             {
                 WebAssociationEnd e = new(r, _m);
-                d.Add(r, e);
+                if (!d.ContainsKey(r)) { d.Add(r, e); }
                 r = _k.resolveIteratorNext(it);
             }
             _k.freeIterator(it);
@@ -136,11 +136,11 @@ namespace WebAppOS
         public static Dictionary<long, WebClass> D_GetSuperClasses(long rClass, TDAKernel _k, IWebMemory _m)
         {
             Dictionary<long, WebClass> d = new();
-            var it = _k.getIteratorForDirectSubClasses(rClass);
+            var it = _k.getIteratorForDirectSuperClasses(rClass);
             var r = _k.resolveIteratorFirst(it);
             while (r != 0)
             {
-                d.Add(r, _m.FindClassByReference(r));
+                if (!d.ContainsKey(r)) { d.Add(r, _m.FindClassByReference(r)); }
                 r = _k.resolveIteratorNext(it);
             }
             _k.freeIterator(it);
@@ -157,7 +157,7 @@ namespace WebAppOS
             var r = _k.resolveIteratorFirst(it);
             while (r != 0)
             {
-                d.Add(r, _m.FindClassByReference(r));
+                if (!d.ContainsKey(r)) { d.Add(r, _m.FindClassByReference(r)); }
                 r = _k.resolveIteratorNext(it);
             }
             _k.freeIterator(it);

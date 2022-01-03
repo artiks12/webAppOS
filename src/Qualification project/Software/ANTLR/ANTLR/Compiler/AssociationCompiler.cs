@@ -143,14 +143,16 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Apstaigājam asociācijas klasi
 		/// </summary>
-		public object VisitAssociationClass(string className, int line, bool isSource)
+		public object VisitAssociationClass(string className, int line, bool IsSource)
 		{
+			string direction = IsSource ? "source" : "target";
+
 			// Pārbauda, vai klases vārds nesakrīt ar rezervētajiem vārdiem
 			foreach (var r in Reserved)
 			{
 				if (className == r)
 				{
-					Errors.Add("At line " + line + ": A class cannot be named '" + r + "'!");
+					Errors.Add("At line " + line + ": A " + direction + " class cannot be named '" + r + "'!");
 					return null;
 				}
 			}
@@ -162,7 +164,7 @@ namespace AntlrCSharp
 			{
 				if (Classes[x].ClassName == className)
 				{
-					if (isSource == true)
+					if (IsSource == true)
 					{
 						_source.Class = Classes[x];
 						_sourceClass = x;
@@ -182,7 +184,7 @@ namespace AntlrCSharp
 			{
 				// Sagatavo kļūdas paziņojumu
 				string message;
-				if (isSource == true) { message = "At line " + line + ": there is no class '" + className + "' to use as source class!"; }
+				if (IsSource == true) { message = "At line " + line + ": there is no class '" + className + "' to use as source class!"; }
 				else { message = "At line " + line + ": there is no class '" + className + "' to use as target class!"; }
 				Errors.Add(message); 
 			}

@@ -1,5 +1,5 @@
 class className
 {
-	int 
+	_int 
 	;
 }

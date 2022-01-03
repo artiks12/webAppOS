@@ -1,2 +1,2 @@
-At line 6: Syntax error! Missing ':'!
-At line 9: Syntax error! Missing ':'!
+At line 6: Syntax error! Missing ':' at source definition!
+At line 9: Syntax error! Missing ':' at target definition!
