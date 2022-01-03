@@ -256,7 +256,7 @@ namespace AntlrCSharp
 					}
 
 					if (error == true) { _method.generate = false; }
-					return true;
+					return error;
 				}
 			}
 
