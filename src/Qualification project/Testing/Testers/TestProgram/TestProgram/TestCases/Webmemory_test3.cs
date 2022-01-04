@@ -41,7 +41,7 @@ namespace TestProgram
             else { Console.WriteLine("Class 'ProjectCreatedEvent' not found!"); }
 
             o2.LinkObject("star", o1);
-            o1.LinkObject("crossFilter", o2);
+            o1.LinkObject("star", o2);
 
             if (c != null)
             {

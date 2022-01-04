@@ -11,7 +11,6 @@ namespace TestProgram
         static bool WebMemory_test1() 
         {
             DirWebMemory memory = new();
-            RemoteWebCalls calls = new();
             memory.Open("ar:C:/sample");
 
             var classes = memory.Classes();
@@ -36,10 +35,24 @@ namespace TestProgram
             else { Console.WriteLine("Class '_class1' not found!"); }
 
             Console.WriteLine("");
+            classes = memory.Classes();
+            foreach (var c in classes)
+            {
+                Console.WriteLine(c.GetReference + " " + c.Name);
+            }
+
+            Console.WriteLine("");
             Console.WriteLine(memory.DeleteClass("_class1"));
             var temp3 = memory.FindClassByName("_class1");
             if (temp3 != null) { Console.WriteLine(temp3.GetReference + " " + temp3.Name); }
             else { Console.WriteLine("Class '_class1' not found!"); }
+
+            Console.WriteLine("");
+            classes = memory.Classes();
+            foreach (var c in classes)
+            {
+                Console.WriteLine(c.GetReference + " " + c.Name);
+            }
 
             return true;
         }
