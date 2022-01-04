@@ -1,6 +1,6 @@
 At line 6: A method cannot be named after class name!
-At line 12: A attribute cannot be named after class name!
+At line 12: An attribute cannot be named after class name!
 At line 18: A method cannot be named 'BaseObject'!
-At line 24: A attribute cannot be named 'BaseObject'!
+At line 24: An attribute cannot be named 'BaseObject'!
 At line 30: A method cannot start with '_constructor_'!
 At line 36: An attribute cannot start with '_constructor_'!

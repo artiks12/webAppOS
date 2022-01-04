@@ -36,9 +36,9 @@ namespace TestProgram
             else { Console.WriteLine("Class '_class1' not found!"); }
 
             Console.WriteLine("");
-            memory.DeleteClass("_class1");
-            temp2 = memory.FindClassByName("_class1");
-            if (temp2 != null) { Console.WriteLine(temp2.GetReference + " " + temp2.Name); }
+            Console.WriteLine(memory.DeleteClass("_class1"));
+            var temp3 = memory.FindClassByName("_class1");
+            if (temp3 != null) { Console.WriteLine(temp3.GetReference + " " + temp3.Name); }
             else { Console.WriteLine("Class '_class1' not found!"); }
 
             return true;

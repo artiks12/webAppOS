@@ -134,7 +134,7 @@ namespace AntlrCSharp
 			// Pārbauda, vai padotā vārdtelpa ir sintaktiski pareizs
 			if (!checkNamespace(_namespace))
 			{
-				Errors.Add("'" + _namespace + "' is in incorrect format!");
+				Errors.Add("Namespace '" + _namespace + "' is in incorrect format!");
 			}
 
 			// Apstaigā kodu
@@ -172,7 +172,7 @@ namespace AntlrCSharp
 			// Pārbauda, vai padotā vārdtelpa ir sintaktiski pareizs
 			if (!checkNamespace(_namespace))
 			{
-				Errors.Add("'" + _namespace + "' is in incorrect format!");
+				Errors.Add("Namespace '" + _namespace + "' is in incorrect format!");
 			}
 
 			if (_namespace == "Test") 

@@ -109,16 +109,16 @@ namespace AntlrCSharp
 			// Pārbauda, vai atribūts sākas ar "_constructor_"
 			if (context.GetText().StartsWith("_constructor_")) { Errors.Add("At line " + context.Start.Line + ": An attribute cannot start with '_constructor_'!"); }
 
+			// Pārbauda, vai atribūta vārds jau ir sastopams virsklasēs
+			var sc = _class.SuperClass;
+			while (sc != null)
+			{
+				if (checkAttributeNameInSuperClass(context, sc) == false) { return null; }
+				sc = sc.SuperClass;
+			}
 			// Pārbauda, vai atribūta vārds jau ir sastopams klasē
 			if (checkAttributeNameInClass(context, _class) == true)
 			{
-				// Pārbauda, vai atribūta vārds jau ir sastopams virsklasēs
-				var sc = _class.SuperClass;
-				while (sc != null)
-				{
-					if (checkAttributeNameInSuperClass(context, sc) == false) { return null; }
-					sc = sc.SuperClass;
-				}
 				_attribute.Name = context.GetText();
 			}
 
@@ -131,7 +131,7 @@ namespace AntlrCSharp
 		/// <returns>Atgriež true, ja atribūta vārds klasē neeksistē, citādi atgriež false</returns>
 		public bool checkAttributeNameInClass([NotNull] FieldNameContext context, Class _checkClass)
 		{
-			string message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class '" + _checkClass.ClassName + "'! Check line ";
+			string message = "At line " + context.Start.Line + ": A field with name '" + context.GetText() + "' already exists in class '" + _checkClass.ClassName + "'! Check line ";
 
 			// Pārbauda, vai atribūta vārds atkārtojas klasē starp metodēm
 			foreach (var m in _checkClass.Methods)
@@ -162,7 +162,7 @@ namespace AntlrCSharp
 		/// <returns>Atgriež true, ja atribūta vārds virsklasē neeksistē, citādi atgriež false</returns>
 		public bool checkAttributeNameInSuperClass([NotNull] FieldNameContext context, Class _checkClass)
 		{
-			string message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass '" + _checkClass.ClassName + "'! Check line ";
+			string message = "At line " + context.Start.Line + ": A field with name '" + context.GetText() + "' already exists in superclass '" + _checkClass.ClassName + "'! Check line ";
 
 			// Pārbauda, vai atribūta vārds atkārtojas klasē starp asociācijām
 			foreach (var ae in _checkClass.AssociationEnds)
@@ -177,7 +177,7 @@ namespace AntlrCSharp
 			// Pārbauda, vai atribūta vārds atkārtojas klasē starp metodēm
 			foreach (var m in _checkClass.Methods)
 			{
-				if (m.Name == context.GetText() && m.Protection == "public")
+				if (m.Name == context.GetText() && m.Protection == "public" && m.generate == true)
 				{
 					Errors.Add(message + m.Line + "!");
 					return false;
@@ -187,7 +187,7 @@ namespace AntlrCSharp
 			// Pārbauda, vai atribūta vārds atkārtojas virsklasē starp citiem atribūtiem
 			foreach (var v in _checkClass.Attributes)
 			{
-				if (v.Name == context.GetText() && v.Protection == "public")
+				if (v.Name == context.GetText() && v.Protection == "public" && v.generate == true)
 				{
 					// Pārbauda, vai sakrītošajiem atribūtiem ir vienāds datu tips
 					if (v.Type != _attribute.Type) 

@@ -1,2 +1,2 @@
-At line 6: association source role name cannot be 'targetClass'!
-At line 10: association target role name cannot be 'sourceClass'!
+At line 6: Association source role name cannot be 'targetClass'!
+At line 10: Association target role name cannot be 'sourceClass'!

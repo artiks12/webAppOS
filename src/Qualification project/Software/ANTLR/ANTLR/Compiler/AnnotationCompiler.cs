@@ -75,7 +75,7 @@ namespace AntlrCSharp
                 _isUrl = true;
 
                 // Pārbauda, vai metodei jau ir izveidota url anotācija
-                if (_urlFound == true) { Errors.Add("At line " + context.Start.Line + ": a URL definition for method '" + _method.Name + "' is already given! Check line " + _method.URL.Line + "!"); }
+                if (_urlFound == true) { Errors.Add("At line " + context.Start.Line + ": A URL definition for method '" + _method.Name + "' is already given! Check line " + _method.URL.Line + "!"); }
                 else
                 {
                     _urlFound = true;
@@ -101,7 +101,7 @@ namespace AntlrCSharp
                 }
 
                 // Ja anotācijas tips nav atbalstīts, tad saglabā kļūdu
-                if (found == false) { Errors.Add("At line " + context.Start.Line + ": annotation type '" + context.GetText() + "' is not supported!"); }
+                if (found == false) { Errors.Add("At line " + context.Start.Line + ": Annotation type '" + context.GetText() + "' is not supported!"); }
             }
             return null;
         }
@@ -208,7 +208,7 @@ namespace AntlrCSharp
                         break;
                     }
                 }
-                if (found == false) { Errors.Add("At line " + context.protocol().Start.Line + ": unsupported URL protocol was given!"); }
+                if (found == false) { Errors.Add("At line " + context.protocol().Start.Line + ": Unsupported URL protocol was given!"); }
                 line = (uint)(context.COLON())[0].Symbol.Line;
             }
 
@@ -228,7 +228,7 @@ namespace AntlrCSharp
                         break;
                     }
                 }
-                if (found == false) { Errors.Add("At line " + context.location().Start.Line + ": unsupported URL location was given!"); }
+                if (found == false) { Errors.Add("At line " + context.location().Start.Line + ": Unsupported URL location was given!"); }
             }
 
             return null;

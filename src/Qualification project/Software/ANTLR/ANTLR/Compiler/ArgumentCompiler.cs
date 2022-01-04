@@ -35,11 +35,11 @@ namespace AntlrCSharp
 						// Komats
 						case "ComaContext":
 							// Pēc komata nevajag vēl vienu komatu
-							if (needComa == false) { Errors.Add("At line " + line + ": argument expected!"); }
+							if (needComa == false) { Errors.Add("At line " + line + ": Argument expected!"); }
 							else { needComa = false; }
 
 							// Skatamies, lai iekavās pēdējais ierakstītais elements nav komats
-							if (x + 1 == c.Count) { Errors.Add("At line " + (uint)((ComaContext)c[x]).Stop.Line + ": argument expected!"); }
+							if (x + 1 == c.Count) { Errors.Add("At line " + (uint)((ComaContext)c[x]).Stop.Line + ": Argument expected!"); }
 
 							line = (uint)((ComaContext)c[x]).Stop.Line;
 						break;

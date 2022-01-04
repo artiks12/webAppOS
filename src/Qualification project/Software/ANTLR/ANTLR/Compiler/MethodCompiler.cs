@@ -142,15 +142,15 @@ namespace AntlrCSharp
 			// Pārbauda, vai metodes vārds sākas ar "_constructor_"
 			if (context.GetText().StartsWith("_constructor_")) { Errors.Add("At line " + context.Start.Line + ": A method cannot start with '_constructor_'!"); }
 
+			var sc = _class.SuperClass;
+			while (sc != null)
+			{
+				if (checkMethodNameInSuperClass(context, sc) == false) { return null; }
+				sc = sc.SuperClass;
+
+			}
 			if (checkMethodNameInClass(context, _class) == true)
 			{
-				var sc = _class.SuperClass;
-				while (sc != null)
-				{
-					if (checkMethodNameInSuperClass(context, sc) == false) { return null; }
-					sc = sc.SuperClass;
-
-				}
 				_method.Name = context.GetText();
 			}
 
@@ -163,7 +163,7 @@ namespace AntlrCSharp
 		/// <returns>Atgriež true, ja metodes vārds klasē neeksistē, citādi atgriež false</returns>
 		public bool checkMethodNameInClass([NotNull] FieldNameContext context, Class _checkClass) 
 		{
-			string message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in class '" + _checkClass.ClassName + "'! Check line ";
+			string message = "At line " + context.Start.Line + ": A field with name '" + context.GetText() + "' already exists in class '" + _checkClass.ClassName + "'! Check line ";
 
 			// Pārbauda, vai metodes vārds atkārtojas klasē starp atribūtiem
 			foreach (var v in _checkClass.Attributes)
@@ -194,7 +194,7 @@ namespace AntlrCSharp
 		/// <returns>Atgriež true, ja metodes vārds virsklasē neeksistē, citādi atgriež false</returns>
 		public bool checkMethodNameInSuperClass([NotNull] FieldNameContext context, Class _checkClass)
 		{
-			string message = "At line " + context.Start.Line + ": a field with name '" + context.GetText() + "' already exists in superclass '" + _checkClass.ClassName + "'! Check line ";
+			string message = "At line " + context.Start.Line + ": A field with name '" + context.GetText() + "' already exists in superclass '" + _checkClass.ClassName + "'! Check line ";
 
 			// Pārbauda, vai metodes vārds atkārtojas klasē starp asociācijām
 			foreach (var ae in _checkClass.AssociationEnds)
@@ -209,7 +209,7 @@ namespace AntlrCSharp
 			// Pārbauda, vai metodes vārds atkārtojas klasē starp atribūtiem
 			foreach (var v in _checkClass.Attributes)
 			{
-				if (v.Name == context.GetText() && v.Protection == "public")
+				if (v.Name == context.GetText() && v.Protection == "public" && v.generate == true)
 				{
 					Errors.Add(message + v.Line + "!");
 					return false;
@@ -220,7 +220,7 @@ namespace AntlrCSharp
 			foreach (var m in _checkClass.Methods)
 			{
 				// Pārbauda, vai metožu vārdi sakrīt
-				if (m.Name == context.GetText() && m.Protection == "public")
+				if (m.Name == context.GetText() && m.Protection == "public" && m.generate == true)
 				{
 					bool error = true;
 

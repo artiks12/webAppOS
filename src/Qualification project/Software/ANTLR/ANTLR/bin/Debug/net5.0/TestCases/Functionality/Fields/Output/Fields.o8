@@ -1,2 +1,2 @@
-At line 19: a field with name 'test' already exists in superclass 'test1'! Check line 6!
-At line 25: a field with name 'test' already exists in superclass 'test1'! Check line 6!
+At line 19: A field with name 'test' already exists in superclass 'test1'! Check line 6!
+At line 25: A field with name 'test' already exists in superclass 'test1'! Check line 6!

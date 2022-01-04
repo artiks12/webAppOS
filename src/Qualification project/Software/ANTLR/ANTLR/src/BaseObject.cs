@@ -205,8 +205,11 @@ namespace AntlrCSharp
             string result = "";
             foreach (var v in _class.Attributes)
             {
-                if (result == "") { result += "\"" + v.Name + "\" , \"" + v.primitiveType + "\""; }
-                else { result += " , \"" + v.Name + "\" , \"" + v.primitiveType + "\""; }
+                if (v.generate == true) 
+                {
+                    if (result == "") { result += "\"" + v.Name + "\" , \"" + v.primitiveType + "\""; }
+                    else { result += " , \"" + v.Name + "\" , \"" + v.primitiveType + "\""; }
+                }
             }
             return result;
         }

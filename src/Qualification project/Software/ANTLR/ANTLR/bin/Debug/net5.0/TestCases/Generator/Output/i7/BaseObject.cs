@@ -68,7 +68,7 @@ namespace Test
 
         protected void _constructor_test2()
         {
-            List<string> attributes = new() { "_int" , "Integer" , "_str" , "String" , "_bool" , "Boolean" , "_double" , "Real" };
+            List<string> attributes = new() { "_str" , "String" , "_bool" , "Boolean" , "_double" , "Real" };
             var o = checkClass( attributes , "test2" );
             if(o == false)
             {
