@@ -15,12 +15,12 @@ namespace AntlrCSharp
         /// Asociācijas avota vārds
         /// </summary>
         public string Type { get; set; }
-
+        
         /// <summary>
         /// Asociācijas avota vārds
         /// </summary>
         public string Definition { get; set; }
-
+        
         /// <summary>
         /// Rinda, kurā metode tiek definēts failā
         /// </summary>

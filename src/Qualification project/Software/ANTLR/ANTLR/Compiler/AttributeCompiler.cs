@@ -195,6 +195,7 @@ namespace AntlrCSharp
 						Errors.Add("At line " + context.Start.Line + ": Attribute '" + context.GetText() + "' , that exists in superclass '" + _checkClass.ClassName + "' , does not have the same datatype! Check line " + v.Line + "!"); 
 						return false; 
 					}
+					// Ja netika atrastas atšķirības, tad atribūtu apakšklasē vēl varēs saglabāt, bet tiek norādīts, ka to nevajadzēs ģenerēt apakšklasē.
 					_attribute.generate = false;
 					return true;
 				}

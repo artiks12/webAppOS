@@ -142,6 +142,7 @@ namespace AntlrCSharp
 			// Pārbauda, vai metodes vārds sākas ar "_constructor_"
 			if (context.GetText().StartsWith("_constructor_")) { Errors.Add("At line " + context.Start.Line + ": A method cannot start with '_constructor_'!"); }
 
+			// Pārbauda, vai metode ir sastopama virsklasē
 			var sc = _class.SuperClass;
 			while (sc != null)
 			{
@@ -149,10 +150,9 @@ namespace AntlrCSharp
 				sc = sc.SuperClass;
 
 			}
-			if (checkMethodNameInClass(context, _class) == true)
-			{
-				_method.Name = context.GetText();
-			}
+
+			// Pārbauda, vai metode ir sastopama klasē
+			if (checkMethodNameInClass(context, _class) == true) { _method.Name = context.GetText(); }
 
 			return null;
 		}
@@ -255,6 +255,7 @@ namespace AntlrCSharp
 						error = false;
 					}
 
+					// Ja netika atrastas atšķirības, tad metodi apakšklasē vēl varēs saglabāt, bet tiek norādīts, ka to nevajadzēs ģenerēt apakšklasē
 					if (error == true) { _method.generate = false; }
 					return error;
 				}

@@ -57,8 +57,8 @@ namespace AntlrCSharp
         public override object VisitBlocks([NotNull] BlocksContext context)
         {
 			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
-			string type;
-			string body;
+			string type; // Bloka tips
+			string body; // Bloka ķermenis
 
 			// Pārbauda, vai blokam ir "galva" jeb tips.
 			if (context.blockType() == null)
@@ -70,7 +70,7 @@ namespace AntlrCSharp
 			}
 			else 
 			{
-				// Ja blokam nav tipa, tad skatās, vai tas ir pareizs
+				// Ja blokam ir tips, tad skatās, vai tas ir pareizs
 				if (VisitBlockType(context.blockType()) == null) 
 				{ 
 					type = "";
@@ -214,7 +214,6 @@ namespace AntlrCSharp
 
 				Console.WriteLine("");
 				Console.WriteLine("Compilation successful!");
-				
 			}
 		}
 	}

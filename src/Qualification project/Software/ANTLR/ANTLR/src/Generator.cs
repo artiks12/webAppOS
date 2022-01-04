@@ -123,7 +123,7 @@ namespace AntlrCSharp
         }
 
         /// <summary>
-        /// Metode, kas ģenerē īpašības, ja tādas ir
+        /// Metode, kas ģenerē īpašības, ja tādas ir un ja tādas ir jāģenerē
         /// </summary>
         public static void generateAttributes(StreamWriter sw, Class _class, ref bool IsMade)
         {
@@ -214,7 +214,7 @@ namespace AntlrCSharp
         }
 
         /// <summary>
-        /// Metode, kas ģenerē metodes
+        /// Metode, kas ģenerē metodes, ja tādas ir un ja tādas ir jāģenerē
         /// </summary>
         public static void generateMethods(StreamWriter sw, Class _class, ref bool IsMade)
         {

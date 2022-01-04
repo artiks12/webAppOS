@@ -130,7 +130,7 @@ namespace AntlrCSharp
             string attributes = attributeList(_class);
             string associations = associationList(_class);
 
-            // Iegūstam sarakstu ar klasēm, ar kurām ir asociācija
+            // Iegūstam sarakstu ar klasēm, ar kurām ir asociācija, izlaižot pašu klasi un tās virsklases
             List<Class> associationClasses = new();
             foreach (var ac in _class.AssociationEnds)
             {
@@ -198,7 +198,7 @@ namespace AntlrCSharp
         }
 
         /// <summary>
-        /// Iegūst attribūtu saraksta elementus
+        /// Iegūst attribūtu saraksta elementus tiem atribūtiem, kurus ir jāģenerē
         /// </summary>
         public static string attributeList(Class _class)
         {
