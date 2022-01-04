@@ -63,17 +63,10 @@ namespace WebAppOS
         /// Izdzēš atribūtu
         /// </summary>
         /// <param name="name">atribūta vārds</param>
-        public int DeleteAttribute(string name)
+        public void DeleteAttribute(string name)
         {
             var a = FindAttributeByName(name);
-            if (a != null)
-            {
-                Console.WriteLine("Attribute: " + a.GetReference);
-                var result = _k.deleteAttribute(a.GetReference);
-                if (result == false) { return 0; }
-                return 1;
-            }
-            return -1;
+            if (a != null) { _k.deleteAttribute(a.GetReference); }
         }
 
         /// <summary>

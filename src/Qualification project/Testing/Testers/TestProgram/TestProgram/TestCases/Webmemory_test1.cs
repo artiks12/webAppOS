@@ -17,7 +17,7 @@ namespace TestProgram
             var classes = memory.Classes();
             foreach (var c in classes) 
             {
-                Console.WriteLine(c.Name);
+                Console.WriteLine(c.GetReference + " " + c.Name);
             }
 
             Console.WriteLine("");
