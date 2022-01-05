@@ -8,25 +8,28 @@
     "net5.0": []
   },
   "packageFolders": {
-    "C:\\Users\\artis\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Artis\\.nuget\\packages\\": {},
+    "D:\\Program Files\\Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\artis\\Documents\\GitHub\\webAppOS\\src\\Qualification project\\Software\\WebMemory\\WebMemory\\WebMemory.csproj",
+      "projectUniqueName": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\Qualification project\\Software\\WebMemory\\WebMemory\\WebMemory.csproj",
       "projectName": "WebMemory",
-      "projectPath": "C:\\Users\\artis\\Documents\\GitHub\\webAppOS\\src\\Qualification project\\Software\\WebMemory\\WebMemory\\WebMemory.csproj",
-      "packagesPath": "C:\\Users\\artis\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\artis\\Documents\\GitHub\\webAppOS\\src\\Qualification project\\Software\\WebMemory\\WebMemory\\obj\\",
+      "projectPath": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\Qualification project\\Software\\WebMemory\\WebMemory\\WebMemory.csproj",
+      "packagesPath": "C:\\Users\\Artis\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Artis\\Documents\\GitHub\\webAppOS\\src\\Qualification project\\Software\\WebMemory\\WebMemory\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "D:\\Program Files\\Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\artis\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Artis\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -65,7 +68,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.403\\RuntimeIdentifierGraph.json"
       }
     }
   }
