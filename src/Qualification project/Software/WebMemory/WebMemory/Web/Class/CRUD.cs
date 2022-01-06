@@ -1,4 +1,9 @@
-﻿using System;
+﻿// CRUD.cs
+/******************************************************
+* Satur meklēsanas, veidosanas un dzēšanas funkcijas klasei "WebClass"
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
 
 namespace WebAppOS
 {

@@ -21,11 +21,6 @@ namespace Test
             _wc = wc;
         }
 
-        protected BaseObject ( IWebMemory wm )
-        {
-            _wm = wm;
-        }
-
         protected bool checkClass( List<string> attributes , string className )
         {
             var c = _wm.FindClassByName( className );

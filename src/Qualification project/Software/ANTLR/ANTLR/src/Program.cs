@@ -1,11 +1,17 @@
-﻿using System;
-using ANTLR;
-using Antlr4.Runtime;
-using System.IO;
-using Antlr4.Runtime.Tree;
-using ANTLR.Grammar;
-using System.Text.Json;
-using static ANTLR.Grammar.LanguageParser;
+﻿// Program.cs
+/******************************************************
+* Kompilatora un starpkoda ģeneratora sākumprogramma.
+*  satur galveno funkciju, kurā iegūst faila vārdu,
+*  vārdtelpas vārdu, sagatavo ANTLR rīkus.
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using System; // nodrošina ievad-izvadierīču lietošanu
+using Antlr4.Runtime; // Nodrošina ANTLR4.Runtime rīku lietošanu (AntlrInputStrream un CommonTokenStream)
+using System.IO; // Nodrosina darbu ar failiem
+using ANTLR.Grammar; // Nodrošina darbu ar gramatikas kodu
+using static ANTLR.Grammar.LanguageParser; // Nodrošina vienkāršāku konteksta objektu notāciju (var rakstīt, piem., CodeContext nevis LanguageParser.CodeContext)
 
 namespace AntlrCSharp
 {
@@ -17,7 +23,7 @@ namespace AntlrCSharp
         /// Programmas galvenā funkcija
         /// </summary>
         /// <param name="args"></param>
-        public static void Main(string []args) 
+        public static void Main() 
         {
             // Iegūstam faila nosaukumu
             Console.Write("Specify full filename: ");
@@ -32,92 +38,22 @@ namespace AntlrCSharp
 
             // Iegūstam koda saturu no faila
             string text;
-            using (StreamReader sr = new StreamReader(filename))
+            using (StreamReader sr = new(filename))
             {
                 text = sr.ReadToEnd();
             }
 
             // Sagatavojam lekseri un parseri
-            AntlrInputStream input = new AntlrInputStream(text);
-            LanguageLexer lexer = new LanguageLexer(input);
-            CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-            LanguageParser parser = new LanguageParser(commonTokenStream);
+            AntlrInputStream input = new(text);
+            LanguageLexer lexer = new(input);
+            CommonTokenStream commonTokenStream = new(lexer);
+            LanguageParser parser = new(commonTokenStream);
 
             // Sagatavojam kodu kompilēšanai
             CodeContext codeContext = parser.code();
             compiler = new Compiler();
 
-            compiler.Compile(codeContext, _namespace); // Kompilējam kodu
+            compiler.Compile(codeContext, _namespace); // Kompilējam kodu (skat. BaseCompiler.cs)
         }
-
-
-        /*
-        /// <summary>
-        /// Testēšanai
-        /// </summary>
-        public static void Main(string[] args)
-        {
-            Console.Write("Specify test type: ");
-            string type = Console.ReadLine();
-            while (type != "Syntax" && type != "Functionality" && type != "Generator")
-            {
-                type = Console.ReadLine();
-            }
-
-            string filename = "Generator";
-            string path = "TestCases/" + type + "/";
-
-            if (type != "Generator") 
-            {
-                Console.Write("Specify test group: ");
-                filename = Console.ReadLine();
-                while (filename == "")
-                {
-                    filename = Console.ReadLine();
-                }
-                path += filename;
-            }
-
-            string _namespace = "Test";
-            
-            int length = Directory.GetFiles(path+"/Input/").Length;
-
-            for (int count = 1; count <= length; count++) 
-            {
-                string inFile = path + "/Input/" + filename + ".i" + count;
-                string outFile = path + "/Output/" + filename + ".o" + count;
-
-                if (type == "Generator") { outFile = path + "/Output/i" + count + "/"; }
-
-                Console.WriteLine("testing: " + inFile);
-
-                // Iegūstam koda saturu no faila
-                string text = "";
-                using (StreamReader sr = new StreamReader(inFile))
-                {
-                    text = sr.ReadToEnd();
-                }
-
-                if (filename == "Namespaces")
-                {
-                    _namespace = text;
-                }
-
-                // Sagatavojam lekseri un parseri
-                AntlrInputStream input = new AntlrInputStream(text);
-                LanguageLexer lexer = new LanguageLexer(input);
-                CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-                LanguageParser parser = new LanguageParser(commonTokenStream);
-
-                // Sagatavojam kodu kompilēšanai
-                CodeContext codeContext = parser.code();
-                compiler = new Compiler();
-
-                compiler.Test(codeContext, _namespace, type, outFile); // Kompilējam kodu
-
-                Console.WriteLine("\n");
-            }
-        }
-        */
     }
 }

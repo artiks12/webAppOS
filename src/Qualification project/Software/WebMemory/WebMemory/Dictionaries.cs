@@ -1,5 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿// Dictionaries.cs
+/******************************************************
+* Satur vārdnīcu iegūsanas funkcijas.
+* Visām funkcijam ir jāpadod TDAKernel un WebMemory, bet
+* ir funkcijas, kuram vel vajag atsauces.
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using System.Collections.Generic; // Nodrošina darbu ar iebūvētajām datu struktūrām
 
 namespace WebAppOS
 {

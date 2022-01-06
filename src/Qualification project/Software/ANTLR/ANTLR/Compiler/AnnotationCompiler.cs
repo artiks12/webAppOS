@@ -1,11 +1,14 @@
-﻿using ANTLR;
-using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
-using System;
-using System.Collections.Generic;
-using ANTLR.Grammar;
-using static ANTLR.Grammar.LanguageParser;
-using Antlr4.Runtime.Tree;
+﻿// AnnotationCompiler.cs
+/******************************************************
+* Satur klases metodes anotāciju kompilēšanas funkcijas.
+* Tās iekļauj anotācijas tipa vērtības pārbaudi, URL atribūtu parbaudi.
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using Antlr4.Runtime.Misc; // Nodrošina to, ka visās "Visit" funkcijas padotie konteksti nav ar vērtību 'null'
+using ANTLR.Grammar; // Nodrošina darbu ar gramatikas kodu
+using static ANTLR.Grammar.LanguageParser; // Nodrošina vienkāršāku konteksta objektu notāciju (var rakstīt, piem., CodeContext nevis LanguageParser.CodeContext)
 
 namespace AntlrCSharp
 {

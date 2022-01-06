@@ -1,11 +1,15 @@
-﻿using ANTLR;
-using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
-using System;
-using System.Collections.Generic;
-using ANTLR.Grammar;
-using static ANTLR.Grammar.LanguageParser;
-using Antlr4.Runtime.Tree;
+﻿// AssociationCompiler.cs
+/******************************************************
+* Satur visas asociācijas kompilesanas funkcijas.
+* Tās iekļauj avota/mērķa pārbaudi, to vārdu un klašu pārbaudes,
+* kā arī lomas vārdu esamību klasē, virsklasēs un apakšklasēs.
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using Antlr4.Runtime.Misc; // Nodrošina to, ka visās "Visit" funkcijas padotie konteksti nav ar vērtību 'null'
+using ANTLR.Grammar; // Nodrošina darbu ar gramatikas kodu
+using static ANTLR.Grammar.LanguageParser; // Nodrošina vienkāršāku konteksta objektu notāciju (var rakstīt, piem., CodeContext nevis LanguageParser.CodeContext)
 
 namespace AntlrCSharp
 {
@@ -65,6 +69,7 @@ namespace AntlrCSharp
 			if (context.ARROWS() == null) { Errors.Add("At line " + line + ": Missing arrows for association definition!"); }
 			else
 			{
+				// Bultas formātā "<->" nozīmē, ka kompozīcijas nav, bet "<>-" - ka ir.
 				if (context.ARROWS().GetText()[1] == '>') { _association.IsComposition = true; }
 				else if (context.ARROWS().GetText()[1] == '-') { _association.IsComposition = false; }
 				line = (uint)context.ARROWS().Symbol.Line;
@@ -143,6 +148,9 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Apstaigājam asociācijas klasi
 		/// </summary>
+		/// <param name="className">klases, kuru pārbauda, vārds</param>
+		/// <param name="line">Rinda, kura ir definēta klase</param>
+		/// <param name="IsSource">Vai tiek skatīta avotklase?</param>
 		public object VisitAssociationClass(string className, int line, bool IsSource)
 		{
 			string direction = IsSource ? "source" : "target";
@@ -244,6 +252,10 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Apstaigājam asociācijas lomas vārdu
 		/// </summary>
+		/// <param name="roleName">lomas vārds, kuru pārbauda</param>
+		/// <param name="associationClass">klase, kurai definē galapunktu</param>
+		/// <param name="line">Rinda, kura ir definēts lomas vārds</param>
+		/// <param name="IsSource">Vai tiek skatīta avotklase?</param>
 		public object VisitAssociationRoleName(string roleName, Class associationClass, uint line, bool IsSource) 
 		{
 			string direction = IsSource ? "source" : "target";
@@ -313,6 +325,10 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Funkcija, kas pārbauda lomas vārda esamību bāzes klasē un apakšklasē
 		/// </summary>
+		/// <param name="roleName">lomas vārds, kuru pārbauda</param>
+		/// <param name="checkClass">klase, kurā pārbauda lomas vārda eksistenci</param>
+		/// <param name="line">Rinda, kura ir definēts lomas vārds</param>
+		/// <param name="type">Vai tiek skatīta avotklase vai mērķklase?</param>
 		/// <returns>Atgriež true, ja lomas vārds klasē neeksistē, citādi atgriež false</returns>
 		public bool checkRoleNameInClass(string rolename, Class checkClass, uint line, string type)
 		{
@@ -354,6 +370,9 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Funkcija, kas pārbauda lomas vārda esamību virsklasē
 		/// </summary>
+		/// <param name="roleName">lomas vārds, kuru pārbauda</param>
+		/// <param name="checkClass">virsklase, kurā pārbauda lomas vārda eksistenci</param>
+		/// <param name="line">Rinda, kura ir definēts lomas vārds</param>
 		/// <returns>Atgriež true, ja lomas vārds virsklasē neeksistē, citādi atgriež false</returns>
 		public bool checkRoleNameInSuperClass(string rolename, Class checkClass, uint line)
 		{
@@ -395,6 +414,10 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Funkcija, kas iziet cauri apakšklasēm un tajās pārbauda lomas vārda esamību
 		/// </summary>
+		/// <param name="roleName">lomas vārds, kuru pārbauda</param>
+		/// <param name="checkClass">apakšklase, kurā pārbauda lomas vārda eksistenci</param>
+		/// <param name="line">Rinda, kura ir definēts lomas vārds</param>
+		/// <param name="type">Vai tiek skatīta avotklase vai mērķklase?</param>
 		/// <returns>Atgriež true, ja lomas vārds apakšklasēs neeksistē, citādi atgriež false</returns>
 		public bool checkSubClasses(string rolename, Class checkClass, uint line, string type)
 		{

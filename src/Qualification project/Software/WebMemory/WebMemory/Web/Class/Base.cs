@@ -1,4 +1,11 @@
-﻿namespace WebAppOS
+﻿// Base.cs
+/******************************************************
+* Satur klases "WebClass" atribūtus
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+namespace WebAppOS
 {
     public partial class WebClass 
     {

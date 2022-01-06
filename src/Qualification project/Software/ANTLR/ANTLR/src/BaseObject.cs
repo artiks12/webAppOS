@@ -1,11 +1,13 @@
-﻿using System;
-using ANTLR;
-using Antlr4.Runtime;
-using System.IO;
-using ANTLR.Grammar;
-using static ANTLR.Grammar.LanguageParser;
-using Antlr4.Runtime.Tree;
-using System.Collections.Generic;
+﻿// BaseObject.cs
+/******************************************************
+* Visas ģenerēšanas funkcijas klasei "BaseObject".
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+
+using System.IO; // Nodrosina darbu ar failiem
+using System.Collections.Generic; // Nodrošina darbu ar iebūvētajām datu struktūrām
 
 namespace AntlrCSharp
 {

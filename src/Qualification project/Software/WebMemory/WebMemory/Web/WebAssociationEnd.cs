@@ -1,4 +1,11 @@
-﻿namespace WebAppOS
+﻿// WebAssociationEnd.cs
+/******************************************************
+* Satur klases "WebAssociationEnd" atribūtus.
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+namespace WebAppOS
 {
     public class WebAssociationEnd 
     {

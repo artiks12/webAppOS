@@ -1,11 +1,14 @@
-﻿using ANTLR;
-using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
-using System;
-using System.Collections.Generic;
-using ANTLR.Grammar;
-using static ANTLR.Grammar.LanguageParser;
-using Antlr4.Runtime.Tree;
+﻿// ClassCompiler.cs
+/******************************************************
+* Satur visas klases kompilesanas funkcijas.
+* Tās iekļauj klases vārda un virsklases pārbaudi
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using Antlr4.Runtime.Misc; // Nodrošina to, ka visās "Visit" funkcijas padotie konteksti nav ar vērtību 'null'
+using ANTLR.Grammar; // Nodrošina darbu ar gramatikas kodu
+using static ANTLR.Grammar.LanguageParser; // Nodrošina vienkāršāku konteksta objektu notāciju (var rakstīt, piem., CodeContext nevis LanguageParser.CodeContext)
 
 namespace AntlrCSharp
 {
@@ -28,14 +31,14 @@ namespace AntlrCSharp
 			else 
 			{
 				line = (uint)context.classHead().Stop.Line;
-				VisitClassHead(context.classHead());
+				VisitClassHead(context.classHead()); // Apstaigā klases galvu
 			}
 
 			// Pārbaudam, vai klasei ir "ķermenis".
 			if (context.classBody() == null) { Errors.Add("At line " + line + ": Missing class body!");}
 			else
 			{
-				VisitClassBody(context.classBody());
+				VisitClassBody(context.classBody()); // Apstaigā klases ķermeni (skat. FieldCompiler.cs)
 			}
 
 			// Ja klasei ir vārds vai klase neatkārtojas, tad klase tiek saglabāta kompilatorā
@@ -60,7 +63,7 @@ namespace AntlrCSharp
 			// Pārbaudam, vai klasei ir vards.
 			if (context.className() == null) { Errors.Add("At line " + line + ": Missing class name!"); }
 
-			return VisitChildren(context);
+			return VisitChildren(context); // Funkcijas "VisitClassName" un "VisitSuperClass"
 		}
 
         /// <summary>
@@ -71,7 +74,7 @@ namespace AntlrCSharp
 			// Pārbaudam, vai ir dota virsklase
 			if (context.superClassName() == null) { Errors.Add("At line " + context.Stop.Line + ": Missing super class!"); }
 			
-			return VisitChildren(context);
+			return VisitChildren(context); // Funkcija "VisitSuperClassName"
         }
 
         /// <summary>

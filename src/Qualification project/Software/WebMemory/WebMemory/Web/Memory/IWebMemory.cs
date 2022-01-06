@@ -1,4 +1,11 @@
-﻿using System.Collections.Generic;
+﻿// IWebMemory.cs
+/******************************************************
+* Satur interfeisa IWebMemory aprakstu.
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using System.Collections.Generic; // Nodrošina darbu ar iebūvētajām datu struktūrām
 
 namespace WebAppOS
 {

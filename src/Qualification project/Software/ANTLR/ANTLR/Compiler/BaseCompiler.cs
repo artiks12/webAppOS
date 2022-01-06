@@ -1,12 +1,20 @@
-﻿using ANTLR;
-using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
-using System;
-using System.Collections.Generic;
-using ANTLR.Grammar;
-using static ANTLR.Grammar.LanguageParser;
-using Antlr4.Runtime.Tree;
-using System.IO;
+﻿// BaseCompiler.cs
+/******************************************************
+* Satur kompilatora pamatlietas.
+*  Tas iekļauj sarakstus ar klasēm, asociācijām un kļūdām, kā arī
+*  sarakstus ar rezervētajiem vārdiem, metožu anotāciju tipiem,
+*  URL protokoliem un lokācijām.
+*  Ir iekļautas arī koda bloku apstaigāšanas funkcijas
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using Antlr4.Runtime.Misc; // Nodrošina to, ka visās "Visit" funkcijas padotie konteksti nav ar vērtību 'null'
+using System; // nodrošina ievad-izvadierīču lietošanu
+using System.Collections.Generic; // Nodrošina darbu ar iebūvētajām datu struktūrām
+using ANTLR.Grammar; // Nodrošina darbu ar gramatikas kodu
+using static ANTLR.Grammar.LanguageParser; // Nodrošina vienkāršāku konteksta objektu notāciju (var rakstīt, piem., CodeContext nevis LanguageParser.CodeContext)
+using Antlr4.Runtime.Tree; // Nodrošina funkcijas "VisitErrorMode" izmantošanu
 
 namespace AntlrCSharp
 {
@@ -17,13 +25,14 @@ namespace AntlrCSharp
 		public List<string> Errors; // Saraksts ar kļūdām.
 		public List<string> Reserved = new() { "class", "association", "Void" , "Integer", "String", "Boolean", "Real", "private", "public", "BaseObject" , "URL" , "_constructor" , "_wm" , "_wc" , "_object" }; // Saraksts ar rezervētajiem vārdiem.
 
-		private List<string> AnnotationTypes = new() { "path" }; // Saraksts ar anotāciju tipiem
+		private List<string> AnnotationTypes = new() { "path" }; // Saraksts ar metožu anotāciju tipiem
 		private List<string> URLProtocols = new() { "staticJava", "dotnet" , "python3" }; // Saraksts ar URL Valodu protokoliem
 		private List<string> URLlocations = new() { "local", "http" , "ftp" }; // Saraksts ar URL lokāciju vērtībām
 
 		/// <summary>
 		/// Metode, kas pārbauda, vai vārdtelpa ir sintaktiski pareiza
 		/// </summary>
+		/// <param name="_namespace">vārdtelpas vārds</param>
 		private static bool checkNamespace(string _namespace)
 		{
 			// Pārbauda, vai pirmais simbols ir burts vai apakšsvītra
@@ -107,7 +116,7 @@ namespace AntlrCSharp
 					}
 				}
 
-				VisitBlockBody(context.blockBody());
+				VisitBlockBody(context.blockBody()); // Apstaigājam bloka ķermeni (skat. AssociationCompiler.cs un ClassCompiler.cs)
 			}
 
 			return null;
@@ -118,13 +127,15 @@ namespace AntlrCSharp
 		/// </summary>
         public override object VisitBlockType([NotNull] BlockTypeContext context)
         {
-			return context.BLOCKTYPE();
+			return context.BLOCKTYPE(); 
         }
 
 		/// <summary>
 		/// Kompilēšanas pamtfunkcija
 		/// </summary>
-		public void Compile(LanguageParser.CodeContext context, string _namespace) 
+		/// <param name="context">jaunkods</param>
+		/// <param name="_namespace">vārdtelpa</param>
+		public void Compile(CodeContext context, string _namespace) 
 		{
 			// Sākam kompilēšanu ar sarakstu iestatīsanu
 			Classes = new();
@@ -138,7 +149,7 @@ namespace AntlrCSharp
 			}
 
 			// Apstaigā kodu
-			VisitChildren(context);
+			VisitChildren(context); // Starpkoda ģenerēsana (funkcija "VisitBlocks")
 
 			// Pārbauda, vai kodā nav kļūdu. Ja nav, tad ģenerējam starpkodu, citādi izdrukājam kļūdas.
 			if (Errors.Count != 0)
@@ -152,65 +163,7 @@ namespace AntlrCSharp
 			}
 			else 
 			{
-				Program.generate(_namespace);
-
-				Console.WriteLine("");
-				Console.WriteLine("Compilation successful!");
-			}
-		}
-
-		/// <summary>
-		/// Kompilatora testēšanas funkcija
-		/// </summary>
-		public void Test(LanguageParser.CodeContext context, string _namespace, string type, string outFile) 
-		{
-			// Sākam kompilēšanu ar sarakstu iestatīsanu
-			Classes = new();
-			Associations = new();
-			Errors = new();
-
-			// Pārbauda, vai padotā vārdtelpa ir sintaktiski pareizs
-			if (!checkNamespace(_namespace))
-			{
-				Errors.Add("Namespace '" + _namespace + "' is in incorrect format!");
-			}
-
-			if (_namespace == "Test") 
-			{
-				// Apstaigā kodu
-				VisitChildren(context);
-			}
-
-			// Pārbauda, vai kodā nav kļūdu. Ja nav, tad ģenerējam starpkodu
-			if (Errors.Count != 0)
-			{
-				Console.WriteLine("");
-				Console.WriteLine("Compilation unsuccessful! See errors in file " + outFile + "!");
-				
-				using (StreamWriter sw = new StreamWriter(outFile))
-				{
-					foreach (var error in Errors)
-					{
-						sw.WriteLine(error);
-					}
-				}
-			}
-			else
-			{
-				if (type == "Generator")
-				{
-					Program.Test(_namespace, outFile);
-				}
-				else 
-				{
-					using (StreamWriter sw = new StreamWriter(outFile))
-					{
-						foreach (var error in Errors)
-						{
-							sw.WriteLine(error);
-						}
-					}
-				}
+				Program.generate(_namespace); // Starpkoda ģenerēsana (skat. Generator.cs)
 
 				Console.WriteLine("");
 				Console.WriteLine("Compilation successful!");

@@ -1,6 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System;
+﻿// KernelWebMemory.cs
+/******************************************************
+* Satur interfeisa IWebMemory funkciju definīcijas.
+* Izmantos WebAppOS sistēmā
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using System.Collections.Generic; // Nodrošina darbu ar iebūvētajām datu struktūrām
+using System.Linq; // Nodrošina LINQ funkcijas
 
 namespace WebAppOS
 {
@@ -66,14 +73,8 @@ namespace WebAppOS
         public int DeleteClass(string name)
         {
             var c = FindClassByName(name);
-            if (c != null)
-            {
-                Console.WriteLine("Class: " + c.GetReference);
-                var result = _k.deleteClass(c.GetReference);
-                if (result == false) { return 0; }
-                else { return 1; }
-            }
-            return -1;
+            if (c != null) { _k.deleteClass(c.GetReference); }
+            return 0;
         }
     }
 }

@@ -1,11 +1,14 @@
-﻿using System;
-using ANTLR;
-using Antlr4.Runtime;
-using System.IO;
-using ANTLR.Grammar;
-using static ANTLR.Grammar.LanguageParser;
-using Antlr4.Runtime.Tree;
-using System.Collections.Generic;
+﻿// Generator.cs
+/******************************************************
+* Visas ģenerēšanas funkcijas kompilētajām klasēm.
+*  Tās iekļauj klašu, tās atribūtu, metožu un asociāciju
+*  ģenerēšanu
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using System.IO; // Nodrosina darbu ar failiem
+using System.Collections.Generic; // Nodrošina darbu ar iebūvētajām datu struktūrām
 
 namespace AntlrCSharp
 {
@@ -33,40 +36,6 @@ namespace AntlrCSharp
             foreach (var _class in compiler.Classes)
             {
                 string filename = "Classes/" + _class.ClassName + ".cs";
-                using (StreamWriter sw = new StreamWriter(filename))
-                {
-                    sw.WriteLine("using WebAppOS;");
-                    sw.WriteLine("using System.Text.Json;");
-                    sw.WriteLine("using System;");
-                    sw.WriteLine("using System.Collections.Generic;\n");
-                    sw.WriteLine("namespace " + _namespace);
-                    sw.WriteLine("{");
-                    generateClass(sw, _class);
-                    sw.Write('}');
-                }
-            }
-        }
-
-        /// <summary>
-        /// Ģeneratora testēšanas funkcija
-        /// </summary>
-        public static void Test(string _namespace, string outFile)
-        {
-            // Ģenerē klases "BaseObject" kodu
-            using (StreamWriter sw = new StreamWriter(outFile + "BaseObject.cs"))
-            {
-                sw.WriteLine("using WebAppOS;");
-                sw.WriteLine("using System.Collections.Generic;\n");
-                sw.WriteLine("namespace " + _namespace);
-                sw.WriteLine("{");
-                generateBaseObject(sw);
-                sw.Write('}');
-            }
-
-            // Ģenerē kodu visām klasēm.
-            foreach (var _class in compiler.Classes)
-            {
-                string filename = outFile + _class.ClassName + ".cs";
                 using (StreamWriter sw = new StreamWriter(filename))
                 {
                     sw.WriteLine("using WebAppOS;");

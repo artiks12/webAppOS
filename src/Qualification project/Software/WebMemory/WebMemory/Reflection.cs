@@ -1,7 +1,14 @@
-﻿using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Linq;
+﻿// Reflection.cs
+/******************************************************
+* Satur interfeisa ILocalWebCalls funkciju definīcijas.
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using System; // nodrošina ievad-izvadierīču lietošanu
+using System.Reflection; // Nodrošina darbu ar tipu refleksiju
+using System.Collections.Generic; // Nodrošina darbu ar iebūvētajām datu struktūrām
+using System.Linq; // Nodrošina LINQ funkcijas
 
 
 namespace WebAppOS

@@ -1,8 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using ANTLR.Grammar;
-using static ANTLR.Grammar.LanguageParser;
-using System.Linq;
+﻿// DataStructures.cs
+/******************************************************
+* Kompilatora Datu struktūru definīcijas.
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using System.Collections.Generic; // Nodrošina darbu ar iebūvētajām datu struktūrām
 
 namespace AntlrCSharp
 {

@@ -1,11 +1,15 @@
-﻿using ANTLR;
-using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
-using System;
-using System.Collections.Generic;
-using ANTLR.Grammar;
-using static ANTLR.Grammar.LanguageParser;
-using Antlr4.Runtime.Tree;
+﻿// AttributeCompiler.cs
+/******************************************************
+* Satur klases atribūtu kompilesanas funkcijas.
+* Tās iekļauj aizsardzības, datu tipa un vārda kompilēsanu,
+* pārbaudi un glabāšanau.
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using Antlr4.Runtime.Misc; // Nodrošina to, ka visās "Visit" funkcijas padotie konteksti nav ar vērtību 'null'
+using ANTLR.Grammar; // Nodrošina darbu ar gramatikas kodu
+using static ANTLR.Grammar.LanguageParser; // Nodrošina vienkāršāku konteksta objektu notāciju (var rakstīt, piem., CodeContext nevis LanguageParser.CodeContext)
 
 namespace AntlrCSharp
 {
@@ -128,6 +132,7 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Pārbauda atribūta vārda esamību klasē
 		/// </summary>
+		/// <param name="_checkClass">Klase, kuru parbauda</param>
 		/// <returns>Atgriež true, ja atribūta vārds klasē neeksistē, citādi atgriež false</returns>
 		public bool checkAttributeNameInClass([NotNull] FieldNameContext context, Class _checkClass)
 		{
@@ -159,6 +164,7 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Pārbauda atribūta vārda esamību virsklasē
 		/// </summary>
+		/// <param name="_checkClass">Virsklase, kuru parbauda</param>
 		/// <returns>Atgriež true, ja atribūta vārds virsklasē neeksistē, citādi atgriež false</returns>
 		public bool checkAttributeNameInSuperClass([NotNull] FieldNameContext context, Class _checkClass)
 		{

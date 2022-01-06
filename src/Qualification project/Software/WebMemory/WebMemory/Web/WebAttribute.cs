@@ -1,4 +1,11 @@
-﻿namespace WebAppOS
+﻿// WebAttribute.cs
+/******************************************************
+* Satur klases "WebAttribute" atribūtus.
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+namespace WebAppOS
 {
     public class WebAttribute 
     {

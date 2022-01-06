@@ -1,11 +1,15 @@
-﻿using ANTLR;
-using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
-using System;
-using System.Collections.Generic;
-using ANTLR.Grammar;
-using static ANTLR.Grammar.LanguageParser;
-using Antlr4.Runtime.Tree;
+﻿// MethodCompiler.cs
+/******************************************************
+* Satur klases metožu kompilesanas funkcijas.
+* Tās iekļauj aizsardzības, datu tipa un vārda kompilēsanu,
+* pārbaudi un glabāšanau, ka arī argumentu un anotāciju esamību.
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using Antlr4.Runtime.Misc; // Nodrošina to, ka visās "Visit" funkcijas padotie konteksti nav ar vērtību 'null'
+using ANTLR.Grammar; // Nodrošina darbu ar gramatikas kodu
+using static ANTLR.Grammar.LanguageParser; // Nodrošina vienkāršāku konteksta objektu notāciju (var rakstīt, piem., CodeContext nevis LanguageParser.CodeContext)
 
 namespace AntlrCSharp
 {
@@ -39,7 +43,7 @@ namespace AntlrCSharp
 			else if (context.annotation().Length != 0) { line = (uint)context.annotation()[context.annotation().Length - 1].Stop.Line; }
 
 			// Pārbauda, vai metodei ir definēti argumenti
-			if (argumentBody != null) { VisitMethodDefinition(argumentBody); }
+			if (argumentBody != null) { VisitMethodDefinition(argumentBody); /* Apstaiga argumentus (skat. ArgumentCompiler.cs) */ }
 			else { Errors.Add("At line " + line + ": Missing arguemnt definition for method!"); }
 
 			// Pārbaudam, vai metodei ir definēts ķermenis
@@ -78,7 +82,7 @@ namespace AntlrCSharp
 			{
 				foreach (var a in context.annotation())
 				{
-					VisitAnnotation(a);
+					VisitAnnotation(a); // Apstaiga argumentus (skat. AnotationCompiler.cs)
 				}
 				if (_urlFound == false) { Errors.Add("At line " + context.Start.Line + ": Missing method URL!"); }
 			}
@@ -160,6 +164,7 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Pārbauda metodes vārda esamību klasē
 		/// </summary>
+		/// <param name="_checkClass">Klase, kuru parbauda</param>
 		/// <returns>Atgriež true, ja metodes vārds klasē neeksistē, citādi atgriež false</returns>
 		public bool checkMethodNameInClass([NotNull] FieldNameContext context, Class _checkClass) 
 		{
@@ -191,6 +196,7 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Pārbauda metodes vārda esamību virsklasē
 		/// </summary>
+		/// <param name="_checkClass">Virsklase, kuru parbauda</param>
 		/// <returns>Atgriež true, ja metodes vārds virsklasē neeksistē, citādi atgriež false</returns>
 		public bool checkMethodNameInSuperClass([NotNull] FieldNameContext context, Class _checkClass)
 		{

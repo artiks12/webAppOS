@@ -1,6 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System;
+﻿// WebObject.cs
+/******************************************************
+* Satur klases "WebObject" atribūtus un funkcijas.
+******************************************************/
+// Autors:  Artis Pauniņš
+// Pabeigts: v1.0 06.01.22
+
+using System.Collections.Generic; // Nodrošina darbu ar iebūvētajām datu struktūrām
+using System.Linq; // Nodrošina LINQ funkcijas
 
 namespace WebAppOS
 {
