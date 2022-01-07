@@ -26,9 +26,9 @@ namespace WebAppOS
         /// 
         /// </summary>
         /// <param name="_k"></param>
-        /// <param name="wmObjRef"></param>
+        /// <param name="wmObjRef">objekta atsauce</param>
         /// <param name="methodURL">ir formātā "dotnet:local:namespace.classname#methodname"</param>
-        /// <param name="arguments"></param>
+        /// <param name="arguments">JSON formātā</param>
         /// <returns></returns>
         public string WebCall(TDAKernel _k, long wmObjRef, string methodURL, string arguments, IRemoteWebCalls wc)
         {
