@@ -22,7 +22,6 @@ namespace AntlrCSharp
         /// <summary>
         /// Programmas galvenā funkcija
         /// </summary>
-        /// <param name="args"></param>
         public static void Main() 
         {
             // Iegūstam faila nosaukumu

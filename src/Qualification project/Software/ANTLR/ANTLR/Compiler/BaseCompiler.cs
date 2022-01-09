@@ -63,8 +63,8 @@ namespace AntlrCSharp
 		/// <summary>
 		/// Apstaigajam blokus
 		/// </summary>
-        public override object VisitBlocks([NotNull] BlocksContext context)
-        {
+		public override object VisitBlocks([NotNull] BlocksContext context)
+		{
 			uint line = (uint)context.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 			string type; // Bloka tips
 			string body; // Bloka ķermenis
@@ -120,7 +120,7 @@ namespace AntlrCSharp
 			}
 
 			return null;
-        }
+		}
 
 		/// <summary>
 		/// Apstaigā bloka tipu

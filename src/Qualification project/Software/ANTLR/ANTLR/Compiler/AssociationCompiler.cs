@@ -47,7 +47,7 @@ namespace AntlrCSharp
 		/// Apstaigājam asociācijas definīciju
 		/// </summary>
 		public override object VisitAssociationDefinition([NotNull] AssociationDefinitionContext context)
-        {
+		{
 			var start = (AssociationContext)context.Parent; // Rindas fiksēšanu sākam no iekavām.
 			uint line = (uint)start.Start.Line; // Nosaka rindu, kurā ir kļūda, ja tādu atrod.
 
@@ -91,7 +91,7 @@ namespace AntlrCSharp
 			VisitAssociationRoleNames(context); // Apstaigājam asociacijas lomu vārdus
 
 			return null;
-        }
+		}
 
 		/// <summary>
 		/// Apstaigājam asociācijas klases
