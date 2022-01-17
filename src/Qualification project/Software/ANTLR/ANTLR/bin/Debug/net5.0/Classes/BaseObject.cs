@@ -1,7 +1,7 @@
 using WebAppOS;
 using System.Collections.Generic;
 
-namespace Test
+namespace sniegs
 {
     public class BaseObject
     {

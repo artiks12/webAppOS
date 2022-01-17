@@ -3,7 +3,7 @@ using System.Text.Json;
 using System;
 using System.Collections.Generic;
 
-namespace Test
+namespace sniegs
 {
     class _class10 : BaseObject
     {

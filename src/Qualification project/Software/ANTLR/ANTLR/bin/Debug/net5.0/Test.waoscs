@@ -10,7 +10,8 @@ class _class2 : _class1
 }
 class _class3 : _class1 
 {
-
+	[URL("dotnet:local:myNamespace.myClass#methodName")]
+	Integer sum(Integer a, Integer b);
 }
 class _class4 : _class2 
 {
