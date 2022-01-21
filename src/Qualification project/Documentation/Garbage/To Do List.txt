@@ -1,5 +1,8 @@
-Par refleksiju pastāstiet, ka Jums vajadzēja sadalīt to URL četrās daļās, tad atrast klasi pēc vārda un metodi pēc vārda, tad izsaukt konstruktoru, tad metodi. Varat pastāsīt, ka to Jūs pats esat izpētījis. 
-Arī vajag lielīties par ANTLR - ka Jūs apguvāt šo rīku. Vēl var pateikt, ka lai to visu palaistu, Jums bija vajadzīgas 3 tehnoloģijas: Java (JDK - java development kit), dotnet un webAppOS kernel DLL.
+Par refleksiju pastāstiet, ka Jums vajadzēja sadalīt to URL četrās daļās, tad atrast klasi pēc vārda un metodi pēc vārda, tad izsaukt konstruktoru, tad metodi. 
+Varat pastāsīt, ka to Jūs pats esat izpētījis. 
+Arī vajag lielīties par ANTLR - ka Jūs apguvāt šo rīku. 
+
+Vēl var pateikt, ka lai to visu palaistu, jums bija vajadzīgas 3 tehnoloģijas: Java (JDK - java development kit), dotnet un webAppOS kernel DLL.
 
 Vēl derētu slaids par projekta gaitu - ka Jūs lietojāt Git, spējās izstrādes metodi, funkcijpunktus, lai novērtētu darbietilpību (un labāk rakstīt 3.x mēneši - lai ir vairāk par 3).
 Tad tajā slaidā var parādīt, cik Jums sanāca koda rindiņu.
